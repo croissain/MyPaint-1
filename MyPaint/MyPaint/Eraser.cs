@@ -10,13 +10,13 @@ using System.Windows.Controls;
 
 namespace MyPaint
 {
-    class Curve : IShape
+    class Eraser : IShape
     {
         private List<Line> _lines = new List<Line>();
         private Point2D _start = new Point2D();
         private Point2D _end = new Point2D();
 
-        public string Name => "Curve";
+        public string Name => "Eraser";
         public int IconKind => (int)PackIconKind.Pencil;
         public Brush s_mColor { get; set; }
         public Brush s_sColor { get; set; }
@@ -32,7 +32,7 @@ namespace MyPaint
                 X2 = x,
                 Y2 = y,
                 StrokeThickness = s_mThickness,
-                Stroke = s_mColor,
+                Stroke = s_sColor,
                 StrokeStartLineCap = PenLineCap.Round,
                 StrokeEndLineCap = PenLineCap.Round
             };
@@ -50,7 +50,7 @@ namespace MyPaint
                 X2 = x,
                 Y2 = y,
                 StrokeThickness = s_mThickness,
-                Stroke = s_mColor,
+                Stroke = s_sColor,
                 StrokeStartLineCap = PenLineCap.Round,
                 StrokeEndLineCap = PenLineCap.Round
             };
@@ -70,7 +70,7 @@ namespace MyPaint
 
         public IShape Clone()
         {
-            return new Curve() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Eraser() { s_sColor = new SolidColorBrush(Colors.White), s_mThickness = 2 };
         }
     }
 }
