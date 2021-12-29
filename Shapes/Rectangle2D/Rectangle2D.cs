@@ -16,10 +16,10 @@ namespace Rectangle2D
         public string Name => "Rectangle";
 
         public int IconKind => (int)PackIconKind.RectangleOutline;
-        public Brush _Brush { get; set; }
-        public int Thickness { get; set; }
+        public Brush s_Color { get; set; }
+        public int s_Thickness { get; set; }
 
-        public UIElement Draw()
+        public void Draw(Canvas canvas)
         {
             var witdh = _rightBottom.X - _leftTop.X;
             var height = _rightBottom.Y - _leftTop.Y;
@@ -27,8 +27,8 @@ namespace Rectangle2D
             {
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
-                Stroke = _Brush,
-                StrokeThickness = Thickness
+                Stroke = s_Color,
+                StrokeThickness = s_Thickness
             };
 
             if (witdh > 0 && height > 0)
@@ -52,7 +52,7 @@ namespace Rectangle2D
                 Canvas.SetTop(rect, _rightBottom.Y);
             }
 
-            return rect;
+            canvas.Children.Add(rect);
         }
 
         public void HandleStart(double x, double y)
@@ -67,7 +67,7 @@ namespace Rectangle2D
 
         public IShape Clone()
         {
-            return new Rectangle2D() { _Brush = new SolidColorBrush(Colors.Red), Thickness = 2 };
+            return new Rectangle2D() { s_Color = new SolidColorBrush(Colors.Red), s_Thickness = 2 };
         }
     }
 }

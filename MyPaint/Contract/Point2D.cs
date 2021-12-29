@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -15,12 +16,10 @@ namespace Contract
         public double X { get; set; }
         public double Y { get; set; }
 
-        public string Name => "Point";
-        
+        public string Name => "Point";      
         public int IconKind => (int)PackIconKind.ChartLineVariant;
-
-        public Brush _Brush{ get; set; }
-        public int Thickness { get; set; }
+        public Brush s_Color{ get; set; }
+        public int s_Thickness { get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -34,7 +33,7 @@ namespace Contract
             Y = y;
         }
 
-        public UIElement Draw()
+        public void Draw(Canvas canvas)
         {
             Line l = new Line()
             {
@@ -42,16 +41,16 @@ namespace Contract
                 Y1 = Y,
                 X2 = X,
                 Y2 = Y,
-                StrokeThickness = Thickness,
-                Stroke = _Brush,
+                StrokeThickness = s_Thickness,
+                Stroke = s_Color,
             };
 
-            return l;
+            canvas.Children.Add(l);
         }
 
         public IShape Clone()
         {
-            return new Point2D() { _Brush = new SolidColorBrush(Colors.Red), Thickness = 2 };
+            return new Point2D() { s_Color = new SolidColorBrush(Colors.Red), s_Thickness = 2 };
         }
     }
 }
