@@ -16,8 +16,9 @@ namespace Ellipse2D
         public string Name => "Ellipse";
 
         public int IconKind => (int)PackIconKind.EllipseOutline;
-        public Brush s_Color { get; set; }
-        public int s_Thickness { get; set; }
+        public Brush s_mColor { get; set; }
+        public Brush s_sColor { get; set; }
+        public int s_mThickness { get; set; }
 
         public void Draw(Canvas canvas)
         {
@@ -27,8 +28,8 @@ namespace Ellipse2D
             {
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
-                Stroke = s_Color,
-                StrokeThickness = s_Thickness
+                Stroke = s_mColor,
+                StrokeThickness = s_mThickness
             };
 
             if (witdh > 0 && height > 0)
@@ -69,7 +70,7 @@ namespace Ellipse2D
 
         public IShape Clone()
         {
-            return new Ellipse2D() { s_Color = new SolidColorBrush(Colors.Red), s_Thickness = 2 };
+            return new Ellipse2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
         }
     }
 }

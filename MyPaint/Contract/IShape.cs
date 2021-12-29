@@ -9,8 +9,10 @@ namespace Contract
     {
         string Name { get; }
         int IconKind { get; }
-        Brush s_Color { get; set; }
-        int s_Thickness { get; set; }
+        Brush s_mColor { get; set; }    // main color
+        Brush s_sColor { get; set; }    // sub color (for eraser)
+        int s_mThickness { get; set; }  // main thickness
+        //int s_sThickness { get; set; }  // sub thickness (for eraser)
 
         void HandleStart(double x, double y);
         void HandleEnd(double x, double y);
