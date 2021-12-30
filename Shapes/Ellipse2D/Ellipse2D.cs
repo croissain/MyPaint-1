@@ -19,6 +19,7 @@ namespace Ellipse2D
         public Brush s_mColor { get; set; }
         public Brush s_sColor { get; set; }
         public int s_mThickness { get; set; }
+        public DoubleCollection s_Outline { get; set; }
 
         public void Draw(Canvas canvas)
         {
@@ -29,7 +30,8 @@ namespace Ellipse2D
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
                 Stroke = s_mColor,
-                StrokeThickness = s_mThickness
+                StrokeThickness = s_mThickness,
+                StrokeDashArray = s_Outline,
             };
 
             if (witdh > 0 && height > 0)

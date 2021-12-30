@@ -13,6 +13,7 @@ namespace Contract
         Brush s_sColor { get; set; }    // sub color (for eraser)
         int s_mThickness { get; set; }  // main thickness
         //int s_sThickness { get; set; }  // sub thickness (for eraser)
+        DoubleCollection s_Outline { get; set; }
 
         void HandleStart(double x, double y);
         void HandleEnd(double x, double y);

@@ -15,7 +15,7 @@
                      mc:Ignorable="d"
                      Title="My Paint"
                      Height="550"
-                     Width="900"
+                     Width="950"
                      Loaded="RibbonWindow_Loaded">
     <DockPanel LastChildFill="True">
         <Fluent:Ribbon DockPanel.Dock="Top">
@@ -266,7 +266,7 @@
 
                         <Fluent:ComboBox Name="OutlineCbbox"
                                          IsReadOnly="True"
-                                         Text="Outline"
+                                         Text="Outline" Width="100"
                                          ToolBar.OverflowMode="Never"
                                          SelectionChanged="Outline_SelectionChanged">
                             <ComboBox.ItemTemplate>
@@ -426,7 +426,7 @@
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-            <Grid Width="900" Height="400" x:Name="fullCanvas">
+            <Grid Width="950" Height="400" x:Name="fullCanvas">
                 <Canvas x:Name="pasteCanvas"
                         Background="White"></Canvas>
                 <Canvas x:Name ="paintCanvas" Background="Transparent"></Canvas>
