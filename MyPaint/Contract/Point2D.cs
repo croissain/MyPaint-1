@@ -21,6 +21,7 @@ namespace Contract
         public Brush s_mColor { get; set; }
         public Brush s_sColor { get; set; }
         public int s_mThickness {  get; set; }
+        public DoubleCollection s_Outline { get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -44,6 +45,7 @@ namespace Contract
                 Y2 = Y,
                 StrokeThickness =  s_mThickness,
                 Stroke =  s_mColor,
+                StrokeDashArray = s_Outline,
             };
 
             canvas.Children.Add(l);

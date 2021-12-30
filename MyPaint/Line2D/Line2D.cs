@@ -18,6 +18,7 @@ namespace Line2D
         public Brush s_mColor { get; set; }
         public Brush s_sColor { get; set; }
         public int s_mThickness { get; set; }
+        public DoubleCollection s_Outline { get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -39,6 +40,7 @@ namespace Line2D
                 Y2 = _end.Y,
                 StrokeThickness = s_mThickness,
                 Stroke = s_mColor,
+                StrokeDashArray = s_Outline,
             };
 
             canvas.Children.Add(l);
