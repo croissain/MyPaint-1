@@ -1,5 +1,6 @@
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Contract
@@ -10,7 +11,10 @@ namespace Contract
         int IconKind { get; }
         Brush s_Color { get; set; }
         int s_Thickness { get; set; }
+<<<<<<< HEAD
         DoubleCollection s_Outline { get; set; }
+=======
+>>>>>>> 19120575
 
         void HandleStart(double x, double y);
         void HandleEnd(double x, double y);

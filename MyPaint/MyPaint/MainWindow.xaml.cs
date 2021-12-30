@@ -40,9 +40,12 @@ namespace MyPaint
         string _selectedShapeName = "";
         Brush _selectedColor;
         int _selectedSize;
+<<<<<<< HEAD
         //Dictionary<string, Outline> _outlinePrototypes = new Dictionary<string, Outline>();
         List<Outline> _outlines = new List<Outline>();
         DoubleCollection _selectedOutline;
+=======
+>>>>>>> 19120575
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -59,7 +62,7 @@ namespace MyPaint
 
                 foreach (var type in types)
                 {
-                    if (type.IsClass && typeof(IShape).IsAssignableFrom(type) && typeof(IShape).Namespace != type.Namespace)
+                    if (type.IsClass && typeof(IShape).IsAssignableFrom(type)) // && typeof(IShape).Namespace != type.Namespace
                     {
                         var shape = Activator.CreateInstance(type) as IShape;
                         _prototypes.Add(shape.Name, shape);
@@ -93,7 +96,7 @@ namespace MyPaint
                 //button.Style = StaticResource.MaterialDesignFloatingActionMiniLightButton;
                 button.Height = 20;
                 button.Width = 20;
-                button.Margin = new Thickness(_selectedSize);
+                button.Margin = new Thickness(2);
                 button.Background = new SolidColorBrush((Color)color.GetValue(null, null));
 
                 button.Click += colorButton_Click;
@@ -107,11 +110,15 @@ namespace MyPaint
             _selectedShapeName = _prototypes.First().Value.Name;
             _selectedColor = new SolidColorBrush(Colors.Red);
             _selectedSize = 2;
+<<<<<<< HEAD
             _selectedOutline = null;
+=======
+>>>>>>> 19120575
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_Color = _selectedColor;
             _preview.s_Thickness = _selectedSize;
 
+<<<<<<< HEAD
             //Thêm curve vào danh sách prototypes
             Curve curve = new Curve();
             _prototypes.Add(curve.Name, curve);
@@ -125,6 +132,8 @@ namespace MyPaint
             _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 1 } });
             _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
             OutlineCbbox.ItemsSource = _outlines;
+=======
+>>>>>>> 19120575
         }
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -166,14 +175,17 @@ namespace MyPaint
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_Color = _selectedColor;
             _preview.s_Thickness = _selectedSize;
+<<<<<<< HEAD
             _preview.s_Outline = _selectedOutline;
+=======
+>>>>>>> 19120575
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
         {
             var color = (sender as Button).Background;
             _selectedColor = color;
-            _preview._Brush = color;
+            _preview.s_Color = color;
         }
 
         private void ChooseSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -212,12 +224,11 @@ namespace MyPaint
                 // Vẽ lại các hình trước đó
                 foreach (var shape in _shapes)
                 {
-                    UIElement element = shape.Draw();
-                    paintCanvas.Children.Add(element);
+                    shape.Draw(paintCanvas);
                 }
 
                 // Vẽ hình preview đè lên
-                paintCanvas.Children.Add(_preview.Draw());
+                _preview.Draw(paintCanvas);
 
                 //Title = $"{pos.X} {pos.Y}";
             }
@@ -236,7 +247,10 @@ namespace MyPaint
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_Color = _selectedColor;
             _preview.s_Thickness = _selectedSize;
+<<<<<<< HEAD
             _preview.s_Outline = _selectedOutline;
+=======
+>>>>>>> 19120575
 
             // Ve lai Xoa toan bo
             paintCanvas.Children.Clear();
@@ -244,12 +258,19 @@ namespace MyPaint
             // Ve lai tat ca cac hinh
             foreach (var shape in _shapes)
             {
-                var element = shape.Draw();
-                paintCanvas.Children.Add(element);
+                shape.Draw(paintCanvas);
             }
 
         }
 
+<<<<<<< HEAD
+=======
+        private void buttonEraser_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+>>>>>>> 19120575
         private void buttonPencil_Click(object sender, RoutedEventArgs e)
         {
             Curve curve = new Curve();
@@ -257,8 +278,12 @@ namespace MyPaint
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_Color = _selectedColor;
             _preview.s_Thickness = _selectedSize;
+<<<<<<< HEAD
             _preview.s_Outline = _selectedOutline;
         }
 
+=======
+        }
+>>>>>>> 19120575
     }
 }

@@ -2,6 +2,7 @@ using Contract;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -16,7 +17,10 @@ namespace Line2D
         public int IconKind => (int)PackIconKind.ChartLineVariant;
         public Brush s_Color { get; set; }
         public int s_Thickness { get; set; }
+<<<<<<< HEAD
         public DoubleCollection s_Outline { get; set; }
+=======
+>>>>>>> 19120575
 
         public void HandleStart(double x, double y)
         {
@@ -28,7 +32,7 @@ namespace Line2D
             _end = new Point2D() { X = x, Y = y };
         }
 
-        public UIElement Draw()
+        public void Draw(Canvas canvas)
         {
             Line l = new Line()
             {
@@ -37,16 +41,19 @@ namespace Line2D
                 X2 = _end.X,
                 Y2 = _end.Y,
                 StrokeThickness = s_Thickness,
+<<<<<<< HEAD
                 StrokeDashArray = s_Outline,
+=======
+>>>>>>> 19120575
                 Stroke = s_Color,
             };
 
-            return l;
+            canvas.Children.Add(l);
         }
 
         public IShape Clone()
         {
-            return new Line2D() { _Brush = new SolidColorBrush(Colors.Red), Thickness = 2 };
+            return new Line2D() { s_Color = new SolidColorBrush(Colors.Red), s_Thickness = 2 };
         }
     }
 }

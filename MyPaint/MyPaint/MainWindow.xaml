@@ -140,7 +140,8 @@
                         </Fluent:RibbonToolBar.LayoutDefinitions>
 
                         <Fluent:Button x:Name="buttonPencil"
-                                       SizeDefinition="Small">
+                                       SizeDefinition="Small"
+                                       Click="buttonPencil_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Pencil"
                                                          VerticalAlignment="Center"
@@ -165,7 +166,8 @@
                         </Fluent:Button>
                         <Fluent:Button x:Name="buttonEraser"
                                        HorizontalAlignment="Left"
-                                       SizeDefinition="Small">
+                                       SizeDefinition="Small"
+                                       Click="buttonEraser_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Eraser"
                                                          VerticalAlignment="Center"

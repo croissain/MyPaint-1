@@ -16,6 +16,7 @@ namespace Ellipse2D
         public string Name => "Ellipse";
 
         public int IconKind => (int)PackIconKind.EllipseOutline;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         public Brush _Brush { get; set; }
         public int Thickness { get; set; }
@@ -24,8 +25,12 @@ namespace Ellipse2D
         public int s_Thickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
 >>>>>>> Stashed changes
+=======
+        public Brush s_Color { get; set; }
+        public int s_Thickness { get; set; }
+>>>>>>> 19120575
 
-        public UIElement Draw()
+        public void Draw(Canvas canvas)
         {
             var witdh = _rightBottom.X - _leftTop.X;
             var height = _rightBottom.Y - _leftTop.Y;
@@ -33,6 +38,7 @@ namespace Ellipse2D
             {
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
                 Stroke = _Brush,
                 StrokeThickness = Thickness
@@ -41,6 +47,10 @@ namespace Ellipse2D
                 Stroke = s_Color,
                 StrokeThickness = s_Thickness
 >>>>>>> Stashed changes
+=======
+                Stroke = s_Color,
+                StrokeThickness = s_Thickness
+>>>>>>> 19120575
             };
 
             if (witdh > 0 && height > 0)
@@ -64,7 +74,7 @@ namespace Ellipse2D
                 Canvas.SetTop(ellipse, _rightBottom.Y);
             }
 
-            return ellipse;
+            canvas.Children.Add(ellipse);
         }
 
         public void HandleStart(double x, double y)
@@ -81,7 +91,7 @@ namespace Ellipse2D
 
         public IShape Clone()
         {
-            return new Ellipse2D() { _Brush = new SolidColorBrush(Colors.Red), Thickness = 2 };
+            return new Ellipse2D() { s_Color = new SolidColorBrush(Colors.Red), s_Thickness = 2 };
         }
     }
 }
