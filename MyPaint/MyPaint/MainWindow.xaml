@@ -420,7 +420,7 @@
             <Grid Width="900" Height="400" x:Name="fullCanvas">
                 <Canvas x:Name="pasteCanvas"
                         Background="White">
-                    <Image x:Name="pasteImage"></Image>
+                    <!--<Image x:Name="pasteImage"></Image>-->
                 </Canvas>
                 <Canvas x:Name ="paintCanvas" Background="Transparent"></Canvas>
                 <Border Background="Transparent" MouseDown="paint_MouseDown" 
