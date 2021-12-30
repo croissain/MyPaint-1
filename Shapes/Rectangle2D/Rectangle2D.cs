@@ -18,6 +18,7 @@ namespace Rectangle2D
         public int IconKind => (int)PackIconKind.RectangleOutline;
         public Brush s_Color { get; set; }
         public int s_Thickness { get; set; }
+        public DoubleCollection s_Outline { get; set; }
 
         public void Draw(Canvas canvas)
         {
@@ -27,6 +28,7 @@ namespace Rectangle2D
             {
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
+                StrokeDashArray = s_Outline,
                 Stroke = s_Color,
                 StrokeThickness = s_Thickness
             };

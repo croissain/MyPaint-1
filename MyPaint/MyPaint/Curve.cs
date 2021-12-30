@@ -20,6 +20,7 @@ namespace MyPaint
         public int IconKind => (int)PackIconKind.Pencil;
         public Brush s_Color { get; set; }
         public int s_Thickness { get; set; }
+        public DoubleCollection s_Outline { get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -28,10 +29,12 @@ namespace MyPaint
             {
                 X1 = x,
                 Y1 = y,
-                X2 = x + s_Thickness,
-                Y2 = y + s_Thickness,
+                X2 = x,
+                Y2 = y,
                 StrokeThickness = s_Thickness,
                 Stroke = s_Color,
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round
             };
 
             _lines.Add(line);
@@ -48,6 +51,8 @@ namespace MyPaint
                 Y2 = y,
                 StrokeThickness = s_Thickness,
                 Stroke = s_Color,
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round
             };
 
             _lines.Add(line);

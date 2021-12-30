@@ -17,6 +17,7 @@ namespace Line2D
         public int IconKind => (int)PackIconKind.ChartLineVariant;
         public Brush s_Color { get; set; }
         public int s_Thickness { get; set; }
+        public DoubleCollection s_Outline { get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -37,6 +38,7 @@ namespace Line2D
                 X2 = _end.X,
                 Y2 = _end.Y,
                 StrokeThickness = s_Thickness,
+                StrokeDashArray = s_Outline,
                 Stroke = s_Color,
             };
 

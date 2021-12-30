@@ -225,25 +225,34 @@
                     </Fluent:SplitButton>
                 </Fluent:RibbonGroupBox>-->
                 <Fluent:RibbonGroupBox Header="Shapes">
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                        <WrapPanel Name="ChooseShapeWrapPanel" Orientation="Horizontal"
-                          Height="Auto" Width="110" >
-                        </WrapPanel>
-                    </ScrollViewer>
-                    <ComboBox Name="Stoke"
-                              SelectedIndex="0"
-                              Width="80"
-                              IsEditable="True"
-                              IsReadOnly="True"
-                              Text="Stroke"
-                              ToolBar.OverflowMode="Never">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text=""
-                                           Foreground="White" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <StackPanel Orientation="Horizontal">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+
+                            <WrapPanel Name="ChooseShapeWrapPanel"
+                                       Orientation="Horizontal"
+                                       Height="Auto"
+                                       Width="110">
+                            </WrapPanel>
+                        </ScrollViewer>
+
+                        <Fluent:ComboBox Name="OutlineCbbox"
+                                         IsReadOnly="True"
+                                         Text="Outline"
+                                         ToolBar.OverflowMode="Never"
+                                         SelectionChanged="Outline_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" Foreground="White" Width="70">
+                                        </TextBlock>
+                                        <Line X1="0" Y1="10" X2="100" Y2="10" StrokeThickness="5"
+                                              Stroke="White" StrokeDashArray="{Binding Value}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </Fluent:ComboBox>
+                    </StackPanel>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox>
                     <Fluent:SplitButton x:Name="viewButton"

@@ -11,6 +11,7 @@ namespace Contract
         int IconKind { get; }
         Brush s_Color { get; set; }
         int s_Thickness { get; set; }
+        DoubleCollection s_Outline { get; set; }
 
         void HandleStart(double x, double y);
         void HandleEnd(double x, double y);
