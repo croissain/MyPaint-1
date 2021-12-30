@@ -44,6 +44,8 @@ namespace MyPaint
         int _selectedSize;
         bool mainColorSelected = true;
         PaintEle pe = new PaintEle();
+        List<Outline> _outlines = new List<Outline>();
+        DoubleCollection _selectedOutline;
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -113,10 +115,18 @@ namespace MyPaint
             _selectedmColor = new SolidColorBrush(Colors.Black);
             _selectedsColor = new SolidColorBrush(Colors.White);
             _selectedSize = 2;
+            _selectedOutline = null;
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_mColor = _selectedmColor;
             _preview.s_sColor = _selectedsColor;
             _preview.s_mThickness = _selectedSize;
+
+            //Thêm outline vào danh sách
+            _outlines.Add(new Outline() { Name = "Solid", Value = null });
+            _outlines.Add(new Outline() { Name = "Dash", Value = new DoubleCollection() { 3, 4 } });
+            _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 1 } });
+            _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
+            OutlineCbbox.ItemsSource = _outlines;
         }
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -171,6 +181,7 @@ namespace MyPaint
             _preview.s_mColor = _selectedmColor;
             _preview.s_sColor = _selectedsColor;
             _preview.s_mThickness = _selectedSize;
+            _preview.s_Outline = _selectedOutline;
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
@@ -196,6 +207,13 @@ namespace MyPaint
                 _selectedsColor = subColor.Background;
                 mainColorSelected = true;
             }
+        }
+
+        private void Outline_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var outline = (OutlineCbbox.SelectedValue as Outline);
+            _selectedOutline = outline.Value;
+            _preview.s_Outline = _selectedOutline;
         }
 
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
@@ -244,6 +262,7 @@ namespace MyPaint
             _preview.s_mColor = _selectedmColor;
             _preview.s_sColor = _selectedsColor;
             _preview.s_mThickness = _selectedSize;
+            _preview.s_Outline = _selectedOutline;
 
             // Ve lai Xoa toan bo
             paintCanvas.Children.Clear();
