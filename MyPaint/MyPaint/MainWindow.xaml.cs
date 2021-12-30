@@ -38,8 +38,11 @@ namespace MyPaint
         List<IShape> _shapes = new List<IShape>();
         IShape _preview;
         string _selectedShapeName = "";
-        Brush _selectedColor = new SolidColorBrush(Colors.Red);
-        int _selectedSize = 2;
+        Brush _selectedColor;
+        int _selectedSize;
+        //Dictionary<string, Outline> _outlinePrototypes = new Dictionary<string, Outline>();
+        List<Outline> _outlines = new List<Outline>();
+        DoubleCollection _selectedOutline;
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -97,10 +100,31 @@ namespace MyPaint
                 colors.Children.Add(button);
             }
 
+            //Thêm curve vào danh sách
+            Curve curve = new Curve();
+            _prototypes.Add(curve.Name, curve);
+
             _selectedShapeName = _prototypes.First().Value.Name;
+            _selectedColor = new SolidColorBrush(Colors.Red);
+            _selectedSize = 2;
+            _selectedOutline = null;
             _preview = _prototypes[_selectedShapeName].Clone();
-            _preview._Brush = _selectedColor;
-            _preview.Thickness = _selectedSize;
+            _preview.s_Color = _selectedColor;
+            _preview.s_Thickness = _selectedSize;
+
+            //Thêm curve vào danh sách prototypes
+            Curve curve = new Curve();
+            _prototypes.Add(curve.Name, curve);
+
+            //Thêm outline vào danh sách
+            //_outlinePrototypes.Add("Solid", new Outline() { Name = "Solid", Value = null });
+            //_outlinePrototypes.Add("Dash", new Outline() { Name = "Dash", Value = new DoubleCollection() { _selectedSize, _selectedSize / 2 } });
+            //_outlinePrototypes.Add("Dot", new Outline() { Name = "Dot", Value = new DoubleCollection() { _selectedSize, _selectedSize } });
+            _outlines.Add(new Outline() { Name = "Solid", Value = null });
+            _outlines.Add(new Outline() { Name = "Dash", Value = new DoubleCollection() { 3, 4 } });
+            _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 1 } });
+            _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
+            OutlineCbbox.ItemsSource = _outlines;
         }
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -112,7 +136,7 @@ namespace MyPaint
         {
             var size = ChooseSize.SelectedValue as Fluent.GalleryItem;
             _selectedSize = Int32.Parse(size.Tag as string);
-            _preview.Thickness = _selectedSize;
+            _preview.s_Thickness = _selectedSize;
         }
 
         private void OnLauncherButtonClick(object sender, RoutedEventArgs e)
@@ -140,7 +164,9 @@ namespace MyPaint
             _selectedShapeName = (sender as Button).Tag as string;
 
             _preview = _prototypes[_selectedShapeName].Clone();
-            _preview._Brush = _selectedColor;
+            _preview.s_Color = _selectedColor;
+            _preview.s_Thickness = _selectedSize;
+            _preview.s_Outline = _selectedOutline;
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
@@ -148,6 +174,20 @@ namespace MyPaint
             var color = (sender as Button).Background;
             _selectedColor = color;
             _preview._Brush = color;
+        }
+
+        private void ChooseSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var size = ChooseSize.SelectedValue as Fluent.GalleryItem;
+            _selectedSize = Int32.Parse(size.Tag as string);
+            _preview.s_Thickness = _selectedSize;
+        }
+
+        private void Outline_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var outline = (OutlineCbbox.SelectedValue as Outline);
+            _selectedOutline = outline.Value;
+            _preview.s_Outline = _selectedOutline;
         }
 
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
@@ -194,8 +234,9 @@ namespace MyPaint
 
             // Sinh ra đối tượng mẫu kế
             _preview = _prototypes[_selectedShapeName].Clone();
-            _preview._Brush = _selectedColor;
-            _preview.Thickness = _selectedSize;
+            _preview.s_Color = _selectedColor;
+            _preview.s_Thickness = _selectedSize;
+            _preview.s_Outline = _selectedOutline;
 
             // Ve lai Xoa toan bo
             paintCanvas.Children.Clear();
@@ -207,6 +248,16 @@ namespace MyPaint
                 paintCanvas.Children.Add(element);
             }
 
+        }
+
+        private void buttonPencil_Click(object sender, RoutedEventArgs e)
+        {
+            Curve curve = new Curve();
+            _selectedShapeName = curve.Name;
+            _preview = _prototypes[_selectedShapeName].Clone();
+            _preview.s_Color = _selectedColor;
+            _preview.s_Thickness = _selectedSize;
+            _preview.s_Outline = _selectedOutline;
         }
 
     }

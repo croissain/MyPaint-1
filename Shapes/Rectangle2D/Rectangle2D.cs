@@ -16,8 +16,14 @@ namespace Rectangle2D
         public string Name => "Rectangle";
 
         public int IconKind => (int)PackIconKind.RectangleOutline;
+<<<<<<< Updated upstream
         public Brush _Brush { get; set; }
         public int Thickness { get; set; }
+=======
+        public Brush s_Color { get; set; }
+        public int s_Thickness { get; set; }
+        public DoubleCollection s_Outline { get; set; }
+>>>>>>> Stashed changes
 
         public UIElement Draw()
         {
@@ -27,8 +33,14 @@ namespace Rectangle2D
             {
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
+<<<<<<< Updated upstream
                 Stroke = _Brush,
                 StrokeThickness = Thickness
+=======
+                StrokeDashArray = s_Outline,
+                Stroke = s_Color,
+                StrokeThickness = s_Thickness
+>>>>>>> Stashed changes
             };
 
             if (witdh > 0 && height > 0)

@@ -7,13 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fluent.Ribbon" Version="9.0.1" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+    <None Remove="images\Dash.png" />
+    <None Remove="images\DashDot.png" />
+    <None Remove="images\Dot.png" />
+    <None Remove="images\solid.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="images\" />
+    <PackageReference Include="Fluent.Ribbon" Version="9.0.1" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,14 +8,14 @@ namespace Contract
     {
         string Name { get; }
         int IconKind { get; }
-        Brush _Brush { get; set; }
-        int Thickness { get; set; }
-
+        Brush s_Color { get; set; }
+        int s_Thickness { get; set; }
+        DoubleCollection s_Outline { get; set; }
 
         void HandleStart(double x, double y);
         void HandleEnd(double x, double y);
 
-        UIElement Draw();
+        void Draw(Canvas canvas);
         IShape Clone();
     }
 }
