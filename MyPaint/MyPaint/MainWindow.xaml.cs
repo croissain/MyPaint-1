@@ -143,7 +143,19 @@ namespace MyPaint
 
         private void pasteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (System.Windows.Forms.Clipboard.ContainsImage())
+            {
+                System.Windows.Forms.IDataObject clipboardData = System.Windows.Forms.Clipboard.GetDataObject();
+                if (clipboardData != null)
+                {
+                    if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
+                    {
+                        System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
+                        pasteImage.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        Console.WriteLine("Clipboard copied to UIElement");
+                    }
+                }
+            }
         }
 
         private void selectButton_Click(object sender, RoutedEventArgs e)
@@ -437,7 +449,5 @@ namespace MyPaint
             }
 
         }
-
-        
     }
 }
