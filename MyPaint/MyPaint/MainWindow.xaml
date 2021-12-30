@@ -7,7 +7,7 @@
                      xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                     TextElement.FontWeight="Regular"
+                     TextElement.FontWeight=             "Regular"
                      TextElement.FontSize="13"
                      TextOptions.TextFormattingMode="Ideal"
                      TextOptions.TextRenderingMode="Auto"
@@ -15,7 +15,7 @@
                      mc:Ignorable="d"
                      Title="My Paint"
                      Height="550"
-                     Width="810"
+                     Width="900"
                      Loaded="RibbonWindow_Loaded">
     <DockPanel LastChildFill="True">
         <Fluent:Ribbon DockPanel.Dock="Top">
@@ -35,6 +35,33 @@
                 </Fluent:Backstage>
             </Fluent:Ribbon.Menu>
             <Fluent:RibbonTabItem Header="Home">
+                <Fluent:RibbonGroupBox x:Name="File"
+                                       Header="File">
+                    <Fluent:Button x:Name="newButton"
+                                   Header="New"
+                                   SizeDefinition="Middle,Small"
+                                   Click="newButton_Click">
+                        <Fluent:Button.LargeIcon>
+                            <materialDesign:PackIcon Kind="FileOutline" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="openButton"
+                                   Header="Open"
+                                   SizeDefinition="Middle,Small"
+                                   Click="openButton_Click">
+                        <Fluent:Button.LargeIcon>
+                            <materialDesign:PackIcon Kind="FolderOpenOutline" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button x:Name="saveButton"
+                                   Header="Save"
+                                   SizeDefinition="Middle,Small"
+                                   Click="saveButton_Click">
+                        <Fluent:Button.LargeIcon>
+                            <materialDesign:PackIcon Kind="ContentSaveOutline" />
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox x:Name="Clipboard"
                                        Header="Clipboard"
                                        Icon="{DynamicResource Fluent.Ribbon.Images.DefaultPlaceholder}"
@@ -149,7 +176,8 @@
                             </Fluent:Button.LargeIcon>
                         </Fluent:Button>
                         <Fluent:Button x:Name="buttonBucket"
-                                       SizeDefinition="Small">
+                                       SizeDefinition="Small"
+                                       Click="buttonBucket_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="FormatColorFill"
                                                          VerticalAlignment="Center"
@@ -353,6 +381,26 @@
                     </Fluent:SplitButton>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Colors">
+                    <StackPanel>
+                        <Fluent:Button x:Name="mainColor"
+                                       Background="Black"
+                                       BorderBrush="Gray"
+                                       Height="45"
+                                       Margin="4,4"
+                                       Click="mainColor_Click">
+                        </Fluent:Button>
+                        <TextBlock Text="color 1"></TextBlock>
+                    </StackPanel>
+                    <StackPanel>
+                        <Fluent:Button x:Name="subColor"
+                                       Background="White"
+                                       BorderBrush="Gray"
+                                       Height="45"
+                                       Margin="4,4"
+                                       Click="subColor_Click">
+                        </Fluent:Button>
+                        <TextBlock Text="color 2"></TextBlock>
+                    </StackPanel>
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                     <WrapPanel Margin="4,4"
                           Height="Auto" Width="148"
@@ -360,8 +408,9 @@
                     </WrapPanel>
                     </ScrollViewer>
                     <Fluent:Button x:Name="moreColorButton"
-                                       Header="More color"
-                                       SizeDefinition="Large">
+                                   Header="More color"
+                                   SizeDefinition="Large"
+                                   Click="moreColorButton_Click">
 
                         <Fluent:Button.LargeIcon>
                             <materialDesign:PackIcon Kind="Palette"
@@ -377,8 +426,10 @@
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-            <Grid Width="800" Height="400">
-                <Canvas x:Name ="paintCanvas" Background="White"></Canvas>
+            <Grid Width="900" Height="400" x:Name="fullCanvas">
+                <Canvas x:Name="pasteCanvas"
+                        Background="White"></Canvas>
+                <Canvas x:Name ="paintCanvas" Background="Transparent"></Canvas>
                 <Border Background="Transparent" MouseDown="paint_MouseDown" 
                 MouseMove="paint_MouseMove"
                 MouseUp="paint_MouseUp">

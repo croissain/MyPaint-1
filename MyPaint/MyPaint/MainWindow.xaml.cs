@@ -1,5 +1,6 @@
 ﻿using Contract;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace MyPaint
     {
         public MainWindow()
         {
-            InitializeComponent();         
+            InitializeComponent();
         }
 
         Dictionary<string, IShape> _prototypes = new Dictionary<string, IShape>();
@@ -38,9 +39,11 @@ namespace MyPaint
         List<IShape> _shapes = new List<IShape>();
         IShape _preview;
         string _selectedShapeName = "";
-        Brush _selectedColor;
+        Brush _selectedmColor; //m là main color
+        Brush _selectedsColor; //s là sub color
         int _selectedSize;
-        //Dictionary<string, Outline> _outlinePrototypes = new Dictionary<string, Outline>();
+        bool mainColorSelected = true;
+        PaintEle pe = new PaintEle();
         List<Outline> _outlines = new List<Outline>();
         DoubleCollection _selectedOutline;
 
@@ -100,33 +103,35 @@ namespace MyPaint
                 colors.Children.Add(button);
             }
 
-            //Cấu hình thông số ban đầu
-            _selectedShapeName = _prototypes.First().Value.Name;
-            _selectedColor = new SolidColorBrush(Colors.Red);
-            _selectedSize = 2;
-            _selectedOutline = null;
-            _preview = _prototypes[_selectedShapeName].Clone();
-            _preview.s_Color = _selectedColor;
-            _preview.s_Thickness = _selectedSize;
-
-            //Thêm curve vào danh sách prototypes
+            //Thêm curve vào danh sách
             Curve curve = new Curve();
             _prototypes.Add(curve.Name, curve);
 
-            //Thêm outline vào danh sách
-            //_outlinePrototypes.Add("Solid", new Outline() { Name = "Solid", Value = null });
-            //_outlinePrototypes.Add("Dash", new Outline() { Name = "Dash", Value = new DoubleCollection() { _selectedSize, _selectedSize / 2 } });
-            //_outlinePrototypes.Add("Dot", new Outline() { Name = "Dot", Value = new DoubleCollection() { _selectedSize, _selectedSize } });
-            _outlines.Add(new Outline() { Name = "Solid", Value = null });
-            _outlines.Add(new Outline() { Name = "Dash", Value = new DoubleCollection() { 3, 4 } });
-            _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 1 } });
-            _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
-            OutlineCbbox.ItemsSource = _outlines;
+            //Thêm eraser vào danh sách
+            Eraser eraser = new Eraser();
+            _prototypes.Add(eraser.Name, eraser);
+
+            _selectedShapeName = curve.Name;
+            _selectedmColor = new SolidColorBrush(Colors.Black);
+            _selectedsColor = new SolidColorBrush(Colors.White);
+            _selectedSize = 2;
+            _selectedOutline = null;
+            _preview = _prototypes[_selectedShapeName].Clone();
+            _preview.s_mColor = _selectedmColor;
+            _preview.s_sColor = _selectedsColor;
+            _preview.s_mThickness = _selectedSize;
         }
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+
+        }
+
+        private void ChooseSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var size = ChooseSize.SelectedValue as Fluent.GalleryItem;
+            _selectedSize = Int32.Parse(size.Tag as string);
+            _preview.s_mThickness = _selectedSize;
         }
 
         private void OnLauncherButtonClick(object sender, RoutedEventArgs e)
@@ -154,30 +159,41 @@ namespace MyPaint
             _selectedShapeName = (sender as Button).Tag as string;
 
             _preview = _prototypes[_selectedShapeName].Clone();
-            _preview.s_Color = _selectedColor;
-            _preview.s_Thickness = _selectedSize;
-            _preview.s_Outline = _selectedOutline;
+            _preview.s_mColor = _selectedmColor;
+            _preview.s_sColor = _selectedsColor;
+            _preview.s_mThickness = _selectedSize;
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
         {
             var color = (sender as Button).Background;
-            _selectedColor = color;
-            _preview.s_Color = color;
-        }
 
-        private void ChooseSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var size = ChooseSize.SelectedValue as Fluent.GalleryItem;
-            _selectedSize = Int32.Parse(size.Tag as string);
-            _preview.s_Thickness = _selectedSize;
+            if (mainColorSelected)
+            {
+                mainColor.Background = color;
+                //pe.ColorOutLineBrush = color;
+                _preview.s_mColor = mainColor.Background;
+                _preview.s_sColor = subColor.Background;
+                _selectedmColor = _preview.s_mColor;
+                _selectedsColor = _preview.s_sColor;
+            }
+            else
+            {
+                subColor.Background = color;
+                //pe.ColorFillBrush = color;
+                _preview.s_mColor = mainColor.Background;
+                _preview.s_sColor = subColor.Background;
+                _selectedmColor = mainColor.Background;
+                _selectedsColor = subColor.Background;
+                mainColorSelected = true;
+            }
         }
 
         private void Outline_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var outline = (OutlineCbbox.SelectedValue as Outline);
             _selectedOutline = outline.Value;
-            _preview.s_Outline = _selectedOutline;
+            //_preview.s_Outline = _selectedOutline;
         }
 
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
@@ -223,9 +239,9 @@ namespace MyPaint
 
             // Sinh ra đối tượng mẫu kế
             _preview = _prototypes[_selectedShapeName].Clone();
-            _preview.s_Color = _selectedColor;
-            _preview.s_Thickness = _selectedSize;
-            _preview.s_Outline = _selectedOutline;
+            _preview.s_mColor = _selectedmColor;
+            _preview.s_sColor = _selectedsColor;
+            _preview.s_mThickness = _selectedSize;
 
             // Ve lai Xoa toan bo
             paintCanvas.Children.Clear();
@@ -240,7 +256,11 @@ namespace MyPaint
 
         private void buttonEraser_Click(object sender, RoutedEventArgs e)
         {
-
+            Eraser eraser = new Eraser();
+            _selectedShapeName = eraser.Name;
+            _preview = _prototypes[_selectedShapeName].Clone();
+            _preview.s_sColor = _selectedsColor;
+            _preview.s_mThickness = _selectedSize;
         }
 
         private void buttonPencil_Click(object sender, RoutedEventArgs e)
@@ -248,10 +268,186 @@ namespace MyPaint
             Curve curve = new Curve();
             _selectedShapeName = curve.Name;
             _preview = _prototypes[_selectedShapeName].Clone();
-            _preview.s_Color = _selectedColor;
-            _preview.s_Thickness = _selectedSize;
-            _preview.s_Outline = _selectedOutline;
+            _preview.s_mColor = _selectedmColor;
+            _preview.s_mThickness = _selectedSize;
         }
 
+        private void mainColor_Click(object sender, RoutedEventArgs e)
+        {
+            mainColorSelected = true;
+        }
+
+        private void subColor_Click(object sender, RoutedEventArgs e)
+        {
+            mainColorSelected = false;
+
+        }
+
+        private void buttonBucket_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void moreColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new System.Windows.Forms.ColorDialog();
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Color cl = new Color();
+                cl.A = dialog.Color.A;
+                cl.R = dialog.Color.R;
+                cl.G = dialog.Color.G;
+                cl.B = dialog.Color.B;
+
+                Brush br = new SolidColorBrush(cl);
+                if (mainColorSelected)
+                    mainColor.Background = br;
+                else
+                    subColor.Background = br;
+
+                _selectedmColor = mainColor.Background;
+                _selectedsColor = subColor.Background;
+
+            }
+        }
+
+        #region newFile
+        private void newButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region saveFile
+        Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+        string save_filename;
+        private void CreateSaveDialog()
+        {
+            dlg.FileName = "mypaint"; // Default file name
+            dlg.DefaultExt = ".jpg";
+            dlg.Filter = "Jpg Files (*.jpg)|*.jpg|Png Files (*.png)|*.png|Canvas (.cvs)|*.cvs|Bitmap (.bmp)|*.bmp"; // Filter files by extension
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                string filename_tmp = dlg.FileName;
+            }
+            save_filename = dlg.FileName.ToString();
+        }
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            CreateSaveDialog();
+            util.SaveGridCanvas(this, fullCanvas, 96, save_filename);
+        }
+        #endregion
+
+        #region loadFile
+        Microsoft.Win32.OpenFileDialog dlg_open = new Microsoft.Win32.OpenFileDialog();
+        private void openButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialogue = new OpenFileDialog()
+            {
+                Filter = "JPG Image (.jpg)|*.jpg|Png Image (.png)|*.png|Gif Image (.gif)|*.gif|Bitmap Image (.bmp)|*.bmp"
+            };
+
+            if (openFileDialogue.ShowDialog() == true)
+            {
+                Stream imageStreamSource = new FileStream(openFileDialogue.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                BitmapDecoder decoder;
+                #region Decoding
+                string extension = System.IO.Path.GetExtension(openFileDialogue.FileName);
+                switch (extension.ToLower())
+                {
+                    case ".jpeg":
+                        decoder = new JpegBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        break;
+                    case ".png":
+                        decoder = new PngBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        break;
+                    case ".gif":
+                        decoder = new GifBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        break;
+                    case ".tiff":
+                        decoder = new TiffBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        break;
+                    case ".wmf":
+                        decoder = new WmpBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        break;
+                    case ".bmp":
+                        decoder = new BmpBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        break;
+                    default:
+                        return;
+                }
+                #endregion
+                BitmapSource LoadedBitmap = decoder.Frames[0];
+                pasteCanvas.Width = LoadedBitmap.Width;
+                pasteCanvas.Height = LoadedBitmap.Height;
+                pasteCanvas.Children.Add(new Image() { Source = LoadedBitmap });
+            }
+        }
+        #endregion
+
+        public static class util
+        {
+            public static void SaveWindow(Window window, int dpi, string filename)
+            {
+                var rtb = new RenderTargetBitmap(
+                    (int)window.Width, //width 
+                    (int)window.Width, //height 
+                    dpi, //dpi x 
+                    dpi, //dpi y 
+                    PixelFormats.Pbgra32// pixelformat 
+                    );
+                rtb.Render(window);
+                SaveRTBAsPNG(rtb, filename);
+
+            }
+
+            //Lưu paintCanvas
+            public static void SaveCanvas(Window window, Canvas canvas, int dpi, string filename)
+            {
+                Size size = new Size(window.Width, window.Height);
+                canvas.Measure(size);
+
+                var rtb = new RenderTargetBitmap(
+                    (int)window.Width, //width 
+                    (int)window.Height, //height 
+                    dpi, //dpi x 
+                    dpi, //dpi y 
+                    PixelFormats.Pbgra32 // pixelformat 
+                    );
+                rtb.Render(canvas);
+                SaveRTBAsPNG(rtb, filename);
+            }
+
+            //Lưu fullCanvas
+            public static void SaveGridCanvas(Window window, Grid canvas, int dpi, string filename)
+            {
+                Size size = new Size(window.Width, window.Height);
+                canvas.Measure(size);
+
+                var rtb = new RenderTargetBitmap(
+                    (int)window.Width, //width 
+                    (int)window.Height, //height 
+                    dpi, //dpi x 
+                    dpi, //dpi y 
+                    PixelFormats.Pbgra32 // pixelformat 
+                    );
+                rtb.Render(canvas);
+                SaveRTBAsPNG(rtb, filename);
+            }
+            private static void SaveRTBAsPNG(RenderTargetBitmap bmp, string filename)
+            {
+                var enc = new System.Windows.Media.Imaging.PngBitmapEncoder();
+                enc.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bmp));
+
+                using (var stm = System.IO.File.Create(filename))
+                {
+                    enc.Save(stm);
+                }
+            }
+
+        }
+
+        
     }
 }

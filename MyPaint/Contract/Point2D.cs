@@ -18,12 +18,9 @@ namespace Contract
 
         public string Name => "Point";      
         public int IconKind => (int)PackIconKind.ChartLineVariant;
-        public Brush s_Color{ get; set; }
-        public int s_Thickness { get; set; }
-        public DoubleCollection s_Outline { get; set; }
-
-        public Brush _Brush{ get; set; }
-        public int Thickness { get; set; }
+        public Brush s_mColor { get; set; }
+        public Brush s_sColor { get; set; }
+        public int s_mThickness {  get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -45,9 +42,8 @@ namespace Contract
                 Y1 = Y,
                 X2 = X,
                 Y2 = Y,
-                StrokeThickness = s_Thickness,
-                StrokeDashArray = s_Outline,
-                Stroke = s_Color,
+                StrokeThickness =  s_mThickness,
+                Stroke =  s_mColor,
             };
 
             canvas.Children.Add(l);
@@ -55,7 +51,7 @@ namespace Contract
 
         public IShape Clone()
         {
-            return new Point2D() { s_Color = new SolidColorBrush(Colors.Red), s_Thickness = 2 };
+            return new Point2D() {  s_mColor = new SolidColorBrush(Colors.Red),  s_mThickness = 2 };
         }
     }
 }

@@ -15,9 +15,9 @@ namespace Line2D
 
         public string Name => "Line";
         public int IconKind => (int)PackIconKind.ChartLineVariant;
-        public Brush s_Color { get; set; }
-        public int s_Thickness { get; set; }
-        public DoubleCollection s_Outline { get; set; }
+        public Brush s_mColor { get; set; }
+        public Brush s_sColor { get; set; }
+        public int s_mThickness { get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -37,9 +37,8 @@ namespace Line2D
                 Y1 = _start.Y,
                 X2 = _end.X,
                 Y2 = _end.Y,
-                StrokeThickness = s_Thickness,
-                StrokeDashArray = s_Outline,
-                Stroke = s_Color,
+                StrokeThickness = s_mThickness,
+                Stroke = s_mColor,
             };
 
             canvas.Children.Add(l);
@@ -47,7 +46,7 @@ namespace Line2D
 
         public IShape Clone()
         {
-            return new Line2D() { s_Color = new SolidColorBrush(Colors.Red), s_Thickness = 2 };
+            return new Line2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
         }
     }
 }
