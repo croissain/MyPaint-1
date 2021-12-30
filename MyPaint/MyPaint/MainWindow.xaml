@@ -428,7 +428,9 @@
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
             <Grid Width="950" Height="400" x:Name="fullCanvas">
                 <Canvas x:Name="pasteCanvas"
-                        Background="White"></Canvas>
+                        Background="White">
+                    <!--<Image x:Name="pasteImage"></Image>-->
+                </Canvas>
                 <Canvas x:Name ="paintCanvas" Background="Transparent"></Canvas>
                 <Border Background="Transparent" MouseDown="paint_MouseDown" 
                 MouseMove="paint_MouseMove"

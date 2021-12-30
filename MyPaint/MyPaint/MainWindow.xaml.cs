@@ -153,7 +153,19 @@ namespace MyPaint
 
         private void pasteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            //if (System.Windows.Forms.Clipboard.ContainsImage())
+            //{
+            //    System.Windows.Forms.IDataObject clipboardData = System.Windows.Forms.Clipboard.GetDataObject();
+            //    if (clipboardData != null)
+            //    {
+            //        if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
+            //        {
+            //            System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
+            //            pasteImage.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            //            Console.WriteLine("Clipboard copied to UIElement");
+            //        }
+            //    }
+            //}
         }
 
         private void selectButton_Click(object sender, RoutedEventArgs e)
@@ -332,8 +344,8 @@ namespace MyPaint
         private void CreateSaveDialog()
         {
             dlg.FileName = "mypaint"; // Default file name
-            dlg.DefaultExt = ".jpg";
-            dlg.Filter = "Jpg Files (*.jpg)|*.jpg|Png Files (*.png)|*.png|Canvas (.cvs)|*.cvs|Bitmap (.bmp)|*.bmp"; // Filter files by extension
+            dlg.DefaultExt = ".jpeg";
+            dlg.Filter = "Jpeg Files (*.jpeg)|*.jpeg|Png Files (*.png)|*.png|Canvas (.cvs)|*.cvs|Bitmap (.bmp)|*.bmp"; // Filter files by extension
             Nullable<bool> result = dlg.ShowDialog();
             if (result == true)
             {
@@ -354,7 +366,7 @@ namespace MyPaint
         {
             OpenFileDialog openFileDialogue = new OpenFileDialog()
             {
-                Filter = "JPG Image (.jpg)|*.jpg|Png Image (.png)|*.png|Gif Image (.gif)|*.gif|Bitmap Image (.bmp)|*.bmp"
+                Filter = "JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png|Gif Image (.gif)|*.gif|Bitmap Image (.bmp)|*.bmp"
             };
 
             if (openFileDialogue.ShowDialog() == true)
@@ -366,7 +378,8 @@ namespace MyPaint
                 switch (extension.ToLower())
                 {
                     case ".jpeg":
-                        decoder = new JpegBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        //decoder = new JpegBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                        decoder = BitmapDecoder.Create( imageStreamSource, BitmapCreateOptions.None, BitmapCacheOption.Default); //nếu lỗi thì dùng dòng trên
                         break;
                     case ".png":
                         decoder = new PngBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
@@ -456,7 +469,5 @@ namespace MyPaint
             }
 
         }
-
-        
     }
 }
