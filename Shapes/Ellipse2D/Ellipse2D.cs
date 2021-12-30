@@ -24,10 +24,13 @@ namespace Ellipse2D
         public Brush s_Color { get; set; }
         public int s_Thickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
+<<<<<<< HEAD
 >>>>>>> Stashed changes
 =======
         public Brush s_Color { get; set; }
         public int s_Thickness { get; set; }
+>>>>>>> 19120575
+=======
 >>>>>>> 19120575
 
         public void Draw(Canvas canvas)
@@ -39,6 +42,7 @@ namespace Ellipse2D
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< Updated upstream
                 Stroke = _Brush,
                 StrokeThickness = Thickness
@@ -48,6 +52,9 @@ namespace Ellipse2D
                 StrokeThickness = s_Thickness
 >>>>>>> Stashed changes
 =======
+=======
+                StrokeDashArray = s_Outline,
+>>>>>>> 19120575
                 Stroke = s_Color,
                 StrokeThickness = s_Thickness
 >>>>>>> 19120575

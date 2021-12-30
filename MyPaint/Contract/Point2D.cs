@@ -20,13 +20,10 @@ namespace Contract
         public int IconKind => (int)PackIconKind.ChartLineVariant;
         public Brush s_Color{ get; set; }
         public int s_Thickness { get; set; }
-<<<<<<< HEAD
         public DoubleCollection s_Outline { get; set; }
 
         public Brush _Brush{ get; set; }
         public int Thickness { get; set; }
-=======
->>>>>>> 19120575
 
         public void HandleStart(double x, double y)
         {
@@ -49,10 +46,7 @@ namespace Contract
                 X2 = X,
                 Y2 = Y,
                 StrokeThickness = s_Thickness,
-<<<<<<< HEAD
                 StrokeDashArray = s_Outline,
-=======
->>>>>>> 19120575
                 Stroke = s_Color,
             };
 
