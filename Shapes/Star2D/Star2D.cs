@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Line2D;
-using System.Drawing;
 using System.Collections.Generic;
 
 namespace Star2D
@@ -18,17 +17,21 @@ namespace Star2D
         private PointCollection star_point = new PointCollection();
 
         public string Name => "Star";
-
         public int IconKind => (int)PackIconKind.StarOutline;
-        public Brush s_mColor
-        {
-            get; set;
-        }
+        public Brush s_mColor{get; set;}
         public Brush s_sColor
         {
             get; set;
         }
         public int s_mThickness
+        {
+            get; set;
+        }
+        public DoubleCollection s_Outline
+        {
+            get; set;
+        }
+        public Brush s_Fill
         {
             get; set;
         }
@@ -43,7 +46,9 @@ namespace Star2D
                 Width = witdh > 0 ? witdh : -witdh,
                 Height = height > 0 ? height : -height,
                 Stroke = s_mColor,
-                StrokeThickness = s_mThickness
+                StrokeThickness = s_mThickness,
+                StrokeDashArray = s_Outline,
+                Fill = s_Fill,
             };
 
             if (witdh > 0 && height > 0)
@@ -67,18 +72,19 @@ namespace Star2D
                 Canvas.SetTop(star, _rightBottom.Y);
             }
             star.Stretch = Stretch.Fill;
-            
-            star_point.Add(new System.Windows.Point(0, 0));
-            star_point.Add(new System.Windows.Point(-0.11226, 0.34549));
-            star_point.Add(new System.Windows.Point(-0.47552, 0.34549));
-            star_point.Add(new System.Windows.Point(-0.18163, 0.55901));
-            star_point.Add(new System.Windows.Point(-0.29389, 0.90451));
-            star_point.Add(new System.Windows.Point(0, 0.69097));
-            star_point.Add(new System.Windows.Point(0.29389, 0.90451));
-            star_point.Add(new System.Windows.Point(0.18163, 0.55901));
-            star_point.Add(new System.Windows.Point(0.47552, 0.34549));
-            star_point.Add(new System.Windows.Point(0.11226, 0.34549));
+
+            star_point.Add(new Point(0, 0));
+            star_point.Add(new Point(-0.11226, 0.34549));
+            star_point.Add(new Point(-0.47552, 0.34549));
+            star_point.Add(new Point(-0.18163, 0.55901));
+            star_point.Add(new Point(-0.29389, 0.90451));
+            star_point.Add(new Point(0, 0.69097));
+            star_point.Add(new Point(0.29389, 0.90451));
+            star_point.Add(new Point(0.18163, 0.55901));
+            star_point.Add(new Point(0.47552, 0.34549));
+            star_point.Add(new Point(0.11226, 0.34549));
             star.Points = star_point;
+
 
             canvas.Children.Add(star);
         }
