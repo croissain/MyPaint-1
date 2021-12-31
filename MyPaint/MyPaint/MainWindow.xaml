@@ -25,7 +25,6 @@
                     <Fluent:BackstageTabControl Background="White">
                         <Fluent:BackstageTabItem Header="New">
                             <Grid>
-
                             </Grid>
                         </Fluent:BackstageTabItem>
                         <Fluent:BackstageTabItem Header="Exit">
@@ -185,7 +184,8 @@
                             </Fluent:Button.LargeIcon>
                         </Fluent:Button>
                         <Fluent:Button x:Name="buttonText"
-                                       SizeDefinition="Small">
+                                       SizeDefinition="Small"
+                                       Click="buttonText_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="FormatTextVariant"
                                                          VerticalAlignment="Center"
@@ -253,7 +253,7 @@
                     </Fluent:SplitButton>
                 </Fluent:RibbonGroupBox>-->
                 <Fluent:RibbonGroupBox Header="Shapes">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Name="ShapesStack">
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                                       VerticalScrollBarVisibility="Auto">
 
@@ -424,6 +424,7 @@
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="View">
             </Fluent:RibbonTabItem>
+            
         </Fluent:Ribbon>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
             <Grid Width="950" Height="400" x:Name="fullCanvas">
