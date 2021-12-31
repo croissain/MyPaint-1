@@ -21,6 +21,21 @@ namespace Rectangle2D
         public int s_mThickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
 
+        public void HandleStart(double x, double y)
+        {
+            _leftTop = new Point2D() { X = x, Y = y };
+        }
+
+        public void HandleEnd(double x, double y)
+        {
+            _rightBottom = new Point2D() { X = x, Y = y };
+        }
+
+        public void HandleMove(double x, double y)
+        {
+            HandleEnd(x, y);
+        }
+
         public void Draw(Canvas canvas)
         {
             var witdh = _rightBottom.X - _leftTop.X;
@@ -56,16 +71,6 @@ namespace Rectangle2D
             }
 
             canvas.Children.Add(rect);
-        }
-
-        public void HandleStart(double x, double y)
-        {
-            _leftTop = new Point2D() { X = x, Y = y };
-        }
-
-        public void HandleEnd(double x, double y)
-        {
-            _rightBottom = new Point2D() { X = x, Y = y };
         }
 
         public IShape Clone()

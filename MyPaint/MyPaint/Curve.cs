@@ -61,6 +61,11 @@ namespace MyPaint
             _start = _end;
         }
 
+        public void HandleMove(double x, double y)
+        {
+            HandleEnd(x, y);
+        }
+
         public void Draw(Canvas canvas)
         {
             foreach (var line in _lines)
