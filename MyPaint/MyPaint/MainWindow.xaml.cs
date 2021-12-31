@@ -116,6 +116,11 @@ namespace MyPaint
             Eraser eraser = new Eraser();
             _prototypes.Add(eraser.Name, eraser);
 
+            //Thêm textbox vào danh sách
+            Textbox2D txb = new Textbox2D();
+            _prototypes.Add(txb.Name, txb);
+
+            //Cấu hình thông số ban đầu
             _selectedShapeName = curve.Name;
             _selectedmColor = new SolidColorBrush(Colors.Black);
             _selectedsColor = new SolidColorBrush(Colors.White);
@@ -264,10 +269,9 @@ namespace MyPaint
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _isDrawing = true;
-
             Point pos = e.GetPosition(paintCanvas);
-
             _preview.HandleStart(pos.X, pos.Y);
+            
         }
 
         private void paint_MouseMove(object sender, MouseEventArgs e)
@@ -275,7 +279,7 @@ namespace MyPaint
             if (_isDrawing)
             {
                 Point pos = e.GetPosition(paintCanvas);
-                _preview.HandleEnd(pos.X, pos.Y);
+                _preview.HandleMove(pos.X, pos.Y);
 
                 // Xoá hết các hình vẽ cũ
                 paintCanvas.Children.Clear();
@@ -297,18 +301,8 @@ namespace MyPaint
         {
             _isDrawing = false;
 
-            // Thêm đối tượng cuối cùng vào mảng quản lí
-            Point pos = e.GetPosition(paintCanvas);
-            _preview.HandleEnd(pos.X, pos.Y);
+            // Thêm đối tượng cuối cùng vào mảng quản lí        
             _shapes.Add(_preview);
-
-            // Sinh ra đối tượng mẫu kế
-            _preview = _prototypes[_selectedShapeName].Clone();
-            _preview.s_mColor = _selectedmColor;
-            _preview.s_sColor = _selectedsColor;
-            _preview.s_mThickness = _selectedSize;
-            _preview.s_Outline = _selectedOutline;
-            _preview.s_Fill = _selectedFill;
 
             // Ve lai Xoa toan bo
             paintCanvas.Children.Clear();
@@ -319,6 +313,16 @@ namespace MyPaint
                 shape.Draw(paintCanvas);
             }
 
+            //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
+            Point pos = e.GetPosition(paintCanvas);
+            _preview.HandleEnd(pos.X, pos.Y);
+
+            // Sinh ra đối tượng mẫu kế
+            _preview = _prototypes[_selectedShapeName].Clone();
+            _preview.s_mColor = _selectedmColor;
+            _preview.s_sColor = _selectedsColor;
+            _preview.s_mThickness = _selectedSize;
+            _preview.s_Outline = _selectedOutline;
         }
 
         private void buttonEraser_Click(object sender, RoutedEventArgs e)
@@ -535,5 +539,38 @@ namespace MyPaint
             }
 
         }
+        
+        private void buttonText_Click(object sender, RoutedEventArgs e)
+        {
+            Textbox2D txb = new Textbox2D();
+            _selectedShapeName = txb.Name;
+            _preview = _prototypes[_selectedShapeName].Clone();
+            _preview.s_mColor = _selectedmColor;
+            _preview.s_mThickness = _selectedSize;
+
+            //Xóa đi bảng chọn shape và thêm vào bảng chọn font, size, style cho text
+            //ShapesStack.Children.Clear();
+            //var fontList = Fonts.SystemFontFamilies;
+
+            //var fontCbb = new Fluent.ComboBox();
+            //fontCbb.Width = 150;
+            //fontCbb.Size = Fluent.RibbonControlSize.Middle;
+            //fontCbb.SelectedIndex = 0;
+            //fontCbb.SelectionChanged += FontCbb_SelectionChanged;
+            //fontCbb.ItemsSource = fontList;
+
+
+            //ShapesStack.Children.Add(fontCbb);
+        }
+
+        FontFamily _selectedFont;
+
+        private void FontCbb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var font = (sender as ComboBox).SelectedItem;
+            _selectedFont = font as FontFamily;
+
+        }
+
     }
 }

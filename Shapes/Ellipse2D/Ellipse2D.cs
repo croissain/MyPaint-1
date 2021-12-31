@@ -26,6 +26,23 @@ namespace Ellipse2D
         }
 
 
+        public void HandleStart(double x, double y)
+        {
+            _leftTop.X = x;
+            _leftTop.Y = y;
+        }
+
+        public void HandleEnd(double x, double y)
+        {
+            _rightBottom.X = x;
+            _rightBottom.Y = y;
+        }
+
+        public void HandleMove(double x, double y)
+        {
+            HandleEnd(x, y);
+        }
+
         public void Draw(Canvas canvas)
         {
             var witdh = _rightBottom.X - _leftTop.X;
@@ -62,18 +79,6 @@ namespace Ellipse2D
             }
 
             canvas.Children.Add(ellipse);
-        }
-
-        public void HandleStart(double x, double y)
-        {
-            _leftTop.X = x;
-            _leftTop.Y = y;
-        }
-
-        public void HandleEnd(double x, double y)
-        {
-            _rightBottom.X = x;
-            _rightBottom.Y = y;
         }
 
         public IShape Clone()

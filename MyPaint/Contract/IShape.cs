@@ -17,6 +17,7 @@ namespace Contract
         Brush s_Fill {  get; set; }
 
         void HandleStart(double x, double y);
+        void HandleMove(double x, double y);
         void HandleEnd(double x, double y);
 
         void Draw(Canvas canvas);

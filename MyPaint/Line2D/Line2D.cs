@@ -32,6 +32,11 @@ namespace Line2D
             _end = new Point2D() { X = x, Y = y };
         }
 
+        public void HandleMove(double x, double y)
+        {
+            HandleEnd(x, y);
+        }
+
         public void Draw(Canvas canvas)
         {
             Line l = new Line()

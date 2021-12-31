@@ -37,6 +37,11 @@ namespace Contract
             Y = y;
         }
 
+        public void HandleMove(double x, double y)
+        {
+            HandleEnd(x, y);
+        }
+
         public void Draw(Canvas canvas)
         {
             Line l = new Line()
@@ -57,5 +62,6 @@ namespace Contract
         {
             return new Point2D() {  s_mColor = new SolidColorBrush(Colors.Red),  s_mThickness = 2 };
         }
+
     }
 }
