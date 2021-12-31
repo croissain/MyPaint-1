@@ -31,6 +31,9 @@ namespace MyPaint
         public MainWindow()
         {
             InitializeComponent();
+
+            //paintCanvas.MouseEnter += new MouseEventHandler(paint_MouseEnter);
+            //paintCanvas.MouseWheel += new MouseWheelEventHandler(paint_MouseWheel);
         }
 
         Dictionary<string, IShape> _prototypes = new Dictionary<string, IShape>();
@@ -43,9 +46,11 @@ namespace MyPaint
         Brush _selectedsColor; //s là sub color
         int _selectedSize;
         bool mainColorSelected = true;
-        PaintEle pe = new PaintEle();
         List<Outline> _outlines = new List<Outline>();
         DoubleCollection _selectedOutline;
+        List<FillColor> _fill = new List<FillColor>();
+        Brush _selectedFill;
+
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -129,14 +134,47 @@ namespace MyPaint
             //Thêm outline vào danh sách
             _outlines.Add(new Outline() { Name = "Solid", Value = null });
             _outlines.Add(new Outline() { Name = "Dash", Value = new DoubleCollection() { 3, 4 } });
-            _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 1 } });
+            _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 2 } });
             _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
-            OutlineCbbox.ItemsSource = _outlines;
+            OutlineCbbox.ItemsSource = _outlines;        
         }
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void ChooseFill_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var fill = ChooseFill.SelectedValue as Fluent.GalleryItem;
+            var fillcolor = new FillColor();
+            fillcolor.Name = fill.Tag as string;
+            switch (fillcolor.Name)
+            {
+                case "Solid":
+                    fillcolor.Value = new SolidColorBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color);
+                    break;
+                case "Linear":
+                    fillcolor.Value = new LinearGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color, 1);
+                    break;
+                case "Radial":
+                    fillcolor.Value = new RadialGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color);
+                    break;
+                default:
+                    fillcolor.Value = Brushes.Transparent;
+                    break;
+            }
+            _selectedFill = fillcolor.Value;
+            _preview.s_Fill = _selectedFill;
+
+            //_fill.Add(new FillColor() { Name = "NoFill", Value = Brushes.Transparent });
+            //_fill.Add(new FillColor() { Name = "Solid", Value = new SolidColorBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color) });
+            //_fill.Add(new FillColor() { Name = "Linear", Value = new LinearGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color, 1) });
+            //_fill.Add(new FillColor() { Name = "Radial", Value = new RadialGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color) });
+
+            //var outline = (OutlineCbbox.SelectedValue as Outline);
+            //_selectedOutline = outline.Value;
+            //_preview.s_Outline = _selectedOutline;
         }
 
         private void ChooseSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -158,19 +196,21 @@ namespace MyPaint
 
         private void pasteButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (System.Windows.Forms.Clipboard.ContainsImage())
-            //{
-            //    System.Windows.Forms.IDataObject clipboardData = System.Windows.Forms.Clipboard.GetDataObject();
-            //    if (clipboardData != null)
-            //    {
-            //        if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
-            //        {
-            //            System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
-            //            pasteImage.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            //            Console.WriteLine("Clipboard copied to UIElement");
-            //        }
-            //    }
-            //}
+            if (System.Windows.Forms.Clipboard.ContainsImage())
+            {
+                System.Windows.Forms.IDataObject clipboardData = System.Windows.Forms.Clipboard.GetDataObject();
+                if (clipboardData != null)
+                {
+                    if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
+                    {
+                        System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
+                        var pasteImg = new Image();
+                        pasteImg.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        pasteCanvas.Children.Add(pasteImg);
+                        Console.WriteLine("Clipboard copied to UIElement");
+                    }
+                }
+            }
         }
 
         private void selectButton_Click(object sender, RoutedEventArgs e)
@@ -187,6 +227,7 @@ namespace MyPaint
             _preview.s_sColor = _selectedsColor;
             _preview.s_mThickness = _selectedSize;
             _preview.s_Outline = _selectedOutline;
+            _preview.s_Fill = _selectedFill;
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
@@ -199,8 +240,10 @@ namespace MyPaint
                 //pe.ColorOutLineBrush = color;
                 _preview.s_mColor = mainColor.Background;
                 _preview.s_sColor = subColor.Background;
+                _preview.s_Fill = mainColor.Background;
                 _selectedmColor = _preview.s_mColor;
                 _selectedsColor = _preview.s_sColor;
+                _selectedFill = _preview.s_mColor;
             }
             else
             {
@@ -210,6 +253,8 @@ namespace MyPaint
                 _preview.s_sColor = subColor.Background;
                 _selectedmColor = mainColor.Background;
                 _selectedsColor = subColor.Background;
+                _selectedFill = mainColor.Background;
+
                 mainColorSelected = true;
             }
         }
@@ -339,6 +384,26 @@ namespace MyPaint
         #region newFile
         private void newButton_Click(object sender, RoutedEventArgs e)
         {
+            var ans = MessageBox.Show("Save this masterpiece?", "MyPaint", MessageBoxButton.YesNoCancel);
+
+            if (ans == MessageBoxResult.Yes)
+            {
+                dlg.FileName = "mypaint"; // Default file name
+                dlg.DefaultExt = ".jpeg";
+                dlg.Filter = "Jpeg Files (*.jpeg)|*.jpeg|Png Files (*.png)|*.png|Canvas (.cvs)|*.cvs|Bitmap (.bmp)|*.bmp"; // Filter files by extension
+                Nullable<bool> result = dlg.ShowDialog();
+                if (result == true)
+                {
+                    string filename_tmp = dlg.FileName;
+                }
+                save_filename = dlg.FileName.ToString();
+            }
+            else if (ans == MessageBoxResult.No)
+            {
+                _shapes.Clear();
+                pasteCanvas.Children.Clear();
+                paintCanvas.Children.Clear();
+            }
 
         }
         #endregion
@@ -384,7 +449,7 @@ namespace MyPaint
                 {
                     case ".jpeg":
                         //decoder = new JpegBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                        decoder = BitmapDecoder.Create( imageStreamSource, BitmapCreateOptions.None, BitmapCacheOption.Default); //nếu lỗi thì dùng dòng trên
+                        decoder = BitmapDecoder.Create(imageStreamSource, BitmapCreateOptions.None, BitmapCacheOption.Default); //nếu lỗi thì dùng dòng trên
                         break;
                     case ".png":
                         decoder = new PngBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);

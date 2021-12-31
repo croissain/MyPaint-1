@@ -14,6 +14,7 @@ namespace Contract
         int s_mThickness { get; set; }  // main thickness
         //int s_sThickness { get; set; }  // sub thickness (for eraser)
         DoubleCollection s_Outline { get; set; }
+        Brush s_Fill {  get; set; }
 
         void HandleStart(double x, double y);
         void HandleMove(double x, double y);

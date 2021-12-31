@@ -20,6 +20,10 @@ namespace Rectangle2D
         public Brush s_sColor { get; set; }
         public int s_mThickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
+        public Brush s_Fill
+        {
+            get; set;
+        }
 
         public void HandleStart(double x, double y)
         {
@@ -47,6 +51,7 @@ namespace Rectangle2D
                 Stroke = s_mColor,
                 StrokeThickness = s_mThickness,
                 StrokeDashArray = s_Outline,
+                Fill = s_Fill,
             };
 
             if (witdh > 0 && height > 0)
