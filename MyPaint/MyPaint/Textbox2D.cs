@@ -25,6 +25,7 @@ namespace MyPaint
         public Brush s_sColor { get; set; }
         public int s_mThickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
+        public Style s_Style { get; set; }
 
         public void HandleStart(double x, double y)
         {
@@ -70,6 +71,7 @@ namespace MyPaint
                 _textbox.Foreground = s_mColor;
                 _textbox.Background = s_sColor;
                 _textbox.BorderBrush = Brushes.Transparent;
+                _textbox.Style = s_Style;
                 _textbox.LostFocus += TextBox_LostFocus;
 
                 SetPosition(_rect, _width, _height);
@@ -79,7 +81,8 @@ namespace MyPaint
             }
 
             _text.Foreground = s_mColor;
-            _text.FontSize = 14;
+            //_text.FontSize = 14;
+            _text.Style = s_Style;
             SetPosition(_text, _width, _height);
             canvas.Children.Add(_text);
         }
