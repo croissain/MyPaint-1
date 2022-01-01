@@ -35,6 +35,9 @@ namespace Star2D
         {
             get; set;
         }
+        public FontFamily s_FontFamily { get; set; }
+        public double s_FontSize { get; set; }
+        public int s_Style { get; set; }
 
         public void Draw(Canvas canvas)
         {
@@ -92,6 +95,11 @@ namespace Star2D
         public void HandleStart(double x, double y)
         {
             _leftTop = new Point2D() { X = x, Y = y };
+        }
+
+        public void HandleMove(double x, double y)
+        {
+            HandleEnd(x, y);
         }
 
         public void HandleEnd(double x, double y)

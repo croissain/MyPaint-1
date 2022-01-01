@@ -24,6 +24,9 @@ namespace Ellipse2D
         {
             get; set;
         }
+        public FontFamily s_FontFamily { get; set; }
+        public double s_FontSize { get; set; }
+        public int s_Style { get; set; }
 
 
         public void HandleStart(double x, double y)
