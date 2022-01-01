@@ -76,6 +76,15 @@ namespace Star2D
             }
             star.Stretch = Stretch.Fill;
 
+            
+            star.Points = star_point;
+
+
+            canvas.Children.Add(star);
+        }
+
+        public void HandleStart(double x, double y)
+        {
             star_point.Add(new Point(0, 0));
             star_point.Add(new Point(-0.11226, 0.34549));
             star_point.Add(new Point(-0.47552, 0.34549));
@@ -86,14 +95,6 @@ namespace Star2D
             star_point.Add(new Point(0.18163, 0.55901));
             star_point.Add(new Point(0.47552, 0.34549));
             star_point.Add(new Point(0.11226, 0.34549));
-            star.Points = star_point;
-
-
-            canvas.Children.Add(star);
-        }
-
-        public void HandleStart(double x, double y)
-        {
             _leftTop = new Point2D() { X = x, Y = y };
         }
 
@@ -109,7 +110,7 @@ namespace Star2D
 
         public IShape Clone()
         {
-            return new Star2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Star2D();
         }
     }
 }
