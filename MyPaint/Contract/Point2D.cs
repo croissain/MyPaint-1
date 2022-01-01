@@ -22,7 +22,10 @@ namespace Contract
         public Brush s_sColor { get; set; }
         public int s_mThickness {  get; set; }
         public DoubleCollection s_Outline { get; set; }
-        public Style s_Style { get ; set ; }
+        public Brush s_Fill { get; set; }
+        public FontFamily s_FontFamily { get; set; }
+        public double s_FontSize { get; set; }
+        public int s_Style { get ; set ; }
 
         public void HandleStart(double x, double y)
         {

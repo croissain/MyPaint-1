@@ -10,16 +10,13 @@ namespace MyPaint
 {
     public partial class MainWindow : Fluent.RibbonWindow
     {
-        Style _selectedStyle = new Style();
-        FontWeight _fontWeightSetter;
-
         private void GroupBoxTextStyle()
         {
             var fontList = Fonts.SystemFontFamilies;
 
             //Combobox chọn font
             var fontCbb = new Fluent.ComboBox();
-            fontCbb.Width = 120;
+            fontCbb.Width = 150;
             fontCbb.Margin = new Thickness() { Bottom = 5 };
             fontCbb.Size = Fluent.RibbonControlSize.Middle;
             fontCbb.SelectedIndex = 0;
@@ -28,7 +25,7 @@ namespace MyPaint
 
             //Combobox chọn fontsize
             var fontSizeCbb = new Fluent.ComboBox();
-            fontSizeCbb.Width = 120;
+            fontSizeCbb.Width = 150;
             fontCbb.Margin = new Thickness() { Bottom = 5 };
             fontSizeCbb.Size = Fluent.RibbonControlSize.Middle;
             fontSizeCbb.SelectedIndex = 4;
@@ -39,6 +36,7 @@ namespace MyPaint
             RadioButton radioBold = new Fluent.RadioButton() 
             {
                 Name = "BoldRadio",
+                Tag = (int)TextStyle.BOLD,
                 FontWeight = FontWeights.DemiBold,
                 FontStyle = FontStyles.Normal,
                 Header = "Bold",
@@ -49,6 +47,7 @@ namespace MyPaint
             RadioButton radioItalic = new Fluent.RadioButton()
             {
                 Name = "ItalicRadio",
+                Tag = (int)TextStyle.ITALIC,
                 FontStyle = FontStyles.Oblique,
                 FontWeight = FontWeights.Normal,
                 Header = "Italic",
@@ -59,6 +58,7 @@ namespace MyPaint
             RadioButton radioUnderline = new Fluent.RadioButton()
             {
                 Name = "UnderlineRadio",
+                Tag = (int)TextStyle.UNDERLINE,
                 Header = "Underline",
                 GroupName = "Style",
             };
@@ -68,10 +68,6 @@ namespace MyPaint
             subStack.Children.Add(radioBold);
             subStack.Children.Add(radioItalic);
             subStack.Children.Add(radioUnderline);
-            //subStack.Children.Add(new TextBlock() { Text = "Underline", TextDecorations = TextDecorations.Underline });
-
-            _selectedStyle.Setters.Add(new Setter(TextBlock.FontWeightProperty, _fontWeightSetter));
-           // _selectedStyle.Setters.Add(new Setter(TextBlock.FontStyleProperty, FontStyles.Normal));
 
             ChooseStyleStack.Orientation = Orientation.Vertical;
             ChooseStyleStack.Children.Add(fontCbb);
@@ -82,44 +78,22 @@ namespace MyPaint
         private void FontCbb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var font = (sender as ComboBox).SelectedItem as FontFamily;
-            _selectedStyle.Setters.Add(new Setter(TextBlock.FontFamilyProperty, font));
+            _selectedFontFamily = font;
+            _preview.s_FontFamily = _selectedFontFamily;
         }
 
         private void FontSizeCbb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var size = (sender as ComboBox).SelectedItem;
-            _selectedStyle.Setters.Add(new Setter(TextBlock.FontSizeProperty, size));
+            _selectedFontSize = (double)size;
+            _preview.s_FontSize = _selectedFontSize;
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            var style = (sender as RadioButton);
-            _fontWeightSetter = style.FontWeight;
-
-            //_selectedStyle.Setters.OfType<Setter>().FirstOrDefault(X => X.Property == TextBlock.FontWeightProperty).Value = style.FontWeight;
-            //_selectedStyle.Setters.OfType<Setter>().FirstOrDefault(X => X.Property == TextBlock.FontStyleProperty).Value = style.FontStyle;
-
-            //try
-            //{
-            //    //_selectedStyle.Setters.Add(new Setter(TextBlock.FontWeightProperty, style.FontWeight));
-            //    _selectedStyle.Setters.Remove(_fontWeightSetter);
-            //    _fontWeightSetter = new Setter(TextBlock.FontWeightProperty, style.FontWeight);
-            //    _selectedStyle.Setters.Add(_fontWeightSetter);
-            //}
-            //catch
-            //{
-            //    _fontWeightSetter = new Setter(TextBlock.FontWeightProperty, style.FontWeight);
-            //    _selectedStyle.Setters.Add(_fontWeightSetter);
-            //}
-
-            //try
-            //{
-            //    _selectedStyle.Setters.Add(new Setter(TextBlock.FontStyleProperty, style.FontStyle));
-            //}
-            //catch
-            //{
-            //    _selectedStyle.Setters.OfType<Setter>().FirstOrDefault(X => X.Property == TextBlock.FontStyleProperty).Value = fontStyle;
-            //}
+            var style = (sender as RadioButton).Tag;
+            _selectedStyle = (int)style;
+            _preview.s_Style = _selectedStyle;
         }
     }
 }
