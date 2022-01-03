@@ -7,7 +7,7 @@
                      xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                     TextElement.FontWeight=             "Regular"
+                     TextElement.FontWeight="Regular"
                      TextElement.FontSize="13"
                      TextOptions.TextFormattingMode="Ideal"
                      TextOptions.TextRenderingMode="Auto"
@@ -201,9 +201,6 @@
                                     <StackPanel Orientation="Horizontal"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center">
-                                        <Button Width="20"
-                                                Height="20"
-                                                Background="Black"></Button>
                                         <TextBlock><Run Text="Solid" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
@@ -221,13 +218,13 @@
                                         <TextBlock><Run Text="Radial" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
-                                <Fluent:GalleryItem Tag="Image">
+                                <!--<Fluent:GalleryItem Tag="Image">
                                     <StackPanel Orientation="Horizontal"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center">
                                         <TextBlock><Run Text="Image" /></TextBlock>
                                     </StackPanel>
-                                </Fluent:GalleryItem>
+                                </Fluent:GalleryItem>-->
                             </Fluent:Gallery>
                         </Fluent:SplitButton>
                         <Fluent:Button x:Name="buttonText"
@@ -251,7 +248,8 @@
                         </Fluent:Button>
                         <Fluent:Button x:Name="buttonEyedrop"
                                        HorizontalAlignment="Left"
-                                       SizeDefinition="Small">
+                                       SizeDefinition="Small"
+                                       Click="buttonEyedrop_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Eyedropper"
                                                          VerticalAlignment="Center"
@@ -479,8 +477,13 @@
                         Background="White">
                     <Image x:Name="pasteImage"></Image>
                 </Canvas>
-                <Canvas x:Name ="paintCanvas" Background="Transparent"></Canvas>
-                <Border Background="Transparent" MouseDown="paint_MouseDown" 
+                <Canvas x:Name="paintCanvas"
+                        Loaded="PaintCanvas_Loaded"
+                        Background="Transparent">
+                </Canvas>
+                <Border x:Name="Picker"
+                        Background="Transparent"
+                        MouseDown="paint_MouseDown"
                         MouseMove="paint_MouseMove"
                         MouseUp="paint_MouseUp">
                 </Border>

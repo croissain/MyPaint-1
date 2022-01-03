@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Line2D;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace MyPaint
 {
@@ -23,6 +24,14 @@ namespace MyPaint
         public int s_mThickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
         public Brush s_Fill { get; set; }
+        public Adorner currAdnr
+        {
+            get; set;
+        }
+        public AdornerLayer adnrLayer
+        {
+            get; set;
+        }
 
         public void HandleStart(double x, double y)
         {

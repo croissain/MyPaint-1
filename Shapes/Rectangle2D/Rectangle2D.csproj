@@ -10,6 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Adorner">
+      <HintPath>..\..\MyPaint\Adorner\bin\Debug\net5.0-windows\Adorner.dll</HintPath>
+    </Reference>
     <Reference Include="Contract">
       <HintPath>..\..\MyPaint\Contract\bin\Debug\net5.0-windows\Contract.dll</HintPath>
     </Reference>

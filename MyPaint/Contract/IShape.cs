@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Documents;
 
 namespace Contract
 {
@@ -15,6 +16,8 @@ namespace Contract
         //int s_sThickness { get; set; }  // sub thickness (for eraser)
         DoubleCollection s_Outline { get; set; }
         Brush s_Fill {  get; set; }
+        Adorner currAdnr { get; set; }
+        AdornerLayer adnrLayer { get; set; }
 
         void HandleStart(double x, double y);
         void HandleMove(double x, double y);
