@@ -26,6 +26,9 @@ namespace Line2D
         public int s_mThickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
         public Brush s_Fill { get; set; }
+        public FontFamily s_FontFamily { get; set; }
+        public double s_FontSize { get; set; }
+        public int s_Style { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
 

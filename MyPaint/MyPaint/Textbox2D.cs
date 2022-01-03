@@ -10,6 +10,12 @@ using System.Windows.Input;
 
 namespace MyPaint
 {
+    enum TextStyle:int
+    {
+        BOLD = 1,
+        ITALIC = 2,
+        UNDERLINE = 3
+    }
     class Textbox2D : IShape
     {
         private Point2D _leftTop = new Point2D();
@@ -28,6 +34,9 @@ namespace MyPaint
         public int s_mThickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
         public Brush s_Fill { get; set; }
+        public FontFamily s_FontFamily { get; set; }
+        public double s_FontSize { get; set; }
+        public int s_Style { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
 
@@ -80,6 +89,8 @@ namespace MyPaint
                 _textbox.Height = height;
                 _textbox.TextWrapping = TextWrapping.Wrap;
                 _textbox.Foreground = s_mColor;
+                _textbox.FontFamily = s_FontFamily;
+                _textbox.FontSize = s_FontSize;
                 _textbox.Background = Brushes.Transparent;
                 _textbox.BorderBrush = Brushes.Transparent;
                 _textbox.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -94,6 +105,23 @@ namespace MyPaint
             }
 
             _text.Foreground = s_mColor;
+            _text.FontSize = s_FontSize;
+            _text.FontFamily = s_FontFamily;
+
+            if(s_Style == (int)TextStyle.ITALIC)
+            {
+                _text.FontStyle = FontStyles.Oblique;
+            }
+            else if(s_Style == (int)TextStyle.UNDERLINE)
+            {
+                _text.TextDecorations = TextDecorations.Underline;
+            }
+            else if(s_Style == (int)TextStyle.BOLD)
+            {
+                _text.FontWeight = FontWeights.ExtraBold;
+            }
+
+            SetPosition(_text, _width, _height);
             _text.FontSize = 14;
             //SetPosition(_text, _width, _height);
             canvas.Children.Add(_text);

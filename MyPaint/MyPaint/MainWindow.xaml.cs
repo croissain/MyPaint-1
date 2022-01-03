@@ -50,6 +50,9 @@ namespace MyPaint
         DoubleCollection _selectedOutline;
         List<FillColor> _fill = new List<FillColor>();
         Brush _selectedFill;
+        FontFamily _selectedFontFamily;
+        double _selectedFontSize;
+        int _selectedStyle;
         FillColor fillcolor = new FillColor();
         AdornerLayer _adnrLayer;
 
@@ -234,6 +237,12 @@ namespace MyPaint
             _preview.s_mThickness = _selectedSize;
             _preview.s_Outline = _selectedOutline;
             _preview.s_Fill = _selectedFill;
+
+            //Trả lại bảng chọn size và outline
+            ChooseStyleStack.Children.Clear();
+            ChooseStyleStack.Orientation = Orientation.Horizontal;
+            ChooseStyleStack.Children.Add(OutlineCbbox);
+            ChooseStyleStack.Children.Add(ChooseSizeButton);
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
@@ -359,6 +368,9 @@ namespace MyPaint
             _preview.s_mThickness = _selectedSize;
             _preview.s_Outline = _selectedOutline;
             _preview.s_Fill = _selectedFill;
+            _preview.s_FontFamily = _selectedFontFamily;
+            _preview.s_FontSize = _selectedFontSize;
+            _preview.s_Style = _selectedStyle;
         }
 
         private void buttonEraser_Click(object sender, RoutedEventArgs e)
@@ -581,30 +593,14 @@ namespace MyPaint
             _selectedShapeName = txb.Name;
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_mColor = _selectedmColor;
-            _preview.s_mThickness = _selectedSize;
 
-            //Xóa đi bảng chọn shape và thêm vào bảng chọn font, size, style cho text
-            //ShapesStack.Children.Clear();
-            //var fontList = Fonts.SystemFontFamilies;
+            //Xóa đi bảng chọn size, outline và thêm vào bảng chọn font, size, style cho text
+            ChooseStyleStack.Children.Clear();
 
-            //var fontCbb = new Fluent.ComboBox();
-            //fontCbb.Width = 150;
-            //fontCbb.Size = Fluent.RibbonControlSize.Middle;
-            //fontCbb.SelectedIndex = 0;
-            //fontCbb.SelectionChanged += FontCbb_SelectionChanged;
-            //fontCbb.ItemsSource = fontList;
-
-
-            //ShapesStack.Children.Add(fontCbb);
-        }
-
-        FontFamily _selectedFont;
-
-        private void FontCbb_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var font = (sender as ComboBox).SelectedItem;
-            _selectedFont = font as FontFamily;
-
+            GroupBoxTextStyle();
+            _preview.s_FontFamily = _selectedFontFamily;
+            _preview.s_FontSize = _selectedFontSize;
+            _preview.s_Style = _selectedStyle;
         }
 
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)

@@ -26,6 +26,26 @@ namespace Star2D
 
         public string Name => "Star";
         public int IconKind => (int)PackIconKind.StarOutline;
+        public Brush s_mColor{get; set;}
+        public Brush s_sColor
+        {
+            get; set;
+        }
+        public int s_mThickness
+        {
+            get; set;
+        }
+        public DoubleCollection s_Outline
+        {
+            get; set;
+        }
+        public Brush s_Fill
+        {
+            get; set;
+        }
+        public FontFamily s_FontFamily { get; set; }
+        public double s_FontSize { get; set; }
+        public int s_Style { get; set; }
         public Brush s_mColor { get; set; }
         public Brush s_sColor { get; set; }
         public int s_mThickness { get; set; }
@@ -52,6 +72,11 @@ namespace Star2D
             star_point.Add(new Point(0.47552, 0.34549));
             star_point.Add(new Point(0.11226, 0.34549));
             _leftTop = new Point2D() { X = x, Y = y };
+        }
+
+        public void HandleMove(double x, double y)
+        {
+            HandleEnd(x, y);
         }
 
         public void HandleMove(double x, double y)
