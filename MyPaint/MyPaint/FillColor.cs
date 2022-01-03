@@ -7,11 +7,6 @@ using System.Windows.Media;
 
 namespace MyPaint
 {
-    enum Fills
-    {
-        NoFill, Solid, Linear, Radial, Image
-    }
-
     class FillColor
     {
         public string Name

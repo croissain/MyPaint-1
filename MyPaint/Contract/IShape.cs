@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Documents;
 
 namespace Contract
 {
@@ -18,6 +19,8 @@ namespace Contract
         FontFamily s_FontFamily { get; set; }
         double s_FontSize { get; set; }
         int s_Style { get; set; }
+        Adorner currAdnr { get; set; }
+        AdornerLayer adnrLayer { get; set; }
 
         void HandleStart(double x, double y);
         void HandleMove(double x, double y);
