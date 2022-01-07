@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Documents;
 
 namespace Contract
 {
@@ -26,6 +27,14 @@ namespace Contract
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
         public int s_Style { get ; set ; }
+        public Adorner currAdnr
+        {
+            get; set;
+        }
+        public AdornerLayer adnrLayer
+        {
+            get; set;
+        }
 
         public void HandleStart(double x, double y)
         {

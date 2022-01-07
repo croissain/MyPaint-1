@@ -53,6 +53,13 @@ namespace MyPaint
         FontFamily _selectedFontFamily;
         double _selectedFontSize;
         int _selectedStyle;
+        FillColor fillcolor = new FillColor();
+        AdornerLayer _adnrLayer;
+
+        private void PaintCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
+            _adnrLayer = AdornerLayer.GetAdornerLayer(paintCanvas);
+        }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -128,6 +135,7 @@ namespace MyPaint
             _selectedsColor = new SolidColorBrush(Colors.White);
             _selectedSize = 2;
             _selectedOutline = null;
+            _selectedFill = null;
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_mColor = _selectedmColor;
             _preview.s_sColor = _selectedsColor;
@@ -138,7 +146,9 @@ namespace MyPaint
             _outlines.Add(new Outline() { Name = "Dash", Value = new DoubleCollection() { 3, 4 } });
             _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 2 } });
             _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
-            OutlineCbbox.ItemsSource = _outlines;        
+            OutlineCbbox.ItemsSource = _outlines;
+
+            //Thêm select vào danh sách
         }
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -149,7 +159,7 @@ namespace MyPaint
         private void ChooseFill_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var fill = ChooseFill.SelectedValue as Fluent.GalleryItem;
-            var fillcolor = new FillColor();
+
             fillcolor.Name = fill.Tag as string;
             switch (fillcolor.Name)
             {
@@ -168,11 +178,6 @@ namespace MyPaint
             }
             _selectedFill = fillcolor.Value;
             _preview.s_Fill = _selectedFill;
-
-            //_fill.Add(new FillColor() { Name = "NoFill", Value = Brushes.Transparent });
-            //_fill.Add(new FillColor() { Name = "Solid", Value = new SolidColorBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color) });
-            //_fill.Add(new FillColor() { Name = "Linear", Value = new LinearGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color, 1) });
-            //_fill.Add(new FillColor() { Name = "Radial", Value = new RadialGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color) });
 
             //var outline = (OutlineCbbox.SelectedValue as Outline);
             //_selectedOutline = outline.Value;
@@ -217,7 +222,9 @@ namespace MyPaint
 
         private void selectButton_Click(object sender, RoutedEventArgs e)
         {
-
+            //Select s = new Select();
+            //_selectedShapeName = s.Name;
+            //_preview = _prototypes[_selectedShapeName].Clone();
         }
 
         private void ChooseShapeButton_Click(object sender, RoutedEventArgs e)
@@ -245,25 +252,54 @@ namespace MyPaint
             if (mainColorSelected)
             {
                 mainColor.Background = color;
-                //pe.ColorOutLineBrush = color;
                 _preview.s_mColor = mainColor.Background;
                 _preview.s_sColor = subColor.Background;
-                _preview.s_Fill = mainColor.Background;
                 _selectedmColor = _preview.s_mColor;
                 _selectedsColor = _preview.s_sColor;
-                _selectedFill = _preview.s_mColor;
+                switch (fillcolor.Name)
+                {
+                    case "Solid":
+                        fillcolor.Value = new SolidColorBrush(((System.Windows.Media.SolidColorBrush)_selectedsColor).Color);
+                        break;
+                    case "Linear":
+                        fillcolor.Value = new LinearGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color, 1);
+                        break;
+                    case "Radial":
+                        fillcolor.Value = new RadialGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color);
+                        break;
+                    default:
+                        fillcolor.Value = Brushes.Transparent;
+                        break;
+                }
+                _preview.s_Fill = fillcolor.Value;
+                _selectedFill = fillcolor.Value;
             }
             else
             {
                 subColor.Background = color;
-                //pe.ColorFillBrush = color;
                 _preview.s_mColor = mainColor.Background;
                 _preview.s_sColor = subColor.Background;
                 _selectedmColor = mainColor.Background;
                 _selectedsColor = subColor.Background;
-                _selectedFill = mainColor.Background;
+                switch (fillcolor.Name)
+                {
+                    case "Solid":
+                        fillcolor.Value = new SolidColorBrush(((System.Windows.Media.SolidColorBrush)_selectedsColor).Color);
+                        break;
+                    case "Linear":
+                        fillcolor.Value = new LinearGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color, 1);
+                        break;
+                    case "Radial":
+                        fillcolor.Value = new RadialGradientBrush(((System.Windows.Media.SolidColorBrush)_selectedmColor).Color, ((System.Windows.Media.SolidColorBrush)_selectedsColor).Color);
+                        break;
+                    default:
+                        fillcolor.Value = Brushes.Transparent;
+                        break;
+                }
+                _preview.s_Fill = fillcolor.Value;
+                _selectedFill = fillcolor.Value;
 
-                mainColorSelected = true;
+                //mainColorSelected = true;
             }
         }
 
@@ -279,7 +315,6 @@ namespace MyPaint
             _isDrawing = true;
             Point pos = e.GetPosition(paintCanvas);
             _preview.HandleStart(pos.X, pos.Y);
-            
         }
 
         private void paint_MouseMove(object sender, MouseEventArgs e)
@@ -311,6 +346,7 @@ namespace MyPaint
 
             // Thêm đối tượng cuối cùng vào mảng quản lí        
             _shapes.Add(_preview);
+            //Shape currShape = (Shape)_preview;
 
             // Ve lai Xoa toan bo
             paintCanvas.Children.Clear();
@@ -370,6 +406,7 @@ namespace MyPaint
         {
 
         }
+
         private void moreColorButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new System.Windows.Forms.ColorDialog();
@@ -389,7 +426,6 @@ namespace MyPaint
 
                 _selectedmColor = mainColor.Background;
                 _selectedsColor = subColor.Background;
-
             }
         }
 
@@ -549,9 +585,8 @@ namespace MyPaint
                     enc.Save(stm);
                 }
             }
-
         }
-        
+
         private void buttonText_Click(object sender, RoutedEventArgs e)
         {
             Textbox2D txb = new Textbox2D();
@@ -568,6 +603,24 @@ namespace MyPaint
             _preview.s_Style = _selectedStyle;
         }
 
-        
+        private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
+        {
+            Picker.MouseLeftButtonDown += (sender, e) =>
+            {
+                Point P = e.GetPosition(this);
+                double X = P.X;
+                double Y = P.Y;
+                RenderTargetBitmap Render = new RenderTargetBitmap((int)Picker.ActualWidth, (int)Picker.ActualHeight, 96, 96, PixelFormats.Default);
+                Render.Render(Picker);
+
+                CroppedBitmap Cropped = new CroppedBitmap(Render, new Int32Rect((int)X, (int)Y, 1, 1));
+                byte[] Pixels = new byte[4];
+                Cropped.CopyPixels(Pixels, 4, 0);
+
+                mainColor.Background = new SolidColorBrush(Color.FromArgb(Pixels[3], Pixels[2], Pixels[1], Pixels[0]));
+                _selectedmColor = mainColor.Background;
+                _preview.s_mColor = mainColor.Background;
+            };
+        }
     }
 }
