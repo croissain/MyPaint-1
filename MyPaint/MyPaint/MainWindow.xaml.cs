@@ -128,6 +128,7 @@ namespace MyPaint
             _selectedsColor = new SolidColorBrush(Colors.White);
             _selectedSize = 2;
             _selectedOutline = null;
+            _selectedFill = _selectedsColor;
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_mColor = _selectedmColor;
             _preview.s_sColor = _selectedsColor;
@@ -248,10 +249,8 @@ namespace MyPaint
                 //pe.ColorOutLineBrush = color;
                 _preview.s_mColor = mainColor.Background;
                 _preview.s_sColor = subColor.Background;
-                _preview.s_Fill = mainColor.Background;
                 _selectedmColor = _preview.s_mColor;
                 _selectedsColor = _preview.s_sColor;
-                _selectedFill = _preview.s_mColor;
             }
             else
             {
@@ -261,7 +260,6 @@ namespace MyPaint
                 _preview.s_sColor = subColor.Background;
                 _selectedmColor = mainColor.Background;
                 _selectedsColor = subColor.Background;
-                _selectedFill = mainColor.Background;
 
                 mainColorSelected = true;
             }
