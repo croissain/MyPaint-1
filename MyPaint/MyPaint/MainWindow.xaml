@@ -5,6 +5,7 @@
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:local="clr-namespace:MyPaint"
                      xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
+                     xmlns:zb="clr-namespace:PanAndZoom"
                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                      TextElement.FontWeight="Regular"
@@ -17,8 +18,11 @@
                      Height="550"
                      Width="950"
                      Loaded="RibbonWindow_Loaded">
+
     <DockPanel LastChildFill="True" KeyDown="DockPanel_KeyDown">
-        <Fluent:Ribbon DockPanel.Dock="Top" x:Name="HeaderMenu">
+        <Fluent:Ribbon DockPanel.Dock="Top"
+                       x:Name="HeaderMenu"
+                       Panel.ZIndex="9999">
             <Fluent:Ribbon.Menu>
                 <Fluent:Backstage Header="File"
                                   Background="Salmon">
@@ -510,23 +514,27 @@
             </Fluent:RibbonTabItem>
 
         </Fluent:Ribbon>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+        <zb:ZoomBorder>
+            <DockPanel>
+        <!--<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">-->
             <Grid Width="950" Height="400" x:Name="fullCanvas">
                 <Canvas x:Name="pasteCanvas"
                         Background="White">
                     <Image x:Name="pasteImage"></Image>
                 </Canvas>
-                <Canvas x:Name="paintCanvas"
-                        Loaded="PaintCanvas_Loaded"
-                        Background="Transparent">
-                </Canvas>
-                <Border x:Name="Picker"
-                        Background="Transparent"
+            <Canvas x:Name="paintCanvas"
+                    Loaded="PaintCanvas_Loaded"
+                    Background="Transparent">
+            </Canvas>
+
+            <Border Background="Transparent"
                         MouseDown="paint_MouseDown"
                         MouseMove="paint_MouseMove"
                         MouseUp="paint_MouseUp">
-                </Border>
-            </Grid>
-        </ScrollViewer>
+            </Border>
+        </Grid>
+        <!--</ScrollViewer>-->
+            </DockPanel>
+        </zb:ZoomBorder>
     </DockPanel>
 </Fluent:RibbonWindow>
