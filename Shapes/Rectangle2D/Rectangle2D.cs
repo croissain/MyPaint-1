@@ -67,12 +67,10 @@ namespace Rectangle2D
             {
                 rotateTransform = _rectangleFinal.RenderTransform as RotateTransform;
                 double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
-                var width = Math.Abs(_width);
-                var height = Math.Abs(_height);
 
-                _rectangle = new Rectangle();
-                _rectangle.Width = width;
-                _rectangle.Height = height;
+                //_rectangle = new Rectangle();
+                _rectangle.Width = Math.Abs(_width);
+                _rectangle.Height = Math.Abs(_height);
                 _rectangle.Stroke = s_mColor;
                 _rectangle.StrokeThickness = s_mThickness;
                 _rectangle.StrokeDashArray = s_Outline;
@@ -93,17 +91,20 @@ namespace Rectangle2D
 
         private void Rectangle_LostFocus(object sender, RoutedEventArgs e)
         {
-            _rectangleFinal.Width = _rectangle.Width;
-            _rectangleFinal.Height = _rectangle.Height;
-            _rectangleFinal.Stroke = _rectangle.Stroke;
-            _rectangleFinal.StrokeThickness = _rectangle.StrokeThickness;
-            _rectangleFinal.StrokeDashArray = _rectangle.StrokeDashArray;
-            _rectangleFinal.Fill = _rectangle.Fill;
-            _rectangleFinal.RenderTransformOrigin = _rectangle.RenderTransformOrigin;
-            _rectangleFinal.RenderTransform = _rectangle.RenderTransform;
+            if(_rectangle != null)
+            {
+                _rectangleFinal.Width = _rectangle.Width;
+                _rectangleFinal.Height = _rectangle.Height;
+                _rectangleFinal.Stroke = _rectangle.Stroke;
+                _rectangleFinal.StrokeThickness = _rectangle.StrokeThickness;
+                _rectangleFinal.StrokeDashArray = _rectangle.StrokeDashArray;
+                _rectangleFinal.Fill = _rectangle.Fill;
+                _rectangleFinal.RenderTransformOrigin = _rectangle.RenderTransformOrigin;
+                _rectangleFinal.RenderTransform = _rectangle.RenderTransform;
 
-            Canvas.SetLeft(_rectangleFinal, Canvas.GetLeft(_rectangle));
-            Canvas.SetTop(_rectangleFinal, Canvas.GetTop(_rectangle));
+                Canvas.SetLeft(_rectangleFinal, Canvas.GetLeft(_rectangle));
+                Canvas.SetTop(_rectangleFinal, Canvas.GetTop(_rectangle));
+            }
 
             _canvas.Children.Remove(_rectangle);
             _rectangle = null;
@@ -135,7 +136,7 @@ namespace Rectangle2D
 
         public IShape Clone()
         {
-            return new Rectangle2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Rectangle2D();
         }
     }
 }

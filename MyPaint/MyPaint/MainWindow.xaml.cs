@@ -31,7 +31,6 @@ namespace MyPaint
         public MainWindow()
         {
             InitializeComponent();
-
             //paintCanvas.MouseEnter += new MouseEventHandler(paint_MouseEnter);
             //paintCanvas.MouseWheel += new MouseWheelEventHandler(paint_MouseWheel);
         }
@@ -55,6 +54,9 @@ namespace MyPaint
         int _selectedStyle;
         FillColor fillcolor = new FillColor();
         AdornerLayer _adnrLayer;
+        bool _isWriting = false;
+        List<IShape> _bufferShapes = new List<IShape>();
+        Point _startPoint;
 
         private void PaintCanvas_Loaded(object sender, RoutedEventArgs e)
         {
@@ -129,6 +131,10 @@ namespace MyPaint
             Textbox2D txb = new Textbox2D();
             _prototypes.Add(txb.Name, txb);
 
+            //Thêm select vào danh sách
+            Select2D select = new Select2D();
+            _prototypes.Add(select.Name, select);
+
             //Cấu hình thông số ban đầu
             _selectedShapeName = curve.Name;
             _selectedmColor = new SolidColorBrush(Colors.Black);
@@ -149,6 +155,10 @@ namespace MyPaint
             OutlineCbbox.ItemsSource = _outlines;
 
             //Thêm select vào danh sách
+
+            //Thêm enable cho undo và redo
+            undoButton.IsEnabled = false;
+            redoButton.IsEnabled = false;
         }
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -222,9 +232,11 @@ namespace MyPaint
 
         private void selectButton_Click(object sender, RoutedEventArgs e)
         {
-            //Select s = new Select();
-            //_selectedShapeName = s.Name;
-            //_preview = _prototypes[_selectedShapeName].Clone();
+            Select2D select = new Select2D();
+            _selectedShapeName = select.Name;
+            _preview = _prototypes[_selectedShapeName].Clone();
+            _preview.s_sColor = _selectedsColor;
+            _preview.s_mThickness = _selectedSize;
         }
 
         private void ChooseShapeButton_Click(object sender, RoutedEventArgs e)
@@ -238,11 +250,16 @@ namespace MyPaint
             _preview.s_Outline = _selectedOutline;
             _preview.s_Fill = _selectedFill;
 
-            //Trả lại bảng chọn size và outline
-            ChooseStyleStack.Children.Clear();
-            ChooseStyleStack.Orientation = Orientation.Horizontal;
-            ChooseStyleStack.Children.Add(OutlineCbbox);
-            ChooseStyleStack.Children.Add(ChooseSizeButton);
+            if(_isWriting == true)
+            {
+                //Trả lại bảng chọn size và outline
+                ChooseStyleStack.Children.Clear();
+                ChooseStyleStack.Orientation = Orientation.Horizontal;
+                ChooseStyleStack.Children.Add(OutlineCbbox);
+                ChooseStyleStack.Children.Add(ChooseSizeButton);
+
+                _isWriting = false;
+            }
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
@@ -315,6 +332,7 @@ namespace MyPaint
             _isDrawing = true;
             Point pos = e.GetPosition(paintCanvas);
             _preview.HandleStart(pos.X, pos.Y);
+            _startPoint = new Point(pos.X, pos.Y);
         }
 
         private void paint_MouseMove(object sender, MouseEventArgs e)
@@ -343,34 +361,42 @@ namespace MyPaint
         private void paint_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _isDrawing = false;
-
-            // Thêm đối tượng cuối cùng vào mảng quản lí        
-            _shapes.Add(_preview);
-            //Shape currShape = (Shape)_preview;
-
-            // Ve lai Xoa toan bo
-            paintCanvas.Children.Clear();
-
-            // Ve lai tat ca cac hinh
-            foreach (var shape in _shapes)
-            {
-                shape.Draw(paintCanvas);
-            }
-
-            //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
             Point pos = e.GetPosition(paintCanvas);
-            _preview.HandleEnd(pos.X, pos.Y);
+            if(pos.X != _startPoint.X && pos.Y != _startPoint.Y)
+            {
+                // Thêm đối tượng cuối cùng vào mảng quản lí        
+                _shapes.Add(_preview);
+                //Shape currShape = (Shape)_preview;
 
-            // Sinh ra đối tượng mẫu kế
-            _preview = _prototypes[_selectedShapeName].Clone();
-            _preview.s_mColor = _selectedmColor;
-            _preview.s_sColor = _selectedsColor;
-            _preview.s_mThickness = _selectedSize;
-            _preview.s_Outline = _selectedOutline;
-            _preview.s_Fill = _selectedFill;
-            _preview.s_FontFamily = _selectedFontFamily;
-            _preview.s_FontSize = _selectedFontSize;
-            _preview.s_Style = _selectedStyle;
+                // Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+
+                //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
+                _preview.HandleEnd(pos.X, pos.Y);
+
+                // Sinh ra đối tượng mẫu kế
+                _preview = _prototypes[_selectedShapeName].Clone();
+                _preview.s_mColor = _selectedmColor;
+                _preview.s_sColor = _selectedsColor;
+                _preview.s_mThickness = _selectedSize;
+                _preview.s_Outline = _selectedOutline;
+                _preview.s_Fill = _selectedFill;
+                _preview.s_FontFamily = _selectedFontFamily;
+                _preview.s_FontSize = _selectedFontSize;
+                _preview.s_Style = _selectedStyle;
+
+                //Enable undo
+                if (_shapes.Count > 0)
+                {
+                    undoButton.IsEnabled = true;
+                }
+            }
         }
 
         private void buttonEraser_Click(object sender, RoutedEventArgs e)
@@ -526,69 +552,9 @@ namespace MyPaint
         }
         #endregion
 
-        public static class util
-        {
-            public static void SaveWindow(Window window, int dpi, string filename)
-            {
-                var rtb = new RenderTargetBitmap(
-                    (int)window.Width, //width 
-                    (int)window.Width, //height 
-                    dpi, //dpi x 
-                    dpi, //dpi y 
-                    PixelFormats.Pbgra32// pixelformat 
-                    );
-                rtb.Render(window);
-                SaveRTBAsPNG(rtb, filename);
-
-            }
-
-            //Lưu paintCanvas
-            public static void SaveCanvas(Window window, Canvas canvas, int dpi, string filename)
-            {
-                Size size = new Size(window.Width, window.Height);
-                canvas.Measure(size);
-
-                var rtb = new RenderTargetBitmap(
-                    (int)window.Width, //width 
-                    (int)window.Height, //height 
-                    dpi, //dpi x 
-                    dpi, //dpi y 
-                    PixelFormats.Pbgra32 // pixelformat 
-                    );
-                rtb.Render(canvas);
-                SaveRTBAsPNG(rtb, filename);
-            }
-
-            //Lưu fullCanvas
-            public static void SaveGridCanvas(Window window, Grid canvas, int dpi, string filename)
-            {
-                Size size = new Size(window.Width, window.Height);
-                canvas.Measure(size);
-
-                var rtb = new RenderTargetBitmap(
-                    (int)window.Width, //width 
-                    (int)window.Height, //height 
-                    dpi, //dpi x 
-                    dpi, //dpi y 
-                    PixelFormats.Pbgra32 // pixelformat 
-                    );
-                rtb.Render(canvas);
-                SaveRTBAsPNG(rtb, filename);
-            }
-            private static void SaveRTBAsPNG(RenderTargetBitmap bmp, string filename)
-            {
-                var enc = new System.Windows.Media.Imaging.PngBitmapEncoder();
-                enc.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bmp));
-
-                using (var stm = System.IO.File.Create(filename))
-                {
-                    enc.Save(stm);
-                }
-            }
-        }
-
         private void buttonText_Click(object sender, RoutedEventArgs e)
         {
+            _isWriting = true;
             Textbox2D txb = new Textbox2D();
             _selectedShapeName = txb.Name;
             _preview = _prototypes[_selectedShapeName].Clone();
@@ -622,5 +588,123 @@ namespace MyPaint
                 _preview.s_mColor = mainColor.Background;
             };
         }
+
+        private void undoButton_Click(object sender, RoutedEventArgs e)
+        {
+            redoButton.IsEnabled = true;
+            int lastIndex = _shapes.Count - 1;
+            if(lastIndex >= 0)
+            {
+                _bufferShapes.Add(_shapes[lastIndex]);
+                _shapes.RemoveAt(lastIndex);
+
+                // Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+
+                if (lastIndex == 0) undoButton.IsEnabled = false;
+            }
+        }
+
+        private void redoButton_Click(object sender, RoutedEventArgs e)
+        {
+            undoButton.IsEnabled = true;
+            int lastIndex = _bufferShapes.Count - 1;
+            if(lastIndex >= 0)
+            {
+                _shapes.Add(_bufferShapes[lastIndex]);
+                _bufferShapes.RemoveAt(lastIndex);
+
+                // Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+
+                if (lastIndex == 0) redoButton.IsEnabled = false;
+            }
+        }
+
+        private void DockPanel_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Z && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                undoButton_Click(sender, e);
+            }
+            else if (e.Key == Key.Y && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                redoButton_Click(sender, e);
+            }
+        }
     }
+
+    public static class util
+    {
+        public static void SaveWindow(Window window, int dpi, string filename)
+        {
+            var rtb = new RenderTargetBitmap(
+                (int)window.Width, //width 
+                (int)window.Width, //height 
+                dpi, //dpi x 
+                dpi, //dpi y 
+                PixelFormats.Pbgra32// pixelformat 
+                );
+            rtb.Render(window);
+            SaveRTBAsPNG(rtb, filename);
+
+        }
+
+        //Lưu paintCanvas
+        public static void SaveCanvas(Window window, Canvas canvas, int dpi, string filename)
+        {
+            Size size = new Size(window.Width, window.Height);
+            canvas.Measure(size);
+
+            var rtb = new RenderTargetBitmap(
+                (int)window.Width, //width 
+                (int)window.Height, //height 
+                dpi, //dpi x 
+                dpi, //dpi y 
+                PixelFormats.Pbgra32 // pixelformat 
+                );
+            rtb.Render(canvas);
+            SaveRTBAsPNG(rtb, filename);
+        }
+
+        //Lưu fullCanvas
+        public static void SaveGridCanvas(Window window, Grid canvas, int dpi, string filename)
+        {
+            Size size = new Size(window.Width, window.Height);
+            canvas.Measure(size);
+
+            var rtb = new RenderTargetBitmap(
+                (int)window.Width, //width 
+                (int)window.Height, //height 
+                dpi, //dpi x 
+                dpi, //dpi y 
+                PixelFormats.Pbgra32 // pixelformat 
+                );
+            rtb.Render(canvas);
+            SaveRTBAsPNG(rtb, filename);
+        }
+        private static void SaveRTBAsPNG(RenderTargetBitmap bmp, string filename)
+        {
+            var enc = new System.Windows.Media.Imaging.PngBitmapEncoder();
+            enc.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bmp));
+
+            using (var stm = System.IO.File.Create(filename))
+            {
+                enc.Save(stm);
+            }
+        }
+    }
+
 }
