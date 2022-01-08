@@ -133,12 +133,10 @@ namespace Star2D
             {
                 rotateTransform = _starFinal.RenderTransform as RotateTransform;
                 double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
-                var width = Math.Abs(_width);
-                var height = Math.Abs(_height);
 
-                _star = new Polygon();
-                _star.Width = width;
-                _star.Height = height;
+                //_star = new Polygon();
+                _star.Width = Math.Abs(_width);
+                _star.Height = Math.Abs(_height);
                 _star.Stroke = s_mColor;
                 _star.StrokeThickness = s_mThickness;
                 _star.StrokeDashArray = s_Outline;
@@ -161,19 +159,22 @@ namespace Star2D
 
         private void Star_LostFocus(object sender, RoutedEventArgs e)
         {
-            _starFinal.Width = _star.Width;
-            _starFinal.Height = _star.Height;
-            _starFinal.Stroke = _star.Stroke;
-            _starFinal.StrokeThickness = _star.StrokeThickness;
-            _starFinal.StrokeDashArray = _star.StrokeDashArray;
-            _starFinal.Fill = _star.Fill;
-            _starFinal.RenderTransformOrigin = _star.RenderTransformOrigin;
-            _starFinal.RenderTransform = _star.RenderTransform;
-            _starFinal.Stretch = Stretch.Fill;
-            _starFinal.Points = star_point;
+            if (_star != null)
+            {
+                _starFinal.Width = _star.Width;
+                _starFinal.Height = _star.Height;
+                _starFinal.Stroke = _star.Stroke;
+                _starFinal.StrokeThickness = _star.StrokeThickness;
+                _starFinal.StrokeDashArray = _star.StrokeDashArray;
+                _starFinal.Fill = _star.Fill;
+                _starFinal.RenderTransformOrigin = _star.RenderTransformOrigin;
+                _starFinal.RenderTransform = _star.RenderTransform;
+                _starFinal.Stretch = Stretch.Fill;
+                _starFinal.Points = star_point;
 
-            Canvas.SetLeft(_starFinal, Canvas.GetLeft(_star));
-            Canvas.SetTop(_starFinal, Canvas.GetTop(_star));
+                Canvas.SetLeft(_starFinal, Canvas.GetLeft(_star));
+                Canvas.SetTop(_starFinal, Canvas.GetTop(_star));
+            }
 
             _canvas.Children.Remove(_star);
             _star = null;

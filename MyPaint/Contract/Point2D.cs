@@ -71,7 +71,7 @@ namespace Contract
 
         public IShape Clone()
         {
-            return new Point2D() {  s_mColor = new SolidColorBrush(Colors.Red),  s_mThickness = 2 };
+            return new Point2D();
         }
 
     }

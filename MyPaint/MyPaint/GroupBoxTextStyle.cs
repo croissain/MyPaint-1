@@ -16,7 +16,7 @@ namespace MyPaint
 
             //Combobox chọn font
             var fontCbb = new Fluent.ComboBox();
-            fontCbb.Width = 150;
+            fontCbb.Width = 180;
             fontCbb.Margin = new Thickness() { Bottom = 5 };
             fontCbb.Size = Fluent.RibbonControlSize.Middle;
             fontCbb.SelectedIndex = 0;
@@ -25,7 +25,7 @@ namespace MyPaint
 
             //Combobox chọn fontsize
             var fontSizeCbb = new Fluent.ComboBox();
-            fontSizeCbb.Width = 150;
+            fontSizeCbb.Width = 180;
             fontCbb.Margin = new Thickness() { Bottom = 5 };
             fontSizeCbb.Size = Fluent.RibbonControlSize.Middle;
             fontSizeCbb.SelectedIndex = 4;

@@ -89,7 +89,7 @@ namespace MyPaint
 
         public IShape Clone()
         {
-            return new Eraser() { s_sColor = new SolidColorBrush(Colors.White), s_mThickness = 2 };
+            return new Eraser();
         }
     }
 }

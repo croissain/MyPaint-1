@@ -89,7 +89,7 @@ namespace MyPaint
 
         public IShape Clone()
         {
-            return new Curve() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Curve();
         }
     }
 }

@@ -73,12 +73,10 @@ namespace Ellipse2D
             {
                 rotateTransform = _ellipseFinal.RenderTransform as RotateTransform;
                 double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
-                var width = Math.Abs(_width);
-                var height = Math.Abs(_height);
 
-                _ellipse = new Ellipse();
-                _ellipse.Width = width;
-                _ellipse.Height = height;
+                //_ellipse = new Ellipse();
+                _ellipse.Width = Math.Abs(_width);
+                _ellipse.Height = Math.Abs(_height);
                 _ellipse.Stroke = s_mColor;
                 _ellipse.StrokeThickness = s_mThickness;
                 _ellipse.StrokeDashArray = s_Outline;
@@ -132,17 +130,20 @@ namespace Ellipse2D
 
         private void Ellipse_LostFocus(object sender, RoutedEventArgs e)
         {
-            _ellipseFinal.Width = _ellipse.Width;
-            _ellipseFinal.Height = _ellipse.Height;
-            _ellipseFinal.Stroke = _ellipse.Stroke;
-            _ellipseFinal.StrokeThickness = _ellipse.StrokeThickness;
-            _ellipseFinal.StrokeDashArray = _ellipse.StrokeDashArray;
-            _ellipseFinal.Fill = _ellipse.Fill;
-            _ellipseFinal.RenderTransformOrigin = _ellipse.RenderTransformOrigin;
-            _ellipseFinal.RenderTransform = _ellipse.RenderTransform;
+            if(_ellipse != null)
+            {
+                _ellipseFinal.Width = _ellipse.Width;
+                _ellipseFinal.Height = _ellipse.Height;
+                _ellipseFinal.Stroke = _ellipse.Stroke;
+                _ellipseFinal.StrokeThickness = _ellipse.StrokeThickness;
+                _ellipseFinal.StrokeDashArray = _ellipse.StrokeDashArray;
+                _ellipseFinal.Fill = _ellipse.Fill;
+                _ellipseFinal.RenderTransformOrigin = _ellipse.RenderTransformOrigin;
+                _ellipseFinal.RenderTransform = _ellipse.RenderTransform;
 
-            Canvas.SetLeft(_ellipseFinal, Canvas.GetLeft(_ellipse));
-            Canvas.SetTop(_ellipseFinal, Canvas.GetTop(_ellipse));
+                Canvas.SetLeft(_ellipseFinal, Canvas.GetLeft(_ellipse));
+                Canvas.SetTop(_ellipseFinal, Canvas.GetTop(_ellipse));
+            }
 
             _canvas.Children.Remove(_ellipse);
             _ellipse = null;
@@ -174,7 +175,7 @@ namespace Ellipse2D
 
         public IShape Clone()
         {
-            return new Ellipse2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Ellipse2D();
         }
     }
 }

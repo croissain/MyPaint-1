@@ -18,8 +18,10 @@
                      Height="550"
                      Width="950"
                      Loaded="RibbonWindow_Loaded">
-    <DockPanel LastChildFill="True">
+
+    <DockPanel LastChildFill="True" KeyDown="DockPanel_KeyDown">
         <Fluent:Ribbon DockPanel.Dock="Top"
+                       x:Name="HeaderMenu"
                        Panel.ZIndex="9999">
             <Fluent:Ribbon.Menu>
                 <Fluent:Backstage Header="File"
@@ -107,7 +109,41 @@
                         <Fluent:Button.LargeIcon>
                             <materialDesign:PackIcon Kind="ContentCopy" />
                         </Fluent:Button.LargeIcon>
+                        <Fluent:Button.ToolTip>
+                            <Fluent:ScreenTip Title="Copy (Ctrl+C)"
+                                              Width="190"
+                                              Text="Copy the contents to the Clipboard." />
+                        </Fluent:Button.ToolTip>
                     </Fluent:Button>
+                    <StackPanel Orientation="Horizontal">
+                        <Fluent:Button x:Name="undoButton"
+                                       KeyTip="Z"
+                                       Click="undoButton_Click"
+                                       SizeDefinition="Middle">
+                            <Fluent:Button.LargeIcon>
+                                <materialDesign:PackIcon Kind="Undo" />
+                            </Fluent:Button.LargeIcon>
+                            <Fluent:Button.ToolTip>
+                                <Fluent:ScreenTip Title="Undo (Ctrl+Z)"
+                                              Width="190"
+                                              Text="Undo last action" />
+                            </Fluent:Button.ToolTip>
+                        </Fluent:Button>
+                        <Fluent:Button x:Name="redoButton"
+                                       KeyTip="Y"
+                                       Click="redoButton_Click"
+                                       SizeDefinition="Middle">
+                            <Fluent:Button.LargeIcon>
+                                <materialDesign:PackIcon Kind="Redo" />
+                            </Fluent:Button.LargeIcon>
+                            <Fluent:Button.ToolTip>
+                                <Fluent:ScreenTip Title="Redo (Ctrl+Y)"
+                                              Width="190"
+                                              Text="Redo last action" />
+                            </Fluent:Button.ToolTip>
+                        </Fluent:Button>
+                        
+                    </StackPanel>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox x:Name="Image"
                                        Header="Image"

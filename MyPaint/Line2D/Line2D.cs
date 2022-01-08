@@ -62,7 +62,7 @@ namespace Line2D
 
             if(_line != null)
             {
-                _line = new Line();
+                //_line = new Line();
                 _line.X1 = _start.X;
                 _line.Y1 = _start.Y;
                 _line.X2 = _end.X;
@@ -81,7 +81,10 @@ namespace Line2D
 
         private void Line_LostFocus(object sender, RoutedEventArgs e)
         {
-            _lineFinal = _line;
+            if (_line != null)
+            {
+                _lineFinal = _line;
+            }
 
             _canvas.Children.Remove(_line);
             _line = null;
@@ -89,7 +92,7 @@ namespace Line2D
 
         public IShape Clone()
         {
-            return new Line2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Line2D();
         }
     }
 }

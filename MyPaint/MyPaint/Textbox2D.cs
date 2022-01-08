@@ -121,23 +121,24 @@ namespace MyPaint
                 _text.FontWeight = FontWeights.ExtraBold;
             }
 
-            SetPosition(_text, _width, _height);
-            _text.FontSize = 14;
             //SetPosition(_text, _width, _height);
             canvas.Children.Add(_text);
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            _text.Text = _textbox.Text;
-            _text.Width = _textbox.Width;
-            _text.Height = _textbox.Height;
-            _text.RenderTransformOrigin = _textbox.RenderTransformOrigin;
-            _text.RenderTransform = _textbox.RenderTransform;
-            _text.TextWrapping = TextWrapping.Wrap;
+            if(_textbox != null)
+            {
+                _text.Text = _textbox.Text;
+                _text.Width = _textbox.Width;
+                _text.Height = _textbox.Height;
+                _text.RenderTransformOrigin = _textbox.RenderTransformOrigin;
+                _text.RenderTransform = _textbox.RenderTransform;
+                _text.TextWrapping = TextWrapping.Wrap;
 
-            Canvas.SetLeft(_text, Canvas.GetLeft(_textbox));
-            Canvas.SetTop(_text, Canvas.GetTop(_textbox));
+                Canvas.SetLeft(_text, Canvas.GetLeft(_textbox));
+                Canvas.SetTop(_text, Canvas.GetTop(_textbox));
+            }
 
             _canvas.Children.Remove(_rect);
             _canvas.Children.Remove(_textbox);
@@ -171,7 +172,7 @@ namespace MyPaint
 
         public IShape Clone()
         {
-            return new Textbox2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Textbox2D();
         }
     }
 }
