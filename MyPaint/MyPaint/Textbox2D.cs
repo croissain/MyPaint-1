@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace MyPaint
 {
@@ -35,6 +37,10 @@ namespace MyPaint
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
         public int s_Style { get; set; }
+        public Adorner currAdnr { get; set; }
+        public AdornerLayer adnrLayer { get; set; }
+
+        RotateTransform rotateTransform = new RotateTransform();
 
         public void HandleStart(double x, double y)
         {
@@ -50,9 +56,12 @@ namespace MyPaint
 
         public void HandleEnd(double x, double y)
         {
-            if(_textbox != null)
+            if (_textbox != null)
             {
                 _textbox.Focus();
+                _rect.Stroke = Brushes.Transparent;
+                currAdnr = new RectangleAdorner(_textbox);
+                adnrLayer.Add(currAdnr);
             }
         }
 
@@ -64,6 +73,8 @@ namespace MyPaint
 
             if (_rect != null && _textbox != null)
             {
+                rotateTransform = _text.RenderTransform as RotateTransform;
+                double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
                 var width = Math.Abs(_width);
                 var height = Math.Abs(_height);
 
@@ -80,13 +91,17 @@ namespace MyPaint
                 _textbox.Foreground = s_mColor;
                 _textbox.FontFamily = s_FontFamily;
                 _textbox.FontSize = s_FontSize;
+                _textbox.Background = Brushes.Transparent;
                 _textbox.BorderBrush = Brushes.Transparent;
+                _textbox.RenderTransformOrigin = new Point(0.5, 0.5);
+                _textbox.RenderTransform = new RotateTransform(angle);
                 _textbox.LostFocus += TextBox_LostFocus;
 
                 SetPosition(_rect, _width, _height);
                 SetPosition(_textbox, _width, _height);
                 canvas.Children.Add(_textbox);
                 canvas.Children.Add(_rect);
+                adnrLayer = AdornerLayer.GetAdornerLayer(canvas);
             }
 
             _text.Foreground = s_mColor;
@@ -106,13 +121,24 @@ namespace MyPaint
                 _text.FontWeight = FontWeights.ExtraBold;
             }
 
-            SetPosition(_text, _width, _height);
+            //SetPosition(_text, _width, _height);
             canvas.Children.Add(_text);
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            _text.Text = _textbox.Text;
+            if(_textbox != null)
+            {
+                _text.Text = _textbox.Text;
+                _text.Width = _textbox.Width;
+                _text.Height = _textbox.Height;
+                _text.RenderTransformOrigin = _textbox.RenderTransformOrigin;
+                _text.RenderTransform = _textbox.RenderTransform;
+                _text.TextWrapping = TextWrapping.Wrap;
+
+                Canvas.SetLeft(_text, Canvas.GetLeft(_textbox));
+                Canvas.SetTop(_text, Canvas.GetTop(_textbox));
+            }
 
             _canvas.Children.Remove(_rect);
             _canvas.Children.Remove(_textbox);
@@ -146,7 +172,7 @@ namespace MyPaint
 
         public IShape Clone()
         {
-            return new Textbox2D() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Textbox2D();
         }
     }
 }

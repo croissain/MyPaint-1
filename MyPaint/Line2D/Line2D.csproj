@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Adorner\Adorner.csproj" />
     <ProjectReference Include="..\Contract\Contract.csproj" />
   </ItemGroup>
 

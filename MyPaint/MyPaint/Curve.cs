@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Line2D;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace MyPaint
 {
@@ -26,6 +27,14 @@ namespace MyPaint
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
         public int s_Style { get; set; }
+        public Adorner currAdnr
+        {
+            get; set;
+        }
+        public AdornerLayer adnrLayer
+        {
+            get; set;
+        }
 
         public void HandleStart(double x, double y)
         {
@@ -80,7 +89,7 @@ namespace MyPaint
 
         public IShape Clone()
         {
-            return new Curve() { s_mColor = new SolidColorBrush(Colors.Red), s_mThickness = 2 };
+            return new Curve();
         }
     }
 }
