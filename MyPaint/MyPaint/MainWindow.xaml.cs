@@ -312,65 +312,74 @@ namespace MyPaint
 
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            _isDrawing = true;
-            Point pos = e.GetPosition(paintCanvas);
-            _preview.HandleStart(pos.X, pos.Y);
+            if (Keyboard.Modifiers != ModifierKeys.Shift)
+            {
+                _isDrawing = true;
+                Point pos = e.GetPosition(paintCanvas);
+                _preview.HandleStart(pos.X, pos.Y);
+            }
         }
 
         private void paint_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_isDrawing)
+            if (Keyboard.Modifiers != ModifierKeys.Shift)
             {
-                Point pos = e.GetPosition(paintCanvas);
-                _preview.HandleMove(pos.X, pos.Y);
-
-                // Xoá hết các hình vẽ cũ
-                paintCanvas.Children.Clear();
-
-                // Vẽ lại các hình trước đó
-                foreach (var shape in _shapes)
+                if (_isDrawing)
                 {
-                    shape.Draw(paintCanvas);
+                    Point pos = e.GetPosition(paintCanvas);
+                    _preview.HandleMove(pos.X, pos.Y);
+
+                    // Xoá hết các hình vẽ cũ
+                    paintCanvas.Children.Clear();
+
+                    // Vẽ lại các hình trước đó
+                    foreach (var shape in _shapes)
+                    {
+                        shape.Draw(paintCanvas);
+                    }
+
+                    // Vẽ hình preview đè lên
+                    _preview.Draw(paintCanvas);
+
+                    //Title = $"{pos.X} {pos.Y}";
                 }
-
-                // Vẽ hình preview đè lên
-                _preview.Draw(paintCanvas);
-
-                //Title = $"{pos.X} {pos.Y}";
             }
         }
 
         private void paint_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            _isDrawing = false;
-
-            // Thêm đối tượng cuối cùng vào mảng quản lí        
-            _shapes.Add(_preview);
-            //Shape currShape = (Shape)_preview;
-
-            // Ve lai Xoa toan bo
-            paintCanvas.Children.Clear();
-
-            // Ve lai tat ca cac hinh
-            foreach (var shape in _shapes)
+            if (Keyboard.Modifiers != ModifierKeys.Shift)
             {
-                shape.Draw(paintCanvas);
+                _isDrawing = false;
+
+                // Thêm đối tượng cuối cùng vào mảng quản lí        
+                _shapes.Add(_preview);
+                //Shape currShape = (Shape)_preview;
+
+                // Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+
+                //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
+                Point pos = e.GetPosition(paintCanvas);
+                _preview.HandleEnd(pos.X, pos.Y);
+
+                // Sinh ra đối tượng mẫu kế
+                _preview = _prototypes[_selectedShapeName].Clone();
+                _preview.s_mColor = _selectedmColor;
+                _preview.s_sColor = _selectedsColor;
+                _preview.s_mThickness = _selectedSize;
+                _preview.s_Outline = _selectedOutline;
+                _preview.s_Fill = _selectedFill;
+                _preview.s_FontFamily = _selectedFontFamily;
+                _preview.s_FontSize = _selectedFontSize;
+                _preview.s_Style = _selectedStyle;
             }
-
-            //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
-            Point pos = e.GetPosition(paintCanvas);
-            _preview.HandleEnd(pos.X, pos.Y);
-
-            // Sinh ra đối tượng mẫu kế
-            _preview = _prototypes[_selectedShapeName].Clone();
-            _preview.s_mColor = _selectedmColor;
-            _preview.s_sColor = _selectedsColor;
-            _preview.s_mThickness = _selectedSize;
-            _preview.s_Outline = _selectedOutline;
-            _preview.s_Fill = _selectedFill;
-            _preview.s_FontFamily = _selectedFontFamily;
-            _preview.s_FontSize = _selectedFontSize;
-            _preview.s_Style = _selectedStyle;
         }
 
         private void buttonEraser_Click(object sender, RoutedEventArgs e)
@@ -605,22 +614,22 @@ namespace MyPaint
 
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
         {
-            Picker.MouseLeftButtonDown += (sender, e) =>
-            {
-                Point P = e.GetPosition(this);
-                double X = P.X;
-                double Y = P.Y;
-                RenderTargetBitmap Render = new RenderTargetBitmap((int)Picker.ActualWidth, (int)Picker.ActualHeight, 96, 96, PixelFormats.Default);
-                Render.Render(Picker);
+            //Picker.MouseLeftButtonDown += (sender, e) =>
+            //{
+            //    Point P = e.GetPosition(this);
+            //    double X = P.X;
+            //    double Y = P.Y;
+            //    RenderTargetBitmap Render = new RenderTargetBitmap((int)Picker.ActualWidth, (int)Picker.ActualHeight, 96, 96, PixelFormats.Default);
+            //    Render.Render(Picker);
 
-                CroppedBitmap Cropped = new CroppedBitmap(Render, new Int32Rect((int)X, (int)Y, 1, 1));
-                byte[] Pixels = new byte[4];
-                Cropped.CopyPixels(Pixels, 4, 0);
+            //    CroppedBitmap Cropped = new CroppedBitmap(Render, new Int32Rect((int)X, (int)Y, 1, 1));
+            //    byte[] Pixels = new byte[4];
+            //    Cropped.CopyPixels(Pixels, 4, 0);
 
-                mainColor.Background = new SolidColorBrush(Color.FromArgb(Pixels[3], Pixels[2], Pixels[1], Pixels[0]));
-                _selectedmColor = mainColor.Background;
-                _preview.s_mColor = mainColor.Background;
-            };
+            //    mainColor.Background = new SolidColorBrush(Color.FromArgb(Pixels[3], Pixels[2], Pixels[1], Pixels[0]));
+            //    _selectedmColor = mainColor.Background;
+            //    _preview.s_mColor = mainColor.Background;
+            //};
         }
     }
 }
