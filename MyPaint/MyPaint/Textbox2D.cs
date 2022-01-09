@@ -84,7 +84,7 @@ namespace MyPaint
                 _rect.StrokeThickness = 1;
                 _rect.StrokeDashArray = new DoubleCollection() { 3, 2 };
 
-                _textbox = new TextBox();
+                //_textbox = new TextBox();
                 _textbox.Width = width;
                 _textbox.Height = height;
                 _textbox.TextWrapping = TextWrapping.Wrap;

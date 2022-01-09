@@ -15,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -109,11 +110,11 @@ namespace MyPaint
             {
                 var button = new Button();
                 button.Name = color.Name;
-                //button.Style = StaticResource.MaterialDesignFloatingActionMiniLightButton;
                 button.Height = 20;
                 button.Width = 20;
                 button.Margin = new Thickness(2);
                 button.Background = new SolidColorBrush((Color)color.GetValue(null, null));
+                button.Focusable = false;
 
                 button.Click += colorButton_Click;
                 colors.Children.Add(button);
@@ -160,6 +161,7 @@ namespace MyPaint
             undoButton.IsEnabled = false;
             redoButton.IsEnabled = false;
         }
+
 
         private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

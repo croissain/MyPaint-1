@@ -21,6 +21,7 @@ namespace MyPaint
             fontCbb.Size = Fluent.RibbonControlSize.Middle;
             fontCbb.SelectedIndex = 0;
             fontCbb.SelectionChanged += FontCbb_SelectionChanged;
+            fontCbb.Focusable = false;
             fontCbb.ItemsSource = fontList;
 
             //Combobox chọn fontsize
@@ -30,6 +31,7 @@ namespace MyPaint
             fontSizeCbb.Size = Fluent.RibbonControlSize.Middle;
             fontSizeCbb.SelectedIndex = 4;
             fontSizeCbb.SelectionChanged += FontSizeCbb_SelectionChanged;
+            fontSizeCbb.Focusable = false;
             fontSizeCbb.ItemsSource = new List<Double> { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 48, 72 };
 
             //Radio button chọn style
@@ -43,6 +45,7 @@ namespace MyPaint
                 GroupName = "Style",
             };
             radioBold.Checked += RadioButton_Checked;
+            radioBold.Focusable = false;
 
             RadioButton radioItalic = new Fluent.RadioButton()
             {
@@ -54,6 +57,7 @@ namespace MyPaint
                 GroupName = "Style",
             };
             radioItalic.Checked += RadioButton_Checked;
+            radioItalic.Focusable = false;
 
             RadioButton radioUnderline = new Fluent.RadioButton()
             {
@@ -63,6 +67,7 @@ namespace MyPaint
                 GroupName = "Style",
             };
             radioUnderline.Checked += RadioButton_Checked;
+            radioUnderline.Focusable = false;
 
             StackPanel subStack = new StackPanel() { Orientation = Orientation.Horizontal};
             subStack.Children.Add(radioBold);

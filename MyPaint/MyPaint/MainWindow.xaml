@@ -201,6 +201,7 @@
 
                         <Fluent:Button x:Name="buttonPencil"
                                        SizeDefinition="Small"
+                                       Focusable="False"
                                        Click="buttonPencil_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Pencil"
@@ -210,6 +211,7 @@
                         </Fluent:Button>
                         <Fluent:SplitButton x:Name="buttonBucket"
                                        SizeDefinition="Small"
+                                            Focusable="False"
                                        Click="buttonBucket_Click">
                             <Fluent:SplitButton.LargeIcon>
                                 <materialDesign:PackIcon Kind="FormatColorFill"
@@ -283,6 +285,7 @@
                         <Fluent:Button x:Name="buttonEyedrop"
                                        HorizontalAlignment="Left"
                                        SizeDefinition="Small"
+                                       Focusable="False"
                                        Click="buttonEyedrop_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Eyedropper"
@@ -292,6 +295,7 @@
                         </Fluent:Button>
                         <Fluent:Button x:Name="buttonZoom"
                                        HorizontalAlignment="Left"
+                                       Focusable="False"
                                        SizeDefinition="Small">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Magnify"
@@ -352,7 +356,8 @@
                                          Margin="0, 10, 5, 5"
                                          ToolBar.OverflowMode="Never"
                                          SelectionChanged="Outline_SelectionChanged" 
-                                         VerticalAlignment="Top">
+                                         VerticalAlignment="Top"
+                                         Focusable="False">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -366,7 +371,7 @@
                         </Fluent:ComboBox>
 
                         <Fluent:SplitButton x:Name="ChooseSizeButton"
-                        Header="Size" SizeDefinition="Large">
+                        Header="Size" SizeDefinition="Large" Focusable="False">
                             <Fluent:SplitButton.LargeIcon>
                                 <materialDesign:PackIcon Kind="NotificationClearAll"
                                                      VerticalAlignment="Center"
@@ -471,6 +476,7 @@
                                        BorderBrush="Gray"
                                        Height="45"
                                        Margin="4,4"
+                                       Focusable="False"
                                        Click="mainColor_Click">
                         </Fluent:Button>
                         <TextBlock Text="color 1"></TextBlock>
@@ -481,6 +487,7 @@
                                        BorderBrush="Gray"
                                        Height="45"
                                        Margin="4,4"
+                                       Focusable="False"
                                        Click="subColor_Click">
                         </Fluent:Button>
                         <TextBlock Text="color 2"></TextBlock>
@@ -494,6 +501,7 @@
                     <Fluent:Button x:Name="moreColorButton"
                                    Header="More color"
                                    SizeDefinition="Large"
+                                   Focusable="False"
                                    Click="moreColorButton_Click">
 
                         <Fluent:Button.LargeIcon>
