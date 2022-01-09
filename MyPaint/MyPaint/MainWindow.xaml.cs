@@ -331,32 +331,38 @@ namespace MyPaint
 
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            _isDrawing = true;
-            Point pos = e.GetPosition(paintCanvas);
-            _preview.HandleStart(pos.X, pos.Y);
-            _startPoint = new Point(pos.X, pos.Y);
+            if (Keyboard.Modifiers != ModifierKeys.Shift)
+            {
+                _isDrawing = true;
+                Point pos = e.GetPosition(paintCanvas);
+                _preview.HandleStart(pos.X, pos.Y);
+                _startPoint = new Point(pos.X, pos.Y);
+            }
         }
 
         private void paint_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_isDrawing)
+            if (Keyboard.Modifiers != ModifierKeys.Shift)
             {
-                Point pos = e.GetPosition(paintCanvas);
-                _preview.HandleMove(pos.X, pos.Y);
-
-                // Xoá hết các hình vẽ cũ
-                paintCanvas.Children.Clear();
-
-                // Vẽ lại các hình trước đó
-                foreach (var shape in _shapes)
+                if (_isDrawing)
                 {
-                    shape.Draw(paintCanvas);
+                    Point pos = e.GetPosition(paintCanvas);
+                    _preview.HandleMove(pos.X, pos.Y);
+
+                    // Xoá hết các hình vẽ cũ
+                    paintCanvas.Children.Clear();
+
+                    // Vẽ lại các hình trước đó
+                    foreach (var shape in _shapes)
+                    {
+                        shape.Draw(paintCanvas);
+                    }
+
+                    // Vẽ hình preview đè lên
+                    _preview.Draw(paintCanvas);
+
+                    //Title = $"{pos.X} {pos.Y}";
                 }
-
-                // Vẽ hình preview đè lên
-                _preview.Draw(paintCanvas);
-
-                //Title = $"{pos.X} {pos.Y}";
             }
         }
 
@@ -573,22 +579,22 @@ namespace MyPaint
 
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
         {
-            Picker.MouseLeftButtonDown += (sender, e) =>
-            {
-                Point P = e.GetPosition(this);
-                double X = P.X;
-                double Y = P.Y;
-                RenderTargetBitmap Render = new RenderTargetBitmap((int)Picker.ActualWidth, (int)Picker.ActualHeight, 96, 96, PixelFormats.Default);
-                Render.Render(Picker);
+            //Picker.MouseLeftButtonDown += (sender, e) =>
+            //{
+            //    Point P = e.GetPosition(this);
+            //    double X = P.X;
+            //    double Y = P.Y;
+            //    RenderTargetBitmap Render = new RenderTargetBitmap((int)Picker.ActualWidth, (int)Picker.ActualHeight, 96, 96, PixelFormats.Default);
+            //    Render.Render(Picker);
 
-                CroppedBitmap Cropped = new CroppedBitmap(Render, new Int32Rect((int)X, (int)Y, 1, 1));
-                byte[] Pixels = new byte[4];
-                Cropped.CopyPixels(Pixels, 4, 0);
+            //    CroppedBitmap Cropped = new CroppedBitmap(Render, new Int32Rect((int)X, (int)Y, 1, 1));
+            //    byte[] Pixels = new byte[4];
+            //    Cropped.CopyPixels(Pixels, 4, 0);
 
-                mainColor.Background = new SolidColorBrush(Color.FromArgb(Pixels[3], Pixels[2], Pixels[1], Pixels[0]));
-                _selectedmColor = mainColor.Background;
-                _preview.s_mColor = mainColor.Background;
-            };
+            //    mainColor.Background = new SolidColorBrush(Color.FromArgb(Pixels[3], Pixels[2], Pixels[1], Pixels[0]));
+            //    _selectedmColor = mainColor.Background;
+            //    _preview.s_mColor = mainColor.Background;
+            //};
         }
 
         private void undoButton_Click(object sender, RoutedEventArgs e)
