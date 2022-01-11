@@ -52,7 +52,9 @@ namespace MyPaint
         Brush _selectedFill;
         FontFamily _selectedFontFamily;
         double _selectedFontSize;
-        int _selectedStyle;
+        FontWeight _selectedFontWeight;
+        FontStyle _selectedFontStyle;
+        int _selectedTextDecoration;
         FillColor fillcolor = new FillColor();
         AdornerLayer _adnrLayer;
         bool _isWriting = false;
@@ -136,6 +138,10 @@ namespace MyPaint
             Select2D select = new Select2D();
             _prototypes.Add(select.Name, select);
 
+            // Thêm Image vào danh sách
+            Image2D image = new Image2D();
+            _prototypes.Add(image.Name, image);
+
             //Cấu hình thông số ban đầu
             _selectedShapeName = curve.Name;
             _selectedmColor = new SolidColorBrush(Colors.Black);
@@ -155,11 +161,6 @@ namespace MyPaint
             _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
             OutlineCbbox.ItemsSource = _outlines;
 
-            //Thêm select vào danh sách
-
-            //Thêm enable cho undo và redo
-            undoButton.IsEnabled = false;
-            redoButton.IsEnabled = false;
         }
 
 
@@ -191,6 +192,20 @@ namespace MyPaint
             _selectedFill = fillcolor.Value;
             _preview.s_Fill = _selectedFill;
 
+            int lastIndex = _shapes.Count - 1;
+            if (lastIndex >= 0)
+            {
+                _shapes[lastIndex].s_Fill = _selectedFill;
+
+                //Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                //Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+            }
             //var outline = (OutlineCbbox.SelectedValue as Outline);
             //_selectedOutline = outline.Value;
             //_preview.s_Outline = _selectedOutline;
@@ -201,6 +216,21 @@ namespace MyPaint
             var size = ChooseSize.SelectedValue as Fluent.GalleryItem;
             _selectedSize = Int32.Parse(size.Tag as string);
             _preview.s_mThickness = _selectedSize;
+
+            int lastIndex = _shapes.Count - 1;
+            if (lastIndex >= 0)
+            {
+                _shapes[lastIndex].s_mThickness = _selectedSize;
+
+                //Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                //Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+            }
         }
 
         private void OnLauncherButtonClick(object sender, RoutedEventArgs e)
@@ -223,10 +253,21 @@ namespace MyPaint
                     if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
                     {
                         System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
-                        var pasteImg = new Image();
-                        pasteImg.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                        pasteCanvas.Children.Add(pasteImg);
-                        Console.WriteLine("Clipboard copied to UIElement");
+                        var source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        var pasteImg = new Image() { Source = source };
+
+                        if (pasteImg != null)
+                        {
+                            Image2D image2D = new Image2D();
+                            image2D.image = pasteImg;
+                            image2D.adnrLayer = _adnrLayer;
+                            _shapes.Add(image2D);
+
+                            image2D.HandleStart(10, 10);
+                            image2D.HandleMove(10 + bitmap.Width, 10 + bitmap.Height);
+                            image2D.Draw(paintCanvas);
+                            image2D.HandleEnd(10 + bitmap.Width, 10 + bitmap.Height);
+                        }
                     }
                 }
             }
@@ -292,6 +333,23 @@ namespace MyPaint
                 }
                 _preview.s_Fill = fillcolor.Value;
                 _selectedFill = fillcolor.Value;
+
+                int lastIndex = _shapes.Count - 1;
+                if (lastIndex >= 0)
+                {
+                    _shapes[lastIndex].s_Fill = _selectedFill;
+                    _shapes[lastIndex].s_mColor = _selectedmColor;
+                    _shapes[lastIndex].s_sColor = _selectedsColor;
+
+                    //Ve lai Xoa toan bo
+                    paintCanvas.Children.Clear();
+
+                    //Ve lai tat ca cac hinh
+                    foreach (var shape in _shapes)
+                    {
+                        shape.Draw(paintCanvas);
+                    }
+                }
             }
             else
             {
@@ -318,7 +376,22 @@ namespace MyPaint
                 _preview.s_Fill = fillcolor.Value;
                 _selectedFill = fillcolor.Value;
 
-                //mainColorSelected = true;
+                int lastIndex = _shapes.Count - 1;
+                if (lastIndex >= 0)
+                {
+                    _shapes[lastIndex].s_Fill = _selectedFill;
+                    _shapes[lastIndex].s_mColor = _selectedmColor;
+                    _shapes[lastIndex].s_sColor = _selectedsColor;
+
+                    //Ve lai Xoa toan bo
+                    paintCanvas.Children.Clear();
+
+                    //Ve lai tat ca cac hinh
+                    foreach (var shape in _shapes)
+                    {
+                        shape.Draw(paintCanvas);
+                    }
+                }
             }
         }
 
@@ -327,6 +400,21 @@ namespace MyPaint
             var outline = (OutlineCbbox.SelectedValue as Outline);
             _selectedOutline = outline.Value;
             _preview.s_Outline = _selectedOutline;
+
+            int lastIndex = _shapes.Count - 1;
+            if (lastIndex >= 0)
+            {
+                _shapes[lastIndex].s_Outline = _selectedOutline;
+
+                //Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                //Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+            }
         }
 
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
@@ -337,6 +425,12 @@ namespace MyPaint
                 Point pos = e.GetPosition(paintCanvas);
                 _preview.HandleStart(pos.X, pos.Y);
                 _startPoint = new Point(pos.X, pos.Y);
+
+                if(_selectedShapeName == "Select")
+                {
+                    cutButton.IsEnabled = true;
+                    copyButton.IsEnabled = true;
+                }
             }
         }
 
@@ -397,7 +491,9 @@ namespace MyPaint
                 _preview.s_Fill = _selectedFill;
                 _preview.s_FontFamily = _selectedFontFamily;
                 _preview.s_FontSize = _selectedFontSize;
-                _preview.s_Style = _selectedStyle;
+                _preview.s_FontWeight = _selectedFontWeight;
+                _preview.s_FontStyle = _selectedFontStyle;
+                _preview.s_TextDecoration = _selectedTextDecoration;
 
                 //Enable undo
                 if (_shapes.Count > 0)
@@ -483,7 +579,7 @@ namespace MyPaint
             else if (ans == MessageBoxResult.No)
             {
                 _shapes.Clear();
-                pasteCanvas.Children.Clear();
+                //pasteCanvas.Children.Clear();
                 paintCanvas.Children.Clear();
             }
 
@@ -553,9 +649,9 @@ namespace MyPaint
                 }
                 #endregion
                 BitmapSource LoadedBitmap = decoder.Frames[0];
-                pasteCanvas.Width = LoadedBitmap.Width;
-                pasteCanvas.Height = LoadedBitmap.Height;
-                pasteCanvas.Children.Add(new Image() { Source = LoadedBitmap });
+                //pasteCanvas.Width = LoadedBitmap.Width;
+                //pasteCanvas.Height = LoadedBitmap.Height;
+                //pasteCanvas.Children.Add(new Image() { Source = LoadedBitmap });
             }
         }
         #endregion
@@ -571,10 +667,14 @@ namespace MyPaint
             //Xóa đi bảng chọn size, outline và thêm vào bảng chọn font, size, style cho text
             ChooseStyleStack.Children.Clear();
 
+            //_selectedStyle = new List<int>();
+
             GroupBoxTextStyle();
             _preview.s_FontFamily = _selectedFontFamily;
             _preview.s_FontSize = _selectedFontSize;
-            _preview.s_Style = _selectedStyle;
+            _preview.s_FontWeight = _selectedFontWeight;
+            _preview.s_FontStyle = _selectedFontStyle;
+            _preview.s_TextDecoration = _selectedTextDecoration;
         }
 
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
@@ -650,6 +750,83 @@ namespace MyPaint
             else if (e.Key == Key.Y && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 redoButton_Click(sender, e);
+            }
+            else if (e.Key == Key.C && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && copyButton.IsEnabled == true)
+            {
+                copyButton_Click(sender, e);
+            }
+            else if (e.Key == Key.X && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && cutButton.IsEnabled == true)
+            {
+                cutButton_Click(sender, e);
+            }
+            else if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && pasteButton.IsEnabled == true)
+            {
+                pasteButton_Click(sender, e);
+            }
+        }
+
+        private void cutButton_Click(object sender, RoutedEventArgs e)
+        {
+            undoButton.IsEnabled = true;
+            cutButton.IsEnabled = false;
+            copyButton.IsEnabled = false;
+            int lastIndex = _shapes.Count - 1;
+            if (lastIndex >= 0)
+            {
+                var _copyShape = _shapes[lastIndex];
+                _shapes.RemoveAt(lastIndex);
+
+                if (_copyShape.Name == "Select")
+                {
+                    var currentSelect = _copyShape as Select2D;
+
+                    //MemoryStream ms = new MemoryStream();
+                    //System.Windows.Media.Imaging.BmpBitmapEncoder bbe = new BmpBitmapEncoder();
+                    //bbe.Frames.Add(currentSelect._image.Source as BitmapFrame);
+                    //bbe.Save(ms);
+                    //System.Drawing.Image img2 = System.Drawing.Image.FromStream(ms);
+                    //System.Windows.Forms.Clipboard.SetImage(img2);
+
+                    CanvasUltilities.CopyUIElementToClipboard(currentSelect.image as FrameworkElement);
+
+                    //currentSelect._imageFinal = null;
+                    currentSelect.image = null;
+                    _shapes.Add(currentSelect);
+                }
+                
+                // Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+            }
+        }
+
+        private void copyButton_Click(object sender, RoutedEventArgs e)
+        {
+            undoButton.IsEnabled = true;
+            copyButton.IsEnabled = false;
+            cutButton.IsEnabled = false;
+            int lastIndex = _shapes.Count - 1;
+            if (lastIndex >= 0)
+            {
+                var _copyShape = _shapes[lastIndex];
+                _shapes.RemoveAt(lastIndex);
+
+                if (_copyShape.Name == "Select")
+                {
+                    var currentSelect = _copyShape as Select2D;
+
+                    CanvasUltilities.CopyUIElementToClipboard(currentSelect.imageFinal as FrameworkElement);
+
+                    //currentSelect._imageFinal = null;
+                    //currentSelect._image = null;
+                    _shapes.Add(currentSelect);
+                }
+                
             }
         }
     }

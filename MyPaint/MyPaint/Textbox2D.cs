@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace MyPaint
 {
@@ -14,7 +15,8 @@ namespace MyPaint
     {
         BOLD = 1,
         ITALIC = 2,
-        UNDERLINE = 3
+        UNDERLINE = 3,
+        STRIKE = 4
     }
     class Textbox2D : IShape
     {
@@ -34,11 +36,14 @@ namespace MyPaint
         public int s_mThickness { get; set; }
         public DoubleCollection s_Outline { get; set; }
         public Brush s_Fill { get; set; }
-        public FontFamily s_FontFamily { get; set; }
-        public double s_FontSize { get; set; }
-        public int s_Style { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
+        //Text style
+        public FontFamily s_FontFamily { get; set; }
+        public double s_FontSize { get; set; }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
 
         RotateTransform rotateTransform = new RotateTransform();
 
@@ -56,12 +61,18 @@ namespace MyPaint
 
         public void HandleEnd(double x, double y)
         {
+            _rightBottom = new Point2D() { X = x, Y = y };
             if (_textbox != null)
             {
                 _textbox.Focus();
                 _rect.Stroke = Brushes.Transparent;
                 currAdnr = new RectangleAdorner(_textbox);
                 adnrLayer.Add(currAdnr);
+            }
+            if(_rect != null)
+            {
+                _canvas.Children.Remove(_rect);
+                _rect = null;
             }
         }
 
@@ -71,20 +82,25 @@ namespace MyPaint
             var _width = _rightBottom.X - _leftTop.X;
             var _height = _rightBottom.Y - _leftTop.Y;
 
-            if (_rect != null && _textbox != null)
+            rotateTransform = _text.RenderTransform as RotateTransform;
+            double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
+            var width = Math.Abs(_width);
+            var height = Math.Abs(_height);
+            if (_rect != null)
             {
-                rotateTransform = _text.RenderTransform as RotateTransform;
-                double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
-                var width = Math.Abs(_width);
-                var height = Math.Abs(_height);
-
                 _rect.Width = width;
                 _rect.Height = height;
                 _rect.Stroke = new SolidColorBrush(Colors.Blue);
                 _rect.StrokeThickness = 1;
                 _rect.StrokeDashArray = new DoubleCollection() { 3, 2 };
 
-                //_textbox = new TextBox();
+                SetPosition(_rect, _width, _height);
+                canvas.Children.Add(_rect);
+                adnrLayer = AdornerLayer.GetAdornerLayer(canvas);
+            }
+
+            if(_textbox != null)
+            {
                 _textbox.Width = width;
                 _textbox.Height = height;
                 _textbox.TextWrapping = TextWrapping.Wrap;
@@ -97,28 +113,27 @@ namespace MyPaint
                 _textbox.RenderTransform = new RotateTransform(angle);
                 _textbox.LostFocus += TextBox_LostFocus;
 
-                SetPosition(_rect, _width, _height);
                 SetPosition(_textbox, _width, _height);
                 canvas.Children.Add(_textbox);
-                canvas.Children.Add(_rect);
                 adnrLayer = AdornerLayer.GetAdornerLayer(canvas);
             }
 
             _text.Foreground = s_mColor;
             _text.FontSize = s_FontSize;
             _text.FontFamily = s_FontFamily;
-
-            if(s_Style == (int)TextStyle.ITALIC)
-            {
-                _text.FontStyle = FontStyles.Oblique;
-            }
-            else if(s_Style == (int)TextStyle.UNDERLINE)
+            _text.FontWeight = s_FontWeight;
+            _text.FontStyle = s_FontStyle;
+            if (s_TextDecoration == (int)TextStyle.UNDERLINE)
             {
                 _text.TextDecorations = TextDecorations.Underline;
             }
-            else if(s_Style == (int)TextStyle.BOLD)
+            else if(s_TextDecoration == (int)TextStyle.STRIKE)
             {
-                _text.FontWeight = FontWeights.ExtraBold;
+                _text.TextDecorations = TextDecorations.Strikethrough;
+            }
+            else
+            {
+                _text.TextDecorations = null;
             }
 
             //SetPosition(_text, _width, _height);
@@ -140,9 +155,7 @@ namespace MyPaint
                 Canvas.SetTop(_text, Canvas.GetTop(_textbox));
             }
 
-            _canvas.Children.Remove(_rect);
             _canvas.Children.Remove(_textbox);
-            _rect = null;
             _textbox = null;
         }
 
