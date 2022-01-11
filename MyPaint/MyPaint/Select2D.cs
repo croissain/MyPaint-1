@@ -19,8 +19,8 @@ namespace MyPaint
         private Point2D _rightBottom = new Point2D();
 
         private Rectangle _rect = null;
-        private Image _image = null;
-        private Image _imageFinal = new Image();
+        public Image image = null;
+        public Image imageFinal = new Image();
         private Canvas _canvas;
 
         public string Name => "Select";
@@ -33,7 +33,9 @@ namespace MyPaint
         public Brush s_Fill { get; set; }
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
-        public int s_Style { get; set; }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
 
@@ -47,26 +49,32 @@ namespace MyPaint
         public void HandleMove(double x, double y)
         {
             _rightBottom = new Point2D() { X = x, Y = y };
-            if(_rect != null)
+            if (_rect != null)
             {
                 _canvas.Children.Remove(_rect);
             }
-            if(_image != null)
+            if (image != null)
             {
-                _canvas.Children.Remove(_image);
+                _canvas.Children.Remove(image);
             }
-            _image = CanvasUltilities.Crop(_canvas, _leftTop.X, _leftTop.Y, Math.Abs(x - _leftTop.X), Math.Abs(y - _leftTop.Y));
             _rect = new Rectangle();
+            image = CanvasUltilities.Crop(_canvas, _leftTop.X, _leftTop.Y, Math.Abs(x - _leftTop.X), Math.Abs(y - _leftTop.Y));
         }
 
         public void HandleEnd(double x, double y)
         {
-            if (_image != null)
+            _rightBottom = new Point2D() { X = x, Y = y };
+            if (image != null)
             {
-                _image.Focusable = true;
-                _image.Focus();
-                currAdnr = new RectangleAdorner(_image);
+                image.Focusable = true;
+                image.Focus();
+                currAdnr = new RectangleAdorner(image);
                 adnrLayer.Add(currAdnr);
+            }
+            if (_rect != null)
+            {
+                _rect.StrokeThickness = 0;
+                _rect.Fill = Brushes.White;
             }
         }
 
@@ -76,53 +84,85 @@ namespace MyPaint
             var _width = _rightBottom.X - _leftTop.X;
             var _height = _rightBottom.Y - _leftTop.Y;
 
-            if (_rect != null && _image != null)
+            if (_rect != null && image != null)
             {
-                rotateTransform = _imageFinal.RenderTransform as RotateTransform;
-                double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;     
+                double angle = 0;
+                if (imageFinal != null)
+                {
+                    rotateTransform = imageFinal.RenderTransform as RotateTransform;
+                    angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
+                }
 
-                _rect.Width = Math.Abs(_width);
-                _rect.Height = Math.Abs(_height);
+                var width = Math.Abs(_width);
+                var height = Math.Abs(_height);
+
+                _rect.Width = width + 2;
+                _rect.Height = height + 2;
                 _rect.Stroke = new SolidColorBrush(Colors.Blue);
                 _rect.StrokeThickness = 1;
                 _rect.Fill = Brushes.Transparent;
                 _rect.StrokeDashArray = new DoubleCollection() { 3, 2 };
-
-                _image.Width = Math.Abs(_width);
-                _image.Height = Math.Abs(_height);
-                _image.RenderTransformOrigin = new Point(0.5, 0.5);
-                _image.RenderTransform = new RotateTransform(angle);
-                _image.LostFocus += Image_LostFocus;
-
-                SetPosition(_rect, _width, _height);
+                if (_width > 0 && _height > 0)
+                {
+                    Canvas.SetLeft(_rect, _leftTop.X - 1);
+                    Canvas.SetTop(_rect, _leftTop.Y - 1);
+                }
+                else if (_width > 0 && _height < 0)
+                {
+                    Canvas.SetLeft(_rect, _leftTop.X - 1);
+                    Canvas.SetTop(_rect, _rightBottom.Y - 1);
+                }
+                else if (_width < 0 && _height > 0)
+                {
+                    Canvas.SetLeft(_rect, _rightBottom.X - 1);
+                    Canvas.SetTop(_rect, _leftTop.Y - 1);
+                }
+                else
+                {
+                    Canvas.SetLeft(_rect, _rightBottom.X - 1);
+                    Canvas.SetTop(_rect, _rightBottom.Y - 1);
+                }
                 canvas.Children.Add(_rect);
 
-                SetPosition(_image, _width, _height);
-                canvas.Children.Add(_image);
+                image.Width = width;
+                image.Height = height;
+                image.RenderTransformOrigin = new Point(0.5, 0.5);
+                image.RenderTransform = new RotateTransform(angle);
+                image.LostFocus += Image_LostFocus;
+                SetPosition(image, _width, _height);
+                canvas.Children.Add(image);
+
                 adnrLayer = AdornerLayer.GetAdornerLayer(canvas);
             }
 
-            //SetPosition(_imageFinal, _width, _height);
-            _canvas.Children.Add(_imageFinal);
+            if (_rect != null && _rect.Fill == Brushes.White)
+            {
+                canvas.Children.Add(_rect);
+            }
+            if (imageFinal != null)
+            {
+                //SetPosition(_imageFinal, _width, _height);
+                canvas.Children.Add(imageFinal);
+            }
         }
 
         private void Image_LostFocus(object sender, RoutedEventArgs e)
         {
-            if(_image != null)
+            if(image != null && imageFinal != null)
             {
-                _imageFinal.Source = _image.Source;
-                _imageFinal.Width = _image.Width;
-                _imageFinal.Height = _image.Height;
-                _imageFinal.RenderTransformOrigin = _image.RenderTransformOrigin;
-                _imageFinal.RenderTransform = _image.RenderTransform;
-                Canvas.SetLeft(_imageFinal, Canvas.GetLeft(_image));
-                Canvas.SetTop(_imageFinal, Canvas.GetTop(_image));
+                imageFinal.Source = image.Source;
+                imageFinal.Width = image.Width;
+                imageFinal.Height = image.Height;
+                imageFinal.RenderTransformOrigin = image.RenderTransformOrigin;
+                imageFinal.RenderTransform = image.RenderTransform;
+                Canvas.SetLeft(imageFinal, Canvas.GetLeft(image));
+                Canvas.SetTop(imageFinal, Canvas.GetTop(image));
             }
 
-            _canvas.Children.Remove(_rect);
-            _canvas.Children.Remove(_image);
-            _rect = null;
-            _image = null;
+            //_canvas.Children.Remove(_rect);
+            _canvas.Children.Remove(image);
+            //_rect = null;
+            image = null;
         }
 
         private void SetPosition(UIElement shape, double width, double height)

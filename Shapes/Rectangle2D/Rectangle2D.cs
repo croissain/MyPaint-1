@@ -29,7 +29,9 @@ namespace Rectangle2D
         public DoubleCollection s_Outline { get; set; }
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
-        public int s_Style { get; set; }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
         public Brush s_Fill { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
@@ -68,7 +70,6 @@ namespace Rectangle2D
                 rotateTransform = _rectangleFinal.RenderTransform as RotateTransform;
                 double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
 
-                //_rectangle = new Rectangle();
                 _rectangle.Width = Math.Abs(_width);
                 _rectangle.Height = Math.Abs(_height);
                 _rectangle.Stroke = s_mColor;
