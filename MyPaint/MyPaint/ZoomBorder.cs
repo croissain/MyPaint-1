@@ -103,7 +103,6 @@ namespace PanAndZoom
             }
         }
 
-        // bỏ phần pan vì trùng với vẽ shape
         private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (child != null && Keyboard.Modifiers == ModifierKeys.Shift)
@@ -113,6 +112,9 @@ namespace PanAndZoom
                 origin = new Point(tt.X, tt.Y);
                 this.Cursor = Cursors.Hand;
                 child.CaptureMouse();
+            } else
+            {
+                return;
             }
         }
 

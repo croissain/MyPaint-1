@@ -577,22 +577,7 @@ namespace MyPaint
 
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
         {
-            //Picker.MouseLeftButtonDown += (sender, e) =>
-            //{
-            //    Point P = e.GetPosition(this);
-            //    double X = P.X;
-            //    double Y = P.Y;
-            //    RenderTargetBitmap Render = new RenderTargetBitmap((int)Picker.ActualWidth, (int)Picker.ActualHeight, 96, 96, PixelFormats.Default);
-            //    Render.Render(Picker);
-
-            //    CroppedBitmap Cropped = new CroppedBitmap(Render, new Int32Rect((int)X, (int)Y, 1, 1));
-            //    byte[] Pixels = new byte[4];
-            //    Cropped.CopyPixels(Pixels, 4, 0);
-
-            //    mainColor.Background = new SolidColorBrush(Color.FromArgb(Pixels[3], Pixels[2], Pixels[1], Pixels[0]));
-            //    _selectedmColor = mainColor.Background;
-            //    _preview.s_mColor = mainColor.Background;
-            //};
+            
         }
 
         private void undoButton_Click(object sender, RoutedEventArgs e)

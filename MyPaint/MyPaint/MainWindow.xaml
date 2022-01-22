@@ -19,7 +19,8 @@
                      Width="950"
                      Loaded="RibbonWindow_Loaded">
 
-    <DockPanel LastChildFill="True" KeyDown="DockPanel_KeyDown">
+    <DockPanel LastChildFill="True"
+               KeyDown="DockPanel_KeyDown">
         <Fluent:Ribbon DockPanel.Dock="Top"
                        x:Name="HeaderMenu"
                        Panel.ZIndex="9999">
@@ -125,8 +126,8 @@
                             </Fluent:Button.LargeIcon>
                             <Fluent:Button.ToolTip>
                                 <Fluent:ScreenTip Title="Undo (Ctrl+Z)"
-                                              Width="190"
-                                              Text="Undo last action" />
+                                                  Width="190"
+                                                  Text="Undo last action" />
                             </Fluent:Button.ToolTip>
                         </Fluent:Button>
                         <Fluent:Button x:Name="redoButton"
@@ -138,11 +139,11 @@
                             </Fluent:Button.LargeIcon>
                             <Fluent:Button.ToolTip>
                                 <Fluent:ScreenTip Title="Redo (Ctrl+Y)"
-                                              Width="190"
-                                              Text="Redo last action" />
+                                                  Width="190"
+                                                  Text="Redo last action" />
                             </Fluent:Button.ToolTip>
                         </Fluent:Button>
-                        
+
                     </StackPanel>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox x:Name="Image"
@@ -213,12 +214,12 @@
                             </Fluent:Button.LargeIcon>
                         </Fluent:Button>
                         <Fluent:SplitButton x:Name="buttonBucket"
-                                       SizeDefinition="Small"
-                                       Click="buttonBucket_Click">
+                                            SizeDefinition="Small"
+                                            Click="buttonBucket_Click">
                             <Fluent:SplitButton.LargeIcon>
                                 <materialDesign:PackIcon Kind="FormatColorFill"
                                                          VerticalAlignment="Center"
-                                                         HorizontalAlignment="Center"/>
+                                                         HorizontalAlignment="Center" />
                             </Fluent:SplitButton.LargeIcon>
                             <Fluent:Gallery GroupBy="Tag"
                                             Name="ChooseFill"
@@ -349,124 +350,134 @@
                     </StackPanel>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Styles">
-                    <StackPanel x:Name="ChooseStyleStack" Orientation="Horizontal">
+                    <StackPanel x:Name="ChooseStyleStack"
+                                Orientation="Horizontal">
                         <Fluent:ComboBox Name="OutlineCbbox"
                                          IsReadOnly="True"
-                                         Text="Outline" Width="100"
+                                         Text="Outline"
+                                         Width="100"
                                          Margin="0, 10, 5, 5"
                                          ToolBar.OverflowMode="Never"
-                                         SelectionChanged="Outline_SelectionChanged" 
+                                         SelectionChanged="Outline_SelectionChanged"
                                          VerticalAlignment="Top">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" Foreground="White" Width="70">
+                                        <TextBlock Text="{Binding Name}"
+                                                   Foreground="White"
+                                                   Width="70">
                                         </TextBlock>
-                                        <Line X1="0" Y1="10" X2="100" Y2="10" StrokeThickness="5"
-                                              Stroke="White" StrokeDashArray="{Binding Value}"/>
+                                        <Line X1="0"
+                                              Y1="10"
+                                              X2="100"
+                                              Y2="10"
+                                              StrokeThickness="5"
+                                              Stroke="White"
+                                              StrokeDashArray="{Binding Value}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </Fluent:ComboBox>
 
                         <Fluent:SplitButton x:Name="ChooseSizeButton"
-                        Header="Size" SizeDefinition="Large">
+                                            Header="Size"
+                                            SizeDefinition="Large">
                             <Fluent:SplitButton.LargeIcon>
                                 <materialDesign:PackIcon Kind="NotificationClearAll"
-                                                     VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center"
-                                                     Height="30"
-                                                     Width="30" />
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"
+                                                         Height="30"
+                                                         Width="30" />
                             </Fluent:SplitButton.LargeIcon>
                             <Fluent:Gallery GroupBy="Tag"
-                                        Name="ChooseSize"
-                                        ItemHeight="32"
-                                        ItemWidth="60"
-                                        Orientation="Vertical"
-                                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                        Selectable="False" 
-                                        SelectionChanged="ChooseSize_SelectionChanged">
+                                            Name="ChooseSize"
+                                            ItemHeight="32"
+                                            ItemWidth="60"
+                                            Orientation="Vertical"
+                                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                            Selectable="False"
+                                            SelectionChanged="ChooseSize_SelectionChanged">
                                 <Fluent:GalleryItem Tag="14">
                                     <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
                                         <Rectangle Fill="White"
-                                               Height="14"
-                                               Width="30"
-                                               Margin="0,5" />
+                                                   Height="14"
+                                                   Width="30"
+                                                   Margin="0,5" />
                                         <TextBlock Margin="8,0,0,0"><Run Text="14" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
                                 <Fluent:GalleryItem Tag="12">
                                     <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
                                         <Rectangle Fill="White"
-                                               Height="12"
-                                               Width="30"
-                                               Margin="0,5" />
+                                                   Height="12"
+                                                   Width="30"
+                                                   Margin="0,5" />
                                         <TextBlock Margin="8,0,0,0"><Run Text="12" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
                                 <Fluent:GalleryItem Tag="10">
                                     <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
                                         <Rectangle Fill="White"
-                                               Height="10"
-                                               Width="30"
-                                               Margin="0,5" />
+                                                   Height="10"
+                                                   Width="30"
+                                                   Margin="0,5" />
                                         <TextBlock Margin="8,0,0,0"><Run Text="10" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
                                 <Fluent:GalleryItem Tag="8">
                                     <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
                                         <Rectangle Fill="White"
-                                               Height="8"
-                                               Width="30"
-                                               Margin="0,5" />
+                                                   Height="8"
+                                                   Width="30"
+                                                   Margin="0,5" />
                                         <TextBlock Margin="8,0,0,0"><Run Text="8" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
                                 <Fluent:GalleryItem Tag="6">
                                     <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
                                         <Rectangle Fill="White"
-                                               Height="6"
-                                               Width="30"
-                                               Margin="0,5" />
+                                                   Height="6"
+                                                   Width="30"
+                                                   Margin="0,5" />
                                         <TextBlock Margin="8,0,0,0"><Run Text="6" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
                                 <Fluent:GalleryItem Tag="4">
                                     <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
                                         <Rectangle Fill="White"
-                                               Height="4"
-                                               Width="30"
-                                               Margin="0,5" />
+                                                   Height="4"
+                                                   Width="30"
+                                                   Margin="0,5" />
                                         <TextBlock Margin="8,0,0,0"><Run Text="4" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
                                 <Fluent:GalleryItem Tag="2">
                                     <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
                                         <Rectangle Fill="White"
-                                               Height="2"
-                                               Width="30"
-                                               Margin="0,5" />
+                                                   Height="2"
+                                                   Width="30"
+                                                   Margin="0,5" />
                                         <TextBlock Margin="8,0,0,0"><Run Text="2" /></TextBlock>
                                     </StackPanel>
                                 </Fluent:GalleryItem>
                             </Fluent:Gallery>
                         </Fluent:SplitButton>
                     </StackPanel>
-                    
+
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Colors">
                     <StackPanel>
@@ -489,11 +500,13 @@
                         </Fluent:Button>
                         <TextBlock Text="color 2"></TextBlock>
                     </StackPanel>
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                    <WrapPanel Margin="4,4"
-                          Height="Auto" Width="148"
-                          x:Name="colors">
-                    </WrapPanel>
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <WrapPanel Margin="4,4"
+                                   Height="Auto"
+                                   Width="148"
+                                   x:Name="colors">
+                        </WrapPanel>
                     </ScrollViewer>
                     <Fluent:Button x:Name="moreColorButton"
                                    Header="More color"
@@ -502,10 +515,10 @@
 
                         <Fluent:Button.LargeIcon>
                             <materialDesign:PackIcon Kind="Palette"
-                                                         VerticalAlignment="Center"
-                                                         HorizontalAlignment="Center"
-                                                         Height="30"
-                                                         Width="30" />
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"
+                                                     Height="30"
+                                                     Width="30" />
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
@@ -514,27 +527,33 @@
             </Fluent:RibbonTabItem>
 
         </Fluent:Ribbon>
-        <zb:ZoomBorder>
-            <DockPanel>
-        <!--<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">-->
-            <Grid Width="950" Height="400" x:Name="fullCanvas">
-                <Canvas x:Name="pasteCanvas"
-                        Background="White">
-                    <Image x:Name="pasteImage"></Image>
-                </Canvas>
-            <Canvas x:Name="paintCanvas"
-                    Loaded="PaintCanvas_Loaded"
-                    Background="Transparent">
-            </Canvas>
+        <ScrollViewer HorizontalScrollBarVisibility="Visible"
+                      VerticalScrollBarVisibility="Visible">
+            <zb:ZoomBorder>
+                <DockPanel>
 
-            <Border Background="Transparent"
-                        MouseDown="paint_MouseDown"
-                        MouseMove="paint_MouseMove"
-                        MouseUp="paint_MouseUp">
-            </Border>
-        </Grid>
-        <!--</ScrollViewer>-->
-            </DockPanel>
-        </zb:ZoomBorder>
+                    <Grid Width="950"
+                          Height="400"
+                          x:Name="fullCanvas">
+                        <Canvas x:Name="pasteCanvas"
+                                Background="White">
+                            <Image x:Name="pasteImage"></Image>
+                        </Canvas>
+                        <Canvas x:Name="paintCanvas"
+                                Loaded="PaintCanvas_Loaded"
+                                Background="Transparent">
+                        </Canvas>
+
+                        <Border Background="Transparent"
+                                MouseDown="paint_MouseDown"
+                                MouseMove="paint_MouseMove"
+                                MouseUp="paint_MouseUp"
+                                x:Name="paintBorder">
+                        </Border>
+                    </Grid>
+
+                </DockPanel>
+            </zb:ZoomBorder>
+        </ScrollViewer>
     </DockPanel>
 </Fluent:RibbonWindow>
