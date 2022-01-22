@@ -31,6 +31,9 @@
                             <Grid>
                             </Grid>
                         </Fluent:BackstageTabItem>
+                        <Fluent:Button Header="Save As" Click="saveAsButton_Click">
+
+                        </Fluent:Button>
                         <Fluent:BackstageTabItem Header="Exit">
 
                         </Fluent:BackstageTabItem>
@@ -532,23 +535,26 @@
             </Fluent:RibbonTabItem>
 
         </Fluent:Ribbon>
-        <zb:ZoomBorder>
+        <!--<zb:ZoomBorder>-->
         <DockPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-            <Grid Width="950" Height="400" x:Name="fullCanvas">
-                <Canvas x:Name="paintCanvas"
+            <Grid Width="850" Height="350" x:Name="fullCanvas" 
+                  HorizontalAlignment="Left" VerticalAlignment="Top"
+                  AllowDrop="True"
+                  Drop="fullCanvas_Drop">
+                    <Canvas x:Name="paintCanvas"
                         Loaded="PaintCanvas_Loaded"
                         Background="White">
-                </Canvas>
+                    </Canvas>
 
-                <Border Background="Transparent"
+                    <Border Background="Transparent"
                             MouseDown="paint_MouseDown"
                             MouseMove="paint_MouseMove"
                             MouseUp="paint_MouseUp">
-                </Border>
-            </Grid>
+                    </Border>
+                </Grid>
         </ScrollViewer>
         </DockPanel>
-        </zb:ZoomBorder>
+        <!--</zb:ZoomBorder>-->
     </DockPanel>
 </Fluent:RibbonWindow>
