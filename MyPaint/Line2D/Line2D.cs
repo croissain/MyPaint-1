@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using MyPaint;
 using System.Collections.Generic;
 
+
 namespace Line2D
 {
     public class Line2D : IShape

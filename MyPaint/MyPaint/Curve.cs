@@ -11,7 +11,7 @@ using System.Windows.Documents;
 
 namespace MyPaint
 {
-    class Curve : IShape
+    public class Curve : IShape
     {
         private List<Line> _lines = new List<Line>();
         private Point2D _start = new Point2D();

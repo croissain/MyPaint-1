@@ -8,10 +8,13 @@ using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -57,6 +60,7 @@ namespace MyPaint
         int _selectedTextDecoration;
         FillColor fillcolor = new FillColor();
         AdornerLayer _adnrLayer;
+        Adorner _adCanvas;
         bool _isWriting = false;
         List<IShape> _bufferShapes = new List<IShape>();
         Point _startPoint;
@@ -64,6 +68,8 @@ namespace MyPaint
         private void PaintCanvas_Loaded(object sender, RoutedEventArgs e)
         {
             _adnrLayer = AdornerLayer.GetAdornerLayer(paintCanvas);
+            _adCanvas = new CanvasAdorner(paintCanvas);
+            _adnrLayer.Add(_adCanvas);
         }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
@@ -161,6 +167,9 @@ namespace MyPaint
             _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
             OutlineCbbox.ItemsSource = _outlines;
 
+            //AdornerLayer adnrLayer = AdornerLayer.GetAdornerLayer(fullCanvas);
+            //adnrLayer.Add(new CanvasAdorner(paintCanvas));
+            //paintCanvas.Focus();
         }
 
 
@@ -649,9 +658,21 @@ namespace MyPaint
                 }
                 #endregion
                 BitmapSource LoadedBitmap = decoder.Frames[0];
-                //pasteCanvas.Width = LoadedBitmap.Width;
-                //pasteCanvas.Height = LoadedBitmap.Height;
-                //pasteCanvas.Children.Add(new Image() { Source = LoadedBitmap });
+                paintCanvas.Width = LoadedBitmap.Width;
+                paintCanvas.Height = LoadedBitmap.Height;
+                Image pasteImg = new Image() { Source = LoadedBitmap };
+                if (pasteImg != null)
+                {
+                    Image2D image2D = new Image2D();
+                    image2D.image = pasteImg;
+                    image2D.adnrLayer = _adnrLayer;
+                    _shapes.Add(image2D);
+
+                    image2D.HandleStart(10, 10);
+                    image2D.HandleMove(10 + LoadedBitmap.Width, 10 + LoadedBitmap.Height);
+                    image2D.Draw(paintCanvas);
+                    //image2D.HandleEnd(10 + LoadedBitmap.Width, 10 + LoadedBitmap.Height);
+                }
             }
         }
         #endregion
@@ -829,6 +850,62 @@ namespace MyPaint
                 
             }
         }
+
+        private void saveAsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "Binary File (*.dat) | *.dat";
+
+            if (dlg.ShowDialog() == true)
+            {
+                string path = dlg.FileName;
+                FileStream stream = new FileStream(path, FileMode.Create);
+
+                foreach (var shape in _shapes)
+                {
+                    //formatter.Serialize(stream, shape);
+                }
+
+                stream.Close();
+            }
+        }
+
+        private void fullCanvas_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
+            {
+                var validExtensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
+                var lst = (IEnumerable<string>)e.Data.GetData(DataFormats.FileDrop);
+                foreach (var ext in lst.Select((f) => System.IO.Path.GetExtension(f)))
+                {
+                    if (!validExtensions.Contains(ext))
+                        System.Windows.MessageBox.Show("Can't drop this file!! Try with another file.", "File not true", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+                foreach (var file in files)
+                {
+                    BitmapImage tmpImage = new BitmapImage((new Uri(file)));
+                    var pasteImg = new Image() { Source = tmpImage };
+
+                    if (pasteImg != null)
+                    {
+                        Image2D image2D = new Image2D();
+                        image2D.image = pasteImg;
+                        image2D.adnrLayer = _adnrLayer;
+                        _shapes.Add(image2D);
+
+                        paintCanvas.Width = tmpImage.Width;
+                        paintCanvas.Height = tmpImage.Height;
+
+                        image2D.HandleStart(0, 0);
+                        image2D.HandleMove(tmpImage.Width, tmpImage.Height);
+                        image2D.Draw(paintCanvas);
+                        //image2D.HandleEnd(tmpImage.Width, tmpImage.Height);
+                    }
+                }               
+            }
+        }
     }
 
     public static class util
@@ -891,5 +968,4 @@ namespace MyPaint
             }
         }
     }
-
 }
