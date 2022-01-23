@@ -24,6 +24,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PanAndZoom;
 
 namespace MyPaint
 {
@@ -64,6 +65,7 @@ namespace MyPaint
         bool _isWriting = false;
         List<IShape> _bufferShapes = new List<IShape>();
         Point _startPoint;
+        private double _zoomValue = 1.0;
 
         private void PaintCanvas_Loaded(object sender, RoutedEventArgs e)
         {
@@ -428,7 +430,7 @@ namespace MyPaint
 
         private void paint_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Keyboard.Modifiers != ModifierKeys.Shift)
+            if (!Keyboard.IsKeyDown(Key.Space))
             {
                 _isDrawing = true;
                 Point pos = e.GetPosition(paintCanvas);
@@ -446,7 +448,7 @@ namespace MyPaint
         private void paint_MouseMove(object sender, MouseEventArgs e)
         {
             Point pos = e.GetPosition(paintCanvas);
-            if (Keyboard.Modifiers != ModifierKeys.Shift)
+            if (!Keyboard.IsKeyDown(Key.Space))
             {
                 if (_isDrawing)
                 {
@@ -701,22 +703,7 @@ namespace MyPaint
 
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
         {
-            //Picker.MouseLeftButtonDown += (sender, e) =>
-            //{
-            //    Point P = e.GetPosition(this);
-            //    double X = P.X;
-            //    double Y = P.Y;
-            //    RenderTargetBitmap Render = new RenderTargetBitmap((int)Picker.ActualWidth, (int)Picker.ActualHeight, 96, 96, PixelFormats.Default);
-            //    Render.Render(Picker);
-
-            //    CroppedBitmap Cropped = new CroppedBitmap(Render, new Int32Rect((int)X, (int)Y, 1, 1));
-            //    byte[] Pixels = new byte[4];
-            //    Cropped.CopyPixels(Pixels, 4, 0);
-
-            //    mainColor.Background = new SolidColorBrush(Color.FromArgb(Pixels[3], Pixels[2], Pixels[1], Pixels[0]));
-            //    _selectedmColor = mainColor.Background;
-            //    _preview.s_mColor = mainColor.Background;
-            //};
+            
         }
 
         private void undoButton_Click(object sender, RoutedEventArgs e)
@@ -908,15 +895,23 @@ namespace MyPaint
             }
         }
 
-        private double _zoomValue = 2.0;
-
         private void paintBorder_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            //_zoomValue += e.Delta > 0 ? -2.0 : 2.0;
+            if (Keyboard.Modifiers == ModifierKeys.Control) {
+                if (e.Delta > 0)
+                {
+                    _zoomValue += 0.1;
+                }
+                else
+                {
+                    _zoomValue -= 0.1;
+                }
 
-            //ScaleTransform scale = new ScaleTransform(_zoomValue, _zoomValue);
-            //paintBorder.LayoutTransform = scale;
-            //e.Handled = true;
+                ScaleTransform scale = new ScaleTransform(_zoomValue, _zoomValue);
+                if(scale.ScaleX >= 0.1)
+                    paintBorder.LayoutTransform = scale;
+                e.Handled = true;
+            }
         }
 
         private void paintCanvas_SizeChanged(object sender, SizeChangedEventArgs e)

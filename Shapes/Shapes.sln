@@ -9,13 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ellipse2D", "Ellipse2D\Elli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Star2D", "Star2D\Star2D.csproj", "{961990CE-D46B-4847-8D74-CC29FAE13748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triangle2D", "Triangle2D\Triangle2D.csproj", "{956AD283-A341-4048-870B-06C4E410CF18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle2D", "Triangle2D\Triangle2D.csproj", "{956AD283-A341-4048-870B-06C4E410CF18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexagon2D", "Hexagon2D\Hexagon2D.csproj", "{C351ADBB-B8FC-4FC1-92A1-ED76E1363BCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexagon2D", "Hexagon2D\Hexagon2D.csproj", "{C351ADBB-B8FC-4FC1-92A1-ED76E1363BCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond2D", "Diamond2D\Diamond2D.csproj", "{D4CAC429-4EE2-4D41-BB4E-EBC7C9A11914}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond2D", "Diamond2D\Diamond2D.csproj", "{D4CAC429-4EE2-4D41-BB4E-EBC7C9A11914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arrow2D", "Arrow2D\Arrow2D.csproj", "{7DCFB020-9AD0-4882-A617-3B64DE9E4CE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arrow2D", "Arrow2D\Arrow2D.csproj", "{7DCFB020-9AD0-4882-A617-3B64DE9E4CE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heart2D", "Heart2D\Heart2D.csproj", "{5EE1D175-6E73-4496-ADFB-7CFB1DF78A36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{7DCFB020-9AD0-4882-A617-3B64DE9E4CE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DCFB020-9AD0-4882-A617-3B64DE9E4CE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DCFB020-9AD0-4882-A617-3B64DE9E4CE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE1D175-6E73-4496-ADFB-7CFB1DF78A36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE1D175-6E73-4496-ADFB-7CFB1DF78A36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE1D175-6E73-4496-ADFB-7CFB1DF78A36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE1D175-6E73-4496-ADFB-7CFB1DF78A36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
