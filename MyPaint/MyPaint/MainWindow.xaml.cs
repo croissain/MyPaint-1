@@ -445,11 +445,11 @@ namespace MyPaint
 
         private void paint_MouseMove(object sender, MouseEventArgs e)
         {
+            Point pos = e.GetPosition(paintCanvas);
             if (Keyboard.Modifiers != ModifierKeys.Shift)
             {
                 if (_isDrawing)
                 {
-                    Point pos = e.GetPosition(paintCanvas);
                     _preview.HandleMove(pos.X, pos.Y);
 
                     // Xoá hết các hình vẽ cũ
@@ -463,10 +463,10 @@ namespace MyPaint
 
                     // Vẽ hình preview đè lên
                     _preview.Draw(paintCanvas);
-
-                    //Title = $"{pos.X} {pos.Y}";
                 }
             }
+
+            Coordinates.Text = $"{Math.Round(pos.X, 3)}, {Math.Round(pos.Y, 3)}";
         }
 
         private void paint_MouseUp(object sender, MouseButtonEventArgs e)
@@ -613,7 +613,8 @@ namespace MyPaint
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
             CreateSaveDialog();
-            util.SaveGridCanvas(this, fullCanvas, 96, save_filename);
+            //util.SaveGridCanvas(this, fullCanvas, 96, save_filename);
+            util.SaveCanvas(this, paintCanvas, 96, save_filename);
         }
         #endregion
 
@@ -906,6 +907,29 @@ namespace MyPaint
                 }               
             }
         }
+
+        private double _zoomValue = 2.0;
+
+        private void paintBorder_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            //_zoomValue += e.Delta > 0 ? -2.0 : 2.0;
+
+            //ScaleTransform scale = new ScaleTransform(_zoomValue, _zoomValue);
+            //paintBorder.LayoutTransform = scale;
+            //e.Handled = true;
+        }
+
+        private void paintCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double width = paintCanvas.Width;
+            double height = paintCanvas.Height;
+            CanvasSize.Text = $"{Math.Round(width)} , {Math.Round(height)} px";
+
+            fullCanvas.Width = width;
+            fullCanvas.Height = height;
+            CanvasBorder.Width = width;
+            CanvasBorder.Height = height;
+        }
     }
 
     public static class util
@@ -914,7 +938,7 @@ namespace MyPaint
         {
             var rtb = new RenderTargetBitmap(
                 (int)window.Width, //width 
-                (int)window.Width, //height 
+                (int)window.Height, //height 
                 dpi, //dpi x 
                 dpi, //dpi y 
                 PixelFormats.Pbgra32// pixelformat 
@@ -927,12 +951,12 @@ namespace MyPaint
         //Lưu paintCanvas
         public static void SaveCanvas(Window window, Canvas canvas, int dpi, string filename)
         {
-            Size size = new Size(window.Width, window.Height);
-            canvas.Measure(size);
+            //Size size = new Size(window.Width, window.Height);
+            //canvas.Measure(size);
 
             var rtb = new RenderTargetBitmap(
-                (int)window.Width, //width 
-                (int)window.Height, //height 
+                (int)canvas.ActualWidth, //width 
+                (int)canvas.ActualHeight, //height 
                 dpi, //dpi x 
                 dpi, //dpi y 
                 PixelFormats.Pbgra32 // pixelformat 
@@ -944,12 +968,12 @@ namespace MyPaint
         //Lưu fullCanvas
         public static void SaveGridCanvas(Window window, Grid canvas, int dpi, string filename)
         {
-            Size size = new Size(window.Width, window.Height);
+            Size size = new Size(canvas.ActualWidth, canvas.ActualHeight);
             canvas.Measure(size);
 
             var rtb = new RenderTargetBitmap(
-                (int)window.Width, //width 
-                (int)window.Height, //height 
+                (int)canvas.ActualWidth, //width 
+                (int)canvas.ActualHeight, //height 
                 dpi, //dpi x 
                 dpi, //dpi y 
                 PixelFormats.Pbgra32 // pixelformat 
