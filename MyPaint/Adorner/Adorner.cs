@@ -487,7 +487,7 @@ namespace MyPaint
             cornerThumb.SnapsToDevicePixels = true;
             cornerThumb.BorderThickness = new Thickness(1);
             cornerThumb.BorderBrush = new SolidColorBrush(Colors.Black);
-            cornerThumb.Background = new SolidColorBrush(Colors.White);
+            cornerThumb.Background = new SolidColorBrush(Colors.Blue);
 
             visualChildren.Add(cornerThumb);
         }

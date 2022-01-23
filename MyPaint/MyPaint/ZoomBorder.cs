@@ -12,6 +12,7 @@ namespace PanAndZoom
         private Point origin;
         private Point start;
 
+
         private TranslateTransform GetTranslateTransform(UIElement element)
         {
             return (TranslateTransform)((TransformGroup)element.RenderTransform)
@@ -88,24 +89,24 @@ namespace PanAndZoom
                 if (!(e.Delta > 0) && (st.ScaleX < .4 || st.ScaleY < .4))
                     return;
 
-                Point relative = e.GetPosition(child);
-                double absoluteX;
-                double absoluteY;
+                //Point relative = e.GetPosition(child);
+                //double absoluteX;
+                //double absoluteY;
 
-                absoluteX = relative.X * st.ScaleX + tt.X;
-                absoluteY = relative.Y * st.ScaleY + tt.Y;
+                //absoluteX = relative.X * st.ScaleX + tt.X;
+                //absoluteY = relative.Y * st.ScaleY + tt.Y;
 
                 st.ScaleX += zoom;
                 st.ScaleY += zoom;
 
-                tt.X = absoluteX - relative.X * st.ScaleX;
-                tt.Y = absoluteY - relative.Y * st.ScaleY;
+                //tt.X = absoluteX - relative.X * st.ScaleX;
+                //tt.Y = absoluteY - relative.Y * st.ScaleY;
             }
         }
 
         private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (child != null && Keyboard.Modifiers == ModifierKeys.Shift)
+            if (child != null && Keyboard.IsKeyDown(Key.Space))
             {
                 var tt = GetTranslateTransform(child);
                 start = e.GetPosition(this);
@@ -120,7 +121,7 @@ namespace PanAndZoom
 
         private void child_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (child != null && Keyboard.Modifiers == ModifierKeys.Shift)
+            if (child != null && Keyboard.IsKeyDown(Key.Space))
             {
                 child.ReleaseMouseCapture();
                 this.Cursor = Cursors.Arrow;
@@ -145,7 +146,6 @@ namespace PanAndZoom
                 }
             }
         }
-
         #endregion
     }
 }

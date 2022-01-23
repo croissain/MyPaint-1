@@ -11,7 +11,7 @@ using System.Windows.Documents;
 
 namespace MyPaint
 {
-    class Curve : IShape
+    public class Curve : IShape
     {
         private List<Line> _lines = new List<Line>();
         private Point2D _start = new Point2D();
@@ -26,7 +26,9 @@ namespace MyPaint
         public Brush s_Fill { get; set; }
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
-        public int s_Style { get; set; }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
         public Adorner currAdnr
         {
             get; set;

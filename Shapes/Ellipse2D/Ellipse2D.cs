@@ -30,7 +30,9 @@ namespace Ellipse2D
         public Brush s_Fill{ get; set; }
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
-        public int s_Style { get; set; }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
 
@@ -74,7 +76,6 @@ namespace Ellipse2D
                 rotateTransform = _ellipseFinal.RenderTransform as RotateTransform;
                 double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
 
-                //_ellipse = new Ellipse();
                 _ellipse.Width = Math.Abs(_width);
                 _ellipse.Height = Math.Abs(_height);
                 _ellipse.Stroke = s_mColor;
@@ -93,39 +94,6 @@ namespace Ellipse2D
             _ellipseFinal.Fill = s_Fill;
 
             canvas.Children.Add(_ellipseFinal);
-
-            //var ellipse = new Ellipse()
-            //{
-            //    Width = width > 0 ? width : -width,
-            //    Height = height > 0 ? height : -height,
-            //    Stroke = s_mColor,
-            //    StrokeThickness = s_mThickness,
-            //    StrokeDashArray = s_Outline,
-            //    Fill = s_Fill,
-            //};
-
-            //if (width > 0 && height > 0)
-            //{
-            //    Canvas.SetLeft(ellipse, _leftTop.X);
-            //    Canvas.SetTop(ellipse, _leftTop.Y);
-            //}
-            //else if (width > 0 && height < 0)
-            //{
-            //    Canvas.SetLeft(ellipse, _leftTop.X);
-            //    Canvas.SetTop(ellipse, _rightBottom.Y);
-            //}
-            //else if (width < 0 && height > 0)
-            //{
-            //    Canvas.SetLeft(ellipse, _rightBottom.X);
-            //    Canvas.SetTop(ellipse, _leftTop.Y);
-            //}
-            //else
-            //{
-            //    Canvas.SetLeft(ellipse, _rightBottom.X);
-            //    Canvas.SetTop(ellipse, _rightBottom.Y);
-            //}
-            //
-            //canvas.Children.Add(ellipse);
         }
 
         private void Ellipse_LostFocus(object sender, RoutedEventArgs e)

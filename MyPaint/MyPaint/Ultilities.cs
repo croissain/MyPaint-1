@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace MyPaint
@@ -24,6 +25,22 @@ namespace MyPaint
             var crop = new CroppedBitmap(rtb, new Int32Rect((int)x, (int)y, (int)Width, (int)Height));
 
             return new Image() { Source = BitmapFrame.Create(crop) };
+        }
+
+        public static void CopyUIElementToClipboard(FrameworkElement element)
+        {
+            double width = element.ActualWidth;
+            double height = element.ActualHeight;
+            RenderTargetBitmap bmpCopied = new RenderTargetBitmap((int)Math.Round(width), (int)Math.Round(height), 96d, 96d, PixelFormats.Default);
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(element);
+                dc.DrawRectangle(vb, null, new Rect(new Point(), new Size(width, height)));
+
+            }
+            bmpCopied.Render(dv);
+            Clipboard.SetImage(bmpCopied);
         }
     }
 }

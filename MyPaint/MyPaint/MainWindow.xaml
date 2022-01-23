@@ -32,6 +32,9 @@
                             <Grid>
                             </Grid>
                         </Fluent:BackstageTabItem>
+                        <Fluent:Button Header="Save As" Click="saveAsButton_Click">
+
+                        </Fluent:Button>
                         <Fluent:BackstageTabItem Header="Exit">
 
                         </Fluent:BackstageTabItem>
@@ -74,6 +77,7 @@
                                    Header="Paste"
                                    KeyTip="V"
                                    SizeDefinition="Large"
+                                   Focusable="True"
                                    Click="pasteButton_Click">
                         <Fluent:Button.LargeIcon>
                             <materialDesign:PackIcon Kind="ContentPaste"
@@ -89,11 +93,13 @@
                         </Fluent:Button.ToolTip>
                     </Fluent:Button>
                     <Fluent:Button x:Name="cutButton"
-                                   Command="Cut"
+                                   Focusable="False"
                                    FocusManager.IsFocusScope="True"
                                    Header="Cut"
                                    KeyTip="X"
-                                   SizeDefinition="Middle,Small">
+                                   Click="cutButton_Click"
+                                   IsEnabled="False"
+                                   SizeDefinition="Middle,Small" Height="22" VerticalAlignment="Top">
                         <Fluent:Button.LargeIcon>
                             <materialDesign:PackIcon Kind="ContentCut" />
                         </Fluent:Button.LargeIcon>
@@ -104,8 +110,11 @@
                         </Fluent:Button.ToolTip>
                     </Fluent:Button>
                     <Fluent:Button x:Name="copyButton"
+                                   Focusable="True"
                                    Header="Copy"
                                    KeyTip="C"
+                                   Click="copyButton_Click"
+                                   IsEnabled="False"
                                    SizeDefinition="Middle,Small">
                         <Fluent:Button.LargeIcon>
                             <materialDesign:PackIcon Kind="ContentCopy" />
@@ -120,6 +129,7 @@
                         <Fluent:Button x:Name="undoButton"
                                        KeyTip="Z"
                                        Click="undoButton_Click"
+                                       IsEnabled="False"
                                        SizeDefinition="Middle">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Undo" />
@@ -133,6 +143,7 @@
                         <Fluent:Button x:Name="redoButton"
                                        KeyTip="Y"
                                        Click="redoButton_Click"
+                                       IsEnabled="False"
                                        SizeDefinition="Middle">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Redo" />
@@ -206,6 +217,7 @@
 
                         <Fluent:Button x:Name="buttonPencil"
                                        SizeDefinition="Small"
+                                       Focusable="False"
                                        Click="buttonPencil_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Pencil"
@@ -214,8 +226,9 @@
                             </Fluent:Button.LargeIcon>
                         </Fluent:Button>
                         <Fluent:SplitButton x:Name="buttonBucket"
-                                            SizeDefinition="Small"
-                                            Click="buttonBucket_Click">
+                                       SizeDefinition="Small"
+                                       Focusable="False"
+                                       Click="buttonBucket_Click">
                             <Fluent:SplitButton.LargeIcon>
                                 <materialDesign:PackIcon Kind="FormatColorFill"
                                                          VerticalAlignment="Center"
@@ -228,6 +241,7 @@
                                             Orientation="Vertical"
                                             ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                             Selectable="False"
+                                            Focusable="False"
                                             SelectionChanged="ChooseFill_SelectionChanged">
                                 <Fluent:GalleryItem Tag="NoFill">
                                     <StackPanel Orientation="Horizontal"
@@ -288,6 +302,7 @@
                         <Fluent:Button x:Name="buttonEyedrop"
                                        HorizontalAlignment="Left"
                                        SizeDefinition="Small"
+                                       Focusable="False"
                                        Click="buttonEyedrop_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Eyedropper"
@@ -297,6 +312,7 @@
                         </Fluent:Button>
                         <Fluent:Button x:Name="buttonZoom"
                                        HorizontalAlignment="Left"
+                                       Focusable="False"
                                        SizeDefinition="Small">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Magnify"
@@ -358,8 +374,9 @@
                                          Width="100"
                                          Margin="0, 10, 5, 5"
                                          ToolBar.OverflowMode="Never"
-                                         SelectionChanged="Outline_SelectionChanged"
-                                         VerticalAlignment="Top">
+                                         SelectionChanged="Outline_SelectionChanged" 
+                                         VerticalAlignment="Top"
+                                         Focusable="False">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -380,8 +397,7 @@
                         </Fluent:ComboBox>
 
                         <Fluent:SplitButton x:Name="ChooseSizeButton"
-                                            Header="Size"
-                                            SizeDefinition="Large">
+                        Header="Size" SizeDefinition="Large" Focusable="False">
                             <Fluent:SplitButton.LargeIcon>
                                 <materialDesign:PackIcon Kind="NotificationClearAll"
                                                          VerticalAlignment="Center"
@@ -390,13 +406,14 @@
                                                          Width="30" />
                             </Fluent:SplitButton.LargeIcon>
                             <Fluent:Gallery GroupBy="Tag"
-                                            Name="ChooseSize"
-                                            ItemHeight="32"
-                                            ItemWidth="60"
-                                            Orientation="Vertical"
-                                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                            Selectable="False"
-                                            SelectionChanged="ChooseSize_SelectionChanged">
+                                        Name="ChooseSize"
+                                        ItemHeight="32"
+                                        ItemWidth="60"
+                                        Orientation="Vertical"
+                                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                        Selectable="False"
+                                        Focusable="False"
+                                        SelectionChanged="ChooseSize_SelectionChanged">
                                 <Fluent:GalleryItem Tag="14">
                                     <StackPanel Orientation="Horizontal"
                                                 VerticalAlignment="Center"
@@ -486,6 +503,7 @@
                                        BorderBrush="Gray"
                                        Height="45"
                                        Margin="4,4"
+                                       Focusable="False"
                                        Click="mainColor_Click">
                         </Fluent:Button>
                         <TextBlock Text="color 1"></TextBlock>
@@ -496,6 +514,7 @@
                                        BorderBrush="Gray"
                                        Height="45"
                                        Margin="4,4"
+                                       Focusable="False"
                                        Click="subColor_Click">
                         </Fluent:Button>
                         <TextBlock Text="color 2"></TextBlock>
@@ -511,6 +530,7 @@
                     <Fluent:Button x:Name="moreColorButton"
                                    Header="More color"
                                    SizeDefinition="Large"
+                                   Focusable="False"
                                    Click="moreColorButton_Click">
 
                         <Fluent:Button.LargeIcon>
@@ -527,33 +547,32 @@
             </Fluent:RibbonTabItem>
 
         </Fluent:Ribbon>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible"
-                      VerticalScrollBarVisibility="Visible">
-            <zb:ZoomBorder>
-                <DockPanel>
+        <DockPanel>
+            <ScrollViewer HorizontalScrollBarVisibility="Visible"
+                          VerticalScrollBarVisibility="Visible">
+                <zb:ZoomBorder x:Name="paintBorder"
+                               MouseWheel="ScrollViewer_MouseWheel">    
+                <Grid Width="850"
+                      Height="350"
+                      MinWidth="50"
+                      x:Name="fullCanvas"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      AllowDrop="True"
+                      Drop="fullCanvas_Drop">
+                    <Canvas x:Name="paintCanvas"
+                            Loaded="PaintCanvas_Loaded"
+                            Background="White">
+                    </Canvas>
 
-                    <Grid Width="950"
-                          Height="400"
-                          x:Name="fullCanvas">
-                        <Canvas x:Name="pasteCanvas"
-                                Background="White">
-                            <Image x:Name="pasteImage"></Image>
-                        </Canvas>
-                        <Canvas x:Name="paintCanvas"
-                                Loaded="PaintCanvas_Loaded"
-                                Background="Transparent">
-                        </Canvas>
-
-                        <Border Background="Transparent"
-                                MouseDown="paint_MouseDown"
-                                MouseMove="paint_MouseMove"
-                                MouseUp="paint_MouseUp"
-                                x:Name="paintBorder">
-                        </Border>
-                    </Grid>
-
-                </DockPanel>
-            </zb:ZoomBorder>
-        </ScrollViewer>
+                    <Border Background="Transparent"
+                            MouseDown="paint_MouseDown"
+                            MouseMove="paint_MouseMove"
+                            MouseUp="paint_MouseUp">
+                    </Border>
+                </Grid>
+        </zb:ZoomBorder>
+            </ScrollViewer>
+        </DockPanel>
     </DockPanel>
 </Fluent:RibbonWindow>

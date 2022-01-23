@@ -18,7 +18,9 @@ namespace Contract
         Brush s_Fill {  get; set; }
         FontFamily s_FontFamily { get; set; }
         double s_FontSize { get; set; }
-        int s_Style { get; set; }
+        FontWeight s_FontWeight { get; set; }
+        FontStyle s_FontStyle { get; set; }
+        int s_TextDecoration { get; set; }
         Adorner currAdnr { get; set; }
         AdornerLayer adnrLayer { get; set; }
 

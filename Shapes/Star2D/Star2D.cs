@@ -45,7 +45,9 @@ namespace Star2D
         }
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
-        public int s_Style { get; set; }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
 
@@ -85,47 +87,6 @@ namespace Star2D
 
         public void Draw(Canvas canvas)
         {
-            //var witdh = _rightBottom.X - _leftTop.X;
-            //var height = _rightBottom.Y - _leftTop.Y;
-
-            //var star = new Polygon()
-            //{
-            //    Width = witdh > 0 ? witdh : -witdh,
-            //    Height = height > 0 ? height : -height,
-            //    Stroke = s_mColor,
-            //    StrokeThickness = s_mThickness,
-            //    StrokeDashArray = s_Outline,
-            //    Fill = s_Fill,
-            //};
-
-            //if (witdh > 0 && height > 0)
-            //{
-            //    Canvas.SetLeft(star, _leftTop.X);
-            //    Canvas.SetTop(star, _leftTop.Y);
-            //}
-            //else if (witdh > 0 && height < 0)
-            //{
-            //    Canvas.SetLeft(star, _leftTop.X);
-            //    Canvas.SetTop(star, _rightBottom.Y);
-            //}
-            //else if (witdh < 0 && height > 0)
-            //{
-            //    Canvas.SetLeft(star, _rightBottom.X);
-            //    Canvas.SetTop(star, _leftTop.Y);
-            //}
-            //else
-            //{
-            //    Canvas.SetLeft(star, _rightBottom.X);
-            //    Canvas.SetTop(star, _rightBottom.Y);
-            //}
-            //star.Stretch = Stretch.Fill;
-
-
-            //star.Points = star_point;
-
-
-            //canvas.Children.Add(star);
-
             _canvas = canvas;
             var _width = _rightBottom.X - _leftTop.X;
             var _height = _rightBottom.Y - _leftTop.Y;
@@ -134,7 +95,6 @@ namespace Star2D
                 rotateTransform = _starFinal.RenderTransform as RotateTransform;
                 double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
 
-                //_star = new Polygon();
                 _star.Width = Math.Abs(_width);
                 _star.Height = Math.Abs(_height);
                 _star.Stroke = s_mColor;

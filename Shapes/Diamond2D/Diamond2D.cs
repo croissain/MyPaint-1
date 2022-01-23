@@ -13,7 +13,6 @@ namespace Diamond2D
 {
     public class Diamond2D : IShape
     {
-
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
         private PointCollection diamond_point = new PointCollection();

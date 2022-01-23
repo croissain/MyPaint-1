@@ -7,6 +7,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Documents;
 using MyPaint;
+using System.Collections.Generic;
+
 
 namespace Line2D
 {
@@ -28,7 +30,9 @@ namespace Line2D
         public Brush s_Fill { get; set; }
         public FontFamily s_FontFamily { get; set; }
         public double s_FontSize { get; set; }
-        public int s_Style { get; set; }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
 
@@ -41,7 +45,8 @@ namespace Line2D
 
         public void HandleEnd(double x, double y)
         {
-            if(_line != null)
+            _end = new Point2D() { X = x, Y = y };
+            if (_line != null)
             {
                 _line.Focusable = true;
                 _line.Focus();
@@ -83,9 +88,14 @@ namespace Line2D
         {
             if (_line != null)
             {
-                _lineFinal = _line;
+                _lineFinal.X1 = _line.X1;
+                _lineFinal.X2 = _line.X2;
+                _lineFinal.Y1 = _line.Y1;
+                _lineFinal.Y2 = _line.Y2;
+                _lineFinal.Stroke = s_mColor;
+                _lineFinal.StrokeThickness = s_mThickness;
+                _lineFinal.StrokeDashArray = s_Outline;
             }
-
             _canvas.Children.Remove(_line);
             _line = null;
         }
