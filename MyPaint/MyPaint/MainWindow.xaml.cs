@@ -262,6 +262,11 @@ namespace MyPaint
                     if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
                     {
                         System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
+                        
+                        if(bitmap.Width > paintCanvas.Width) paintCanvas.Width = bitmap.Width + 10;
+                  
+                        if(bitmap.Height > paintCanvas.Height) paintCanvas.Height = bitmap.Height + 10;
+                        
                         var source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                         var pasteImg = new Image() { Source = source };
 
@@ -466,7 +471,7 @@ namespace MyPaint
                 }
             }
 
-            Coordinates.Text = $"{Math.Round(pos.X, 3)}, {Math.Round(pos.Y, 3)}";
+            Coordinates.Text = $"{Math.Round(pos.X)}, {Math.Round(pos.Y)}";
         }
 
         private void paint_MouseUp(object sender, MouseButtonEventArgs e)
@@ -565,6 +570,22 @@ namespace MyPaint
 
                 _selectedmColor = mainColor.Background;
                 _selectedsColor = subColor.Background;
+
+                int lastIndex = _shapes.Count - 1;
+                if (lastIndex >= 0)
+                {
+                    _shapes[lastIndex].s_mColor = _selectedmColor;
+                    _shapes[lastIndex].s_sColor = _selectedsColor;
+
+                    //Ve lai Xoa toan bo
+                    paintCanvas.Children.Clear();
+
+                    //Ve lai tat ca cac hinh
+                    foreach (var shape in _shapes)
+                    {
+                        shape.Draw(paintCanvas);
+                    }
+                }
             }
         }
 
@@ -896,10 +917,10 @@ namespace MyPaint
                         image2D.adnrLayer = _adnrLayer;
                         _shapes.Add(image2D);
 
-                        paintCanvas.Width = tmpImage.Width;
-                        paintCanvas.Height = tmpImage.Height;
+                        if(tmpImage.Width > paintCanvas.Width) paintCanvas.Width = tmpImage.Width + 10;
+                        if(tmpImage.Height > paintCanvas.Height) paintCanvas.Height = tmpImage.Height + 10;
 
-                        image2D.HandleStart(0, 0);
+                        image2D.HandleStart(10, 10);
                         image2D.HandleMove(tmpImage.Width, tmpImage.Height);
                         image2D.Draw(paintCanvas);
                         //image2D.HandleEnd(tmpImage.Width, tmpImage.Height);
