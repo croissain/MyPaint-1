@@ -547,32 +547,65 @@
             </Fluent:RibbonTabItem>
 
         </Fluent:Ribbon>
-        <DockPanel>
-            <ScrollViewer HorizontalScrollBarVisibility="Visible"
-                          VerticalScrollBarVisibility="Visible">
-                <zb:ZoomBorder x:Name="paintBorder"
-                               MouseWheel="ScrollViewer_MouseWheel">    
-                <Grid Width="850"
-                      Height="350"
-                      MinWidth="50"
-                      x:Name="fullCanvas"
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Top"
-                      AllowDrop="True"
-                      Drop="fullCanvas_Drop">
+
+        <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom" 
+              Background="Gray" Height="20" Panel.ZIndex="9999">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <materialDesign:PackIcon Kind="ArrowDecision"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Left"
+                                                         Height="15"
+                                                         Width="15" />
+                <TextBlock x:Name="Coordinates" Margin="30 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                </TextBlock>
+            </Grid>
+            <Grid Grid.Column="1">
+                <materialDesign:PackIcon Kind="MonitorScreenshot"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Left"
+                                                         Height="15"
+                                                         Width="15" />
+                <TextBlock x:Name="CanvasSize" Text="850 x 350" Margin="30 0 0 0" 
+                               HorizontalAlignment="Left" VerticalAlignment="Center">
+                </TextBlock>
+            </Grid>
+        </Grid>
+        
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+            <zb:ZoomBorder x:Name="paintBorder"
+                           MouseWheel="paintBorder_MouseWheel">
+                <Grid x:Name="fullCanvas"
+                        Margin="5"
+                        AllowDrop="True"
+                        Drop="fullCanvas_Drop"
+                        Width="850" Height="350"
+                        VerticalAlignment="Top" HorizontalAlignment="Left">
                     <Canvas x:Name="paintCanvas"
                             Loaded="PaintCanvas_Loaded"
-                            Background="White">
+                            Background="White"
+                            Width="850" Height="350"
+                            ClipToBounds="True"
+                            VerticalAlignment="Top" HorizontalAlignment="Left"
+                            SizeChanged="paintCanvas_SizeChanged">
+                            
                     </Canvas>
 
-                    <Border Background="Transparent"
+                    <Border x:Name="CanvasBorder"
+                            Background="Transparent"
                             MouseDown="paint_MouseDown"
                             MouseMove="paint_MouseMove"
-                            MouseUp="paint_MouseUp">
+                            MouseUp="paint_MouseUp"
+                            Width="850" Height="350"
+                            VerticalAlignment="Top" HorizontalAlignment="Left">
                     </Border>
                 </Grid>
-        </zb:ZoomBorder>
-            </ScrollViewer>
-        </DockPanel>
+            </zb:ZoomBorder>
+        </ScrollViewer>
     </DockPanel>
 </Fluent:RibbonWindow>

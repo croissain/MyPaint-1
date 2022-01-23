@@ -392,12 +392,14 @@ namespace MyPaint
         }
     }
 
+    //======================================
+
     public class CanvasAdorner : Adorner
     {
         // Resizing adorner uses Thumbs for visual elements.  
         // The Thumbs have built-in mouse input handling.
         public Thumb bottomEdge, rightEdge, bottomRightCorner;
-
+        //Rect surrounding;
         // To store and manage the adorner's visual children.
         VisualCollection visualChildren;
 
@@ -407,6 +409,8 @@ namespace MyPaint
         public CanvasAdorner(Canvas adornedElement, bool SurroundingBorder = true)
             : base(adornedElement)
         {
+            //surrounding = new Rect(0, 0, adornedElement.ActualWidth, adornedElement.ActualHeight);
+            
             visualChildren = new VisualCollection(this);
 
             // Call a helper method to initialize the Thumbs
@@ -460,13 +464,12 @@ namespace MyPaint
             double adornerWidth = this.DesiredSize.Width;
             double adornerHeight = this.DesiredSize.Height;
 
-
             if (bottomEdge != null)
-                bottomEdge.Arrange(new Rect(desiredWidth / 2 - adornerWidth / 2, desiredHeight - adornerHeight / 2, adornerWidth, adornerHeight));
+                bottomEdge.Arrange(new Rect(Math.Abs(desiredWidth / 2 - adornerWidth / 2), Math.Abs(desiredHeight - adornerHeight / 2) + 3, adornerWidth, adornerHeight));
             if (rightEdge != null)
-                rightEdge.Arrange(new Rect(desiredWidth - adornerWidth / 2, desiredHeight / 2 - adornerHeight / 2, adornerWidth, adornerHeight));
+                rightEdge.Arrange(new Rect(Math.Abs(desiredWidth - adornerWidth / 2) + 3, Math.Abs(desiredHeight / 2 - adornerHeight / 2), adornerWidth, adornerHeight));
             if (bottomRightCorner != null)
-                bottomRightCorner.Arrange(new Rect(desiredWidth - adornerWidth / 2, desiredHeight - adornerHeight / 2, adornerWidth, adornerHeight));
+                bottomRightCorner.Arrange(new Rect(Math.Abs(desiredWidth - adornerWidth / 2) + 2, Math.Abs(desiredHeight - adornerHeight / 2) + 2, adornerWidth, adornerHeight));
 
             // Return the final size.
             return finalSize;
@@ -486,8 +489,8 @@ namespace MyPaint
             cornerThumb.Height = cornerThumb.Width = 6;
             cornerThumb.SnapsToDevicePixels = true;
             cornerThumb.BorderThickness = new Thickness(1);
-            cornerThumb.BorderBrush = new SolidColorBrush(Colors.Black);
-            cornerThumb.Background = new SolidColorBrush(Colors.Blue);
+            cornerThumb.BorderBrush = new SolidColorBrush(Colors.White);
+            cornerThumb.Background = new SolidColorBrush(Colors.LightGray);
 
             visualChildren.Add(cornerThumb);
         }
