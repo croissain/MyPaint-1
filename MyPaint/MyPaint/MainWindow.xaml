@@ -177,6 +177,8 @@
                     </Fluent:Button>
                     <Fluent:Button x:Name="Crop"
                                    Header="Crop"
+                                   IsEnabled="False"
+                                   Click="Crop_Click"
                                    SizeDefinition="Middle,Small">
                         <Fluent:Button.LargeIcon>
                             <materialDesign:PackIcon Kind="Crop" />
@@ -571,7 +573,7 @@
                                                          HorizontalAlignment="Left"
                                                          Height="15"
                                                          Width="15" />
-                <TextBlock x:Name="CanvasSize" Text="850 x 350" Margin="30 0 0 0" 
+                <TextBlock x:Name="CanvasSize" Text="850 x 350 px" Margin="30 0 0 0" 
                                HorizontalAlignment="Left" VerticalAlignment="Center">
                 </TextBlock>
             </Grid>
