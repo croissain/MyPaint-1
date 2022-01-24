@@ -24,7 +24,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using PanAndZoom;
 
 namespace MyPaint
 {
@@ -43,6 +42,7 @@ namespace MyPaint
         Dictionary<string, IShape> _prototypes = new Dictionary<string, IShape>();
         Dictionary<string, int> packIconKind = new Dictionary<string, int>();
         bool _isDrawing = false;
+        bool _isPicker = false;
         List<IShape> _shapes = new List<IShape>();
         IShape _preview;
         string _selectedShapeName = "";
@@ -308,6 +308,7 @@ namespace MyPaint
             _preview.s_mThickness = _selectedSize;
             _preview.s_Outline = _selectedOutline;
             _preview.s_Fill = _selectedFill;
+            _isPicker = false;
 
             if(_isWriting == true)
             {
@@ -437,16 +438,34 @@ namespace MyPaint
         {
             if (!Keyboard.IsKeyDown(Key.Space))
             {
-                _isDrawing = true;
-                Point pos = e.GetPosition(paintCanvas);
-                _preview.HandleStart(pos.X, pos.Y);
-                _startPoint = new Point(pos.X, pos.Y);
-
-                if(_selectedShapeName == "Select")
+                if (_isPicker)
                 {
-                    cutButton.IsEnabled = true;
-                    copyButton.IsEnabled = true;
-                    Crop.IsEnabled = true;
+                    _isDrawing = false;
+                    Point ptClicked = e.GetPosition(paintCanvas);
+
+                    if (e.LeftButton.Equals(MouseButtonState.Pressed))
+                    {
+                        Color pxlColor = GetPixelColor(paintCanvas, ptClicked);
+                        var converter = new System.Windows.Media.BrushConverter();
+                        var brush = (Brush)converter.ConvertFromString(pxlColor.ToString());
+                        MessageBox.Show("HEX: " + brush.ToString());
+                        mainColor.Background = brush;
+                        _selectedmColor = brush;
+                        _preview.s_mColor = brush;
+                    }
+                } else {
+                    _isDrawing = true;
+                    _isPicker = false;
+                    Point pos = e.GetPosition(paintCanvas);
+                    _preview.HandleStart(pos.X, pos.Y);
+                    _startPoint = new Point(pos.X, pos.Y);
+
+                    if(_selectedShapeName == "Select")
+                    {
+                        cutButton.IsEnabled = true;
+                        copyButton.IsEnabled = true;
+                        Crop.IsEnabled = true;
+                    }
                 }
             }
         }
@@ -456,8 +475,8 @@ namespace MyPaint
             Point pos = e.GetPosition(paintCanvas);
             if (!Keyboard.IsKeyDown(Key.Space))
             {
-                if (_isDrawing)
-                {
+                 if (_isDrawing) {
+                    _isPicker = false;
                     _preview.HandleMove(pos.X, pos.Y);
 
                     // Xoá hết các hình vẽ cũ
@@ -473,7 +492,7 @@ namespace MyPaint
                     _preview.Draw(paintCanvas);
                 }
             }
-
+            
             Coordinates.Text = $"{Math.Round(pos.X)}, {Math.Round(pos.Y)}";
         }
 
@@ -536,6 +555,7 @@ namespace MyPaint
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_mColor = _selectedmColor;
             _preview.s_mThickness = _selectedSize;
+            _isPicker = false;
         }
 
         private void mainColor_Click(object sender, RoutedEventArgs e)
@@ -723,9 +743,57 @@ namespace MyPaint
             _preview.s_TextDecoration = _selectedTextDecoration;
         }
 
+        // new
+        public static Color GetPixelColor(Visual visual, Point pt)
+        {
+            Point ptDpi = getScreenDPI(visual);
+
+            Size srcSize = VisualTreeHelper.GetDescendantBounds(visual).Size;
+
+            //Viewbox uses values between 0 & 1 so normalize the Rect with respect to the visual's Height & Width
+            Rect percentSrcRec = new Rect(pt.X / srcSize.Width, pt.Y / srcSize.Height,
+                                          1 / srcSize.Width, 1 / srcSize.Height);
+
+            var bmpOut = new RenderTargetBitmap(1, 1, 96d, 96d, PixelFormats.Pbgra32); //assumes 96 dpi
+            //var bmpOut = new RenderTargetBitmap((int)(ptDpi.X / 96d),
+            //                                    (int)(ptDpi.Y / 96d),
+            //                                    ptDpi.X, ptDpi.Y, PixelFormats.Default); //generalized for monitors with different dpi
+
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                dc.DrawRectangle(new VisualBrush { Visual = visual, Viewbox = percentSrcRec },
+                                 null, //no Pen
+                                 new Rect(0, 0, 1d, 1d));
+            }
+            bmpOut.Render(dv);
+
+            var bytes = new byte[4];
+            int iStride = 4; // = 4 * bmpOut.Width (for 32 bit graphics with 4 bytes per pixel -- 4 * 8 bits per byte = 32)
+            bmpOut.CopyPixels(bytes, iStride, 0);
+
+            return Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
+        }
+
+        public static Point getScreenDPI(Visual v)
+        {
+            //System.Windows.SystemParameters
+            PresentationSource source = PresentationSource.FromVisual(v);
+            Point ptDpi;
+            if (source != null)
+            {
+                ptDpi = new Point(96.0 * source.CompositionTarget.TransformToDevice.M11,
+                                   96.0 * source.CompositionTarget.TransformToDevice.M22);
+            }
+            else
+                ptDpi = new Point(96d, 96d); //default value.
+
+            return ptDpi;
+        }
+
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
         {
-            
+            _isPicker = true;
         }
 
         private void undoButton_Click(object sender, RoutedEventArgs e)
@@ -793,6 +861,10 @@ namespace MyPaint
             else if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && pasteButton.IsEnabled == true)
             {
                 pasteButton_Click(sender, e);
+            }
+            else if (e.Key == Key.I)
+            {
+                buttonEyedrop_Click(sender, e);
             }
         }
 
