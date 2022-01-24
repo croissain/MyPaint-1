@@ -446,6 +446,7 @@ namespace MyPaint
                 {
                     cutButton.IsEnabled = true;
                     copyButton.IsEnabled = true;
+                    Crop.IsEnabled = true;
                 }
             }
         }
@@ -939,12 +940,41 @@ namespace MyPaint
         {
             double width = paintCanvas.Width;
             double height = paintCanvas.Height;
-            CanvasSize.Text = $"{Math.Round(width)} , {Math.Round(height)} px";
+            CanvasSize.Text = $"{Math.Round(width)} x {Math.Round(height)} px";
 
             fullCanvas.Width = width;
             fullCanvas.Height = height;
             CanvasBorder.Width = width;
             CanvasBorder.Height = height;
+        }
+
+        private void Crop_Click(object sender, RoutedEventArgs e)
+        {
+            undoButton.IsEnabled = true;
+            copyButton.IsEnabled = false;
+            cutButton.IsEnabled = false;
+            Crop.IsEnabled = false;
+            int lastIndex = _shapes.Count - 1;
+            if (lastIndex >= 0)
+            {
+                var _copyShape = _shapes[lastIndex];
+                _shapes.Clear();
+                paintCanvas.Children.Clear();
+
+                if (_copyShape.Name == "Select")
+                {
+                    var currentSelect = _copyShape as Select2D;
+                    paintCanvas.Width = currentSelect.imageFinal.Width;
+                    paintCanvas.Height = currentSelect.imageFinal.Height;
+
+                    _shapes.Add(currentSelect);
+                    _preview = currentSelect;
+                    Canvas.SetLeft(currentSelect.imageFinal, 0);
+                    Canvas.SetTop(currentSelect.imageFinal, 0);
+                    paintCanvas.Children.Add(currentSelect.imageFinal);
+                }
+
+            }
         }
     }
 
