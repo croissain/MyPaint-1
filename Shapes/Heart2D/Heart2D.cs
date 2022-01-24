@@ -63,6 +63,9 @@ namespace Heart2D
         {
             get; set;
         }
+        public FontWeight s_FontWeight { get; set; }
+        public FontStyle s_FontStyle { get; set; }
+        public int s_TextDecoration { get; set; }
 
         RotateTransform rotateTransform = new RotateTransform();
 
