@@ -168,16 +168,29 @@ namespace MyPaint
             _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 2 } });
             _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
             OutlineCbbox.ItemsSource = _outlines;
-
-            //AdornerLayer adnrLayer = AdornerLayer.GetAdornerLayer(fullCanvas);
-            //adnrLayer.Add(new CanvasAdorner(paintCanvas));
-            //paintCanvas.Focus();
         }
 
-
-        private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void RibbonWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (paintCanvas.Children.Count > 0)
+            {
+                var ans = MessageBox.Show("Save this masterpiece?", "MyPaint", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
+                if (ans == MessageBoxResult.Yes)
+                {
+                    CreateSaveDialog();
+                    util.SaveCanvas(this, paintCanvas, 96, save_filename);
+                }
+                else if(ans == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
         private void ChooseFill_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -242,16 +255,6 @@ namespace MyPaint
                     shape.Draw(paintCanvas);
                 }
             }
-        }
-
-        private void OnLauncherButtonClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OnMenuItemClick(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void pasteButton_Click(object sender, RoutedEventArgs e)
@@ -569,11 +572,6 @@ namespace MyPaint
 
         }
 
-        private void buttonBucket_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void moreColorButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new System.Windows.Forms.ColorDialog();
@@ -615,24 +613,26 @@ namespace MyPaint
         #region newFile
         private void newButton_Click(object sender, RoutedEventArgs e)
         {
-            var ans = MessageBox.Show("Save this masterpiece?", "MyPaint", MessageBoxButton.YesNoCancel);
-
-            if (ans == MessageBoxResult.Yes)
+            if(paintCanvas.Children.Count > 0)
             {
-                dlg.FileName = "mypaint"; // Default file name
-                dlg.DefaultExt = ".jpeg";
-                dlg.Filter = "Jpeg Files (*.jpeg)|*.jpeg|Png Files (*.png)|*.png|Canvas (.cvs)|*.cvs|Bitmap (.bmp)|*.bmp"; // Filter files by extension
-                Nullable<bool> result = dlg.ShowDialog();
-                if (result == true)
+                var ans = MessageBox.Show("Save this masterpiece?", "MyPaint", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                if (ans == MessageBoxResult.Yes)
                 {
-                    string filename_tmp = dlg.FileName;
+                    CreateSaveDialog();
+                    util.SaveCanvas(this, paintCanvas, 96, save_filename);
+                    _shapes.Clear();
+                    paintCanvas.Children.Clear();
                 }
-                save_filename = dlg.FileName.ToString();
+                else if (ans == MessageBoxResult.No)
+                {
+                    _shapes.Clear();
+                    paintCanvas.Children.Clear();
+                }
             }
-            else if (ans == MessageBoxResult.No)
+            else
             {
                 _shapes.Clear();
-                //pasteCanvas.Children.Clear();
                 paintCanvas.Children.Clear();
             }
 
@@ -717,6 +717,8 @@ namespace MyPaint
                     image2D.HandleMove(10 + LoadedBitmap.Width, 10 + LoadedBitmap.Height);
                     image2D.Draw(paintCanvas);
                     //image2D.HandleEnd(10 + LoadedBitmap.Width, 10 + LoadedBitmap.Height);
+
+                    undoButton.IsEnabled = true;
                 }
             }
         }
@@ -930,25 +932,6 @@ namespace MyPaint
                     _shapes.Add(currentSelect);
                 }
                 
-            }
-        }
-
-        private void saveAsButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "Binary File (*.dat) | *.dat";
-
-            if (dlg.ShowDialog() == true)
-            {
-                string path = dlg.FileName;
-                FileStream stream = new FileStream(path, FileMode.Create);
-
-                foreach (var shape in _shapes)
-                {
-                    //formatter.Serialize(stream, shape);
-                }
-
-                stream.Close();
             }
         }
 
