@@ -55,6 +55,10 @@ namespace Contract
             HandleEnd(x, y);
         }
 
+        public void HandleHoldShift(double x, double y)
+        { 
+        }
+
         public void Draw(Canvas canvas)
         {
             Line l = new Line()

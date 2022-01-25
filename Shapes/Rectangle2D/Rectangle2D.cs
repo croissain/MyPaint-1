@@ -36,6 +36,8 @@ namespace Rectangle2D
         public Adorner currAdnr { get; set; }
         public AdornerLayer adnrLayer { get; set; }
 
+        private bool _isShift;
+
         RotateTransform rotateTransform = new RotateTransform();
 
         public void HandleStart(double x, double y)
@@ -56,7 +58,63 @@ namespace Rectangle2D
 
         public void HandleMove(double x, double y)
         {
-            _rightBottom = new Point2D() { X = x, Y = y };
+            if (!Keyboard.IsKeyDown(Key.LeftShift) || !Keyboard.IsKeyDown(Key.RightShift))
+            {
+                _rightBottom = new Point2D() { X = x, Y = y };
+                _rectangle = new Rectangle();
+            }
+        }
+
+        public void HandleHoldShift(double x, double y)
+        {
+            double _width = Math.Abs(_rightBottom.X - _leftTop.X);
+            double _height = Math.Abs(_rightBottom.Y - _leftTop.Y);
+            double diff = _width < _height ? _width : _height;
+
+            if (_rightBottom.X > _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff};
+                }
+            }
+            else if (_rightBottom.X > _leftTop.X && _rightBottom.Y < _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
+            else if (_rightBottom.X < _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff };
+                }
+            }
+            else
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
             _rectangle = new Rectangle();
         }
 

@@ -27,6 +27,7 @@ namespace Contract
         void HandleStart(double x, double y);
         void HandleMove(double x, double y);
         void HandleEnd(double x, double y);
+        void HandleHoldShift(double x, double y);
 
         void Draw(Canvas canvas);
         IShape Clone();
