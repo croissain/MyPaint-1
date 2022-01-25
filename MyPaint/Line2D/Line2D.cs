@@ -61,6 +61,21 @@ namespace Line2D
             _line = new Line();
         }
 
+        public void HandleHoldShift(double x, double y)
+        {
+            double diff = Math.Abs(_end.X - _start.X) - Math.Abs(_end.Y - _start.Y);
+            if (diff > 0)
+            {
+                _end = new Point2D() { X = x, Y = _start.Y };
+                _line = new Line();
+            }
+            else
+            {
+                _end = new Point2D() { X = _start.X, Y = y };
+                _line = new Line();
+            }
+        }
+
         public void Draw(Canvas canvas)
         {
             _canvas = canvas;

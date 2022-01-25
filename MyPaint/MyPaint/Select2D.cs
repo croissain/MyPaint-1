@@ -78,6 +78,10 @@ namespace MyPaint
             }
         }
 
+        public void HandleHoldShift(double x, double y)
+        {
+        }
+
         public void Draw(Canvas canvas)
         {
             _canvas = canvas;

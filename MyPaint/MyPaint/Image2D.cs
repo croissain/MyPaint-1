@@ -57,8 +57,11 @@ namespace MyPaint
                 image.Focus();
                 currAdnr = new RectangleAdorner(image);
                 adnrLayer.Add(currAdnr);
-            }
-            
+            }   
+        }
+
+        public void HandleHoldShift(double x, double y)
+        {
         }
 
         public void Draw(Canvas canvas)

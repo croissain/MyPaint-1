@@ -67,8 +67,8 @@ namespace MyPaint
                 Y2 = y,
                 StrokeThickness = s_mThickness,
                 Stroke = s_sColor,
-                StrokeStartLineCap = PenLineCap.Round,
-                StrokeEndLineCap = PenLineCap.Round
+                StrokeStartLineCap = PenLineCap.Square,
+                StrokeEndLineCap = PenLineCap.Square
             };
 
             _lines.Add(line);
@@ -79,6 +79,10 @@ namespace MyPaint
         public void HandleMove(double x, double y)
         {
             HandleEnd(x, y);
+        }
+
+        public void HandleHoldShift(double x, double y)
+        {
         }
 
         public void Draw(Canvas canvas)

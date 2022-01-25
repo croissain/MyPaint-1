@@ -35,8 +35,7 @@ namespace MyPaint
         public MainWindow()
         {
             InitializeComponent();
-            //paintCanvas.MouseEnter += new MouseEventHandler(paint_MouseEnter);
-            //paintCanvas.MouseWheel += new MouseWheelEventHandler(paint_MouseWheel);
+            CanvasBorder.Cursor = Cursors.Pen;
         }
 
         Dictionary<string, IShape> _prototypes = new Dictionary<string, IShape>();
@@ -95,7 +94,6 @@ namespace MyPaint
                         _prototypes.Add(shape.Name, shape);
                         packIconKind.Add(shape.Name, shape.IconKind);
                     }
-
                 }
             }
 
@@ -264,11 +262,13 @@ namespace MyPaint
                     if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
                     {
                         System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
-                        
-                        if(bitmap.Width > paintCanvas.Width) paintCanvas.Width = bitmap.Width + 10;
-                  
-                        if(bitmap.Height > paintCanvas.Height) paintCanvas.Height = bitmap.Height + 10;
-                        
+
+                        if (bitmap.Width > paintCanvas.Width)
+                            paintCanvas.Width = bitmap.Width + 10;
+
+                        if (bitmap.Height > paintCanvas.Height)
+                            paintCanvas.Height = bitmap.Height + 10;
+
                         var source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                         var pasteImg = new Image() { Source = source };
 
@@ -310,7 +310,7 @@ namespace MyPaint
             _preview.s_Fill = _selectedFill;
             _isPicker = false;
 
-            if(_isWriting == true)
+            if (_isWriting == true)
             {
                 //Trả lại bảng chọn size và outline
                 ChooseStyleStack.Children.Clear();
@@ -453,14 +453,16 @@ namespace MyPaint
                         _selectedmColor = brush;
                         _preview.s_mColor = brush;
                     }
-                } else {
+                }
+                else
+                {
                     _isDrawing = true;
                     _isPicker = false;
                     Point pos = e.GetPosition(paintCanvas);
                     _preview.HandleStart(pos.X, pos.Y);
                     _startPoint = new Point(pos.X, pos.Y);
 
-                    if(_selectedShapeName == "Select")
+                    if (_selectedShapeName == "Select")
                     {
                         cutButton.IsEnabled = true;
                         copyButton.IsEnabled = true;
@@ -475,10 +477,18 @@ namespace MyPaint
             Point pos = e.GetPosition(paintCanvas);
             if (!Keyboard.IsKeyDown(Key.Space))
             {
-                 if (_isDrawing) {
-                    _isPicker = false;
-                    _preview.HandleMove(pos.X, pos.Y);
-
+                if (_isDrawing)
+                {
+                    if (Keyboard.IsKeyDown(Key.LeftShift)|| Keyboard.IsKeyDown(Key.RightShift))
+                    {
+                        _isPicker = false;
+                        _preview.HandleHoldShift(pos.X, pos.Y);
+                    }
+                    else
+                    {
+                        _isPicker = false;
+                        _preview.HandleMove(pos.X, pos.Y);
+                    }
                     // Xoá hết các hình vẽ cũ
                     paintCanvas.Children.Clear();
 
@@ -492,7 +502,7 @@ namespace MyPaint
                     _preview.Draw(paintCanvas);
                 }
             }
-            
+
             Coordinates.Text = $"{Math.Round(pos.X)}, {Math.Round(pos.Y)}";
         }
 
@@ -500,7 +510,7 @@ namespace MyPaint
         {
             _isDrawing = false;
             Point pos = e.GetPosition(paintCanvas);
-            if(pos.X != _startPoint.X && pos.Y != _startPoint.Y)
+            if (pos.X != _startPoint.X && pos.Y != _startPoint.Y)
             {
                 // Thêm đối tượng cuối cùng vào mảng quản lí        
                 _shapes.Add(_preview);
@@ -516,7 +526,14 @@ namespace MyPaint
                 }
 
                 //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
-                _preview.HandleEnd(pos.X, pos.Y);
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    _preview.HandleHoldShift(pos.X, pos.Y);
+                }
+                else
+                {
+                    _preview.HandleEnd(pos.X, pos.Y);
+                }
 
                 // Sinh ra đối tượng mẫu kế
                 _preview = _prototypes[_selectedShapeName].Clone();
@@ -755,9 +772,6 @@ namespace MyPaint
                                           1 / srcSize.Width, 1 / srcSize.Height);
 
             var bmpOut = new RenderTargetBitmap(1, 1, 96d, 96d, PixelFormats.Pbgra32); //assumes 96 dpi
-            //var bmpOut = new RenderTargetBitmap((int)(ptDpi.X / 96d),
-            //                                    (int)(ptDpi.Y / 96d),
-            //                                    ptDpi.X, ptDpi.Y, PixelFormats.Default); //generalized for monitors with different dpi
 
             DrawingVisual dv = new DrawingVisual();
             using (DrawingContext dc = dv.RenderOpen())
@@ -800,7 +814,7 @@ namespace MyPaint
         {
             redoButton.IsEnabled = true;
             int lastIndex = _shapes.Count - 1;
-            if(lastIndex >= 0)
+            if (lastIndex >= 0)
             {
                 _bufferShapes.Add(_shapes[lastIndex]);
                 _shapes.RemoveAt(lastIndex);
@@ -814,7 +828,8 @@ namespace MyPaint
                     shape.Draw(paintCanvas);
                 }
 
-                if (lastIndex == 0) undoButton.IsEnabled = false;
+                if (lastIndex == 0)
+                    undoButton.IsEnabled = false;
             }
         }
 
@@ -822,7 +837,7 @@ namespace MyPaint
         {
             undoButton.IsEnabled = true;
             int lastIndex = _bufferShapes.Count - 1;
-            if(lastIndex >= 0)
+            if (lastIndex >= 0)
             {
                 _shapes.Add(_bufferShapes[lastIndex]);
                 _bufferShapes.RemoveAt(lastIndex);
@@ -836,7 +851,8 @@ namespace MyPaint
                     shape.Draw(paintCanvas);
                 }
 
-                if (lastIndex == 0) redoButton.IsEnabled = false;
+                if (lastIndex == 0)
+                    redoButton.IsEnabled = false;
             }
         }
 
@@ -896,7 +912,7 @@ namespace MyPaint
                     currentSelect.image = null;
                     _shapes.Add(currentSelect);
                 }
-                
+
                 // Ve lai Xoa toan bo
                 paintCanvas.Children.Clear();
 
@@ -929,7 +945,7 @@ namespace MyPaint
                     //currentSelect._image = null;
                     _shapes.Add(currentSelect);
                 }
-                
+
             }
         }
 
@@ -977,21 +993,24 @@ namespace MyPaint
                         image2D.adnrLayer = _adnrLayer;
                         _shapes.Add(image2D);
 
-                        if(tmpImage.Width > paintCanvas.Width) paintCanvas.Width = tmpImage.Width + 10;
-                        if(tmpImage.Height > paintCanvas.Height) paintCanvas.Height = tmpImage.Height + 10;
+                        if (tmpImage.Width > paintCanvas.Width)
+                            paintCanvas.Width = tmpImage.Width + 10;
+                        if (tmpImage.Height > paintCanvas.Height)
+                            paintCanvas.Height = tmpImage.Height + 10;
 
                         image2D.HandleStart(10, 10);
                         image2D.HandleMove(tmpImage.Width, tmpImage.Height);
                         image2D.Draw(paintCanvas);
                         //image2D.HandleEnd(tmpImage.Width, tmpImage.Height);
                     }
-                }               
+                }
             }
         }
 
         private void paintBorder_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (Keyboard.Modifiers == ModifierKeys.Control) {
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
                 if (e.Delta > 0)
                 {
                     _zoomValue += 0.1;
@@ -1002,7 +1021,7 @@ namespace MyPaint
                 }
 
                 ScaleTransform scale = new ScaleTransform(_zoomValue, _zoomValue);
-                if(scale.ScaleX >= 0.1)
+                if (scale.ScaleX >= 0.1)
                     paintBorder.LayoutTransform = scale;
                 e.Handled = true;
             }
