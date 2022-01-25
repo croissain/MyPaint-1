@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Line2D", "Line2D\Line2D.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adorner", "Adorner\Adorner.csproj", "{1318D87C-D6B8-478D-8C5C-8A27CECBD973}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorPickerControls", "ColorPickerControls\ColorPickerControls.csproj", "{E086E6E5-8ADD-4F5C-9AC3-A82FDB6127A8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{1318D87C-D6B8-478D-8C5C-8A27CECBD973}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1318D87C-D6B8-478D-8C5C-8A27CECBD973}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1318D87C-D6B8-478D-8C5C-8A27CECBD973}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E086E6E5-8ADD-4F5C-9AC3-A82FDB6127A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E086E6E5-8ADD-4F5C-9AC3-A82FDB6127A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E086E6E5-8ADD-4F5C-9AC3-A82FDB6127A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E086E6E5-8ADD-4F5C-9AC3-A82FDB6127A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

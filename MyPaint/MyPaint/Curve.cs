@@ -76,6 +76,10 @@ namespace MyPaint
             _start = _end;
         }
 
+        public void HandleHoldShift(double x, double y)
+        {
+        }
+
         public void HandleMove(double x, double y)
         {
             HandleEnd(x, y);
