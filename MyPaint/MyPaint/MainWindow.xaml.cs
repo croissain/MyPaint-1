@@ -484,8 +484,7 @@ namespace MyPaint
                 ReDraw();
 
                 //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
-                    _preview.HandleEnd(pos.X, pos.Y);
-                
+                _preview.HandleEnd(pos.X, pos.Y);
 
                 // Sinh ra đối tượng mẫu kế
                 _preview = _prototypes[_selectedShapeName].Clone();
