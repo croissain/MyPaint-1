@@ -18,7 +18,8 @@
                      Height="550"
                      Width="950"
                      Loaded="RibbonWindow_Loaded"
-                     Closing="RibbonWindow_Closing">
+                     Closing="RibbonWindow_Closing"
+                     WindowStartupLocation="CenterScreen">
 
     <DockPanel LastChildFill="True"
                KeyDown="DockPanel_KeyDown">
@@ -302,7 +303,6 @@
                         <Fluent:Button x:Name="buttonEyedrop"
                                        HorizontalAlignment="Left"
                                        SizeDefinition="Small"
-                                       Focusable="False"
                                        Click="buttonEyedrop_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Eyedropper"
@@ -593,7 +593,6 @@
                             ClipToBounds="True"
                             VerticalAlignment="Top" HorizontalAlignment="Left"
                             SizeChanged="paintCanvas_SizeChanged">
-                            
                     </Canvas>
 
                     <Border x:Name="CanvasBorder"
