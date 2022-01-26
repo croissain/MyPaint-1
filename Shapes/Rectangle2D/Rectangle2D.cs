@@ -112,6 +112,7 @@ namespace Rectangle2D
                 }
                 else
                 {
+                    //_rightBottom.Y = _leftTop.Y - diff;
                     _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
                 }
             }

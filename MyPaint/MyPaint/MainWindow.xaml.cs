@@ -526,14 +526,8 @@ namespace MyPaint
                 }
 
                 //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                {
-                    _preview.HandleHoldShift(pos.X, pos.Y);
-                }
-                else
-                {
                     _preview.HandleEnd(pos.X, pos.Y);
-                }
+                
 
                 // Sinh ra đối tượng mẫu kế
                 _preview = _prototypes[_selectedShapeName].Clone();
