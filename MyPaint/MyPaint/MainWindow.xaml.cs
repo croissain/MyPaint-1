@@ -166,16 +166,29 @@ namespace MyPaint
             _outlines.Add(new Outline() { Name = "Dot", Value = new DoubleCollection() { 1, 2 } });
             _outlines.Add(new Outline() { Name = "Dash Dot", Value = new DoubleCollection() { 4, 1, 1, 1 } });
             OutlineCbbox.ItemsSource = _outlines;
-
-            //AdornerLayer adnrLayer = AdornerLayer.GetAdornerLayer(fullCanvas);
-            //adnrLayer.Add(new CanvasAdorner(paintCanvas));
-            //paintCanvas.Focus();
         }
 
-
-        private void _mainRibbon_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void RibbonWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (paintCanvas.Children.Count > 0)
+            {
+                var ans = MessageBox.Show("Save this masterpiece?", "MyPaint", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
+                if (ans == MessageBoxResult.Yes)
+                {
+                    CreateSaveDialog();
+                    util.SaveCanvas(this, paintCanvas, 96, save_filename);
+                }
+                else if(ans == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
         private void ChooseFill_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -206,14 +219,7 @@ namespace MyPaint
             {
                 _shapes[lastIndex].s_Fill = _selectedFill;
 
-                //Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                //Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
             }
             //var outline = (OutlineCbbox.SelectedValue as Outline);
             //_selectedOutline = outline.Value;
@@ -230,26 +236,8 @@ namespace MyPaint
             if (lastIndex >= 0)
             {
                 _shapes[lastIndex].s_mThickness = _selectedSize;
-
-                //Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                //Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
             }
-        }
-
-        private void OnLauncherButtonClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OnMenuItemClick(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void pasteButton_Click(object sender, RoutedEventArgs e)
@@ -267,7 +255,7 @@ namespace MyPaint
                             paintCanvas.Width = bitmap.Width + 10;
 
                         if (bitmap.Height > paintCanvas.Height)
-                            paintCanvas.Height = bitmap.Height + 10;
+                            paintCanvas.Height = bitmap.Height + 20;
 
                         var source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                         var pasteImg = new Image() { Source = source };
@@ -275,18 +263,19 @@ namespace MyPaint
                         if (pasteImg != null)
                         {
                             Image2D image2D = new Image2D();
-                            image2D.image = pasteImg;
-                            image2D.adnrLayer = _adnrLayer;
-                            _shapes.Add(image2D);
 
-                            image2D.HandleStart(10, 10);
-                            image2D.HandleMove(10 + bitmap.Width, 10 + bitmap.Height);
+                            image2D.HandleStart(10, 20);
+                            image2D.image = pasteImg;
+                            image2D.HandleMove(10 + bitmap.Width, 20 + bitmap.Height);
                             image2D.Draw(paintCanvas);
-                            image2D.HandleEnd(10 + bitmap.Width, 10 + bitmap.Height);
+                            image2D.HandleEnd(10 + bitmap.Width, 20 + bitmap.Height);
+                            _shapes.Add(image2D);
                         }
                     }
                 }
             }
+
+            _isPicker = false;
         }
 
         private void selectButton_Click(object sender, RoutedEventArgs e)
@@ -296,10 +285,15 @@ namespace MyPaint
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_sColor = _selectedsColor;
             _preview.s_mThickness = _selectedSize;
+
+            _isPicker = false;
+            //Trả lại bảng chọn size và outline
+            GroupBoxShapeStyle();
         }
 
         private void ChooseShapeButton_Click(object sender, RoutedEventArgs e)
         {
+            CanvasBorder.Cursor = Cursors.Pen;
             _selectedShapeName = (sender as Button).Tag as string;
 
             _preview = _prototypes[_selectedShapeName].Clone();
@@ -308,18 +302,10 @@ namespace MyPaint
             _preview.s_mThickness = _selectedSize;
             _preview.s_Outline = _selectedOutline;
             _preview.s_Fill = _selectedFill;
+
             _isPicker = false;
-
-            if (_isWriting == true)
-            {
-                //Trả lại bảng chọn size và outline
-                ChooseStyleStack.Children.Clear();
-                ChooseStyleStack.Orientation = Orientation.Horizontal;
-                ChooseStyleStack.Children.Add(OutlineCbbox);
-                ChooseStyleStack.Children.Add(ChooseSizeButton);
-
-                _isWriting = false;
-            }
+            //Trả lại bảng chọn size và outline
+            GroupBoxShapeStyle();
         }
 
         private void colorButton_Click(object sender, RoutedEventArgs e)
@@ -358,14 +344,7 @@ namespace MyPaint
                     _shapes[lastIndex].s_mColor = _selectedmColor;
                     _shapes[lastIndex].s_sColor = _selectedsColor;
 
-                    //Ve lai Xoa toan bo
-                    paintCanvas.Children.Clear();
-
-                    //Ve lai tat ca cac hinh
-                    foreach (var shape in _shapes)
-                    {
-                        shape.Draw(paintCanvas);
-                    }
+                    ReDraw();
                 }
             }
             else
@@ -400,14 +379,7 @@ namespace MyPaint
                     _shapes[lastIndex].s_mColor = _selectedmColor;
                     _shapes[lastIndex].s_sColor = _selectedsColor;
 
-                    //Ve lai Xoa toan bo
-                    paintCanvas.Children.Clear();
-
-                    //Ve lai tat ca cac hinh
-                    foreach (var shape in _shapes)
-                    {
-                        shape.Draw(paintCanvas);
-                    }
+                    ReDraw();
                 }
             }
         }
@@ -423,14 +395,7 @@ namespace MyPaint
             {
                 _shapes[lastIndex].s_Outline = _selectedOutline;
 
-                //Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                //Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
             }
         }
 
@@ -443,16 +408,22 @@ namespace MyPaint
                     _isDrawing = false;
                     Point ptClicked = e.GetPosition(paintCanvas);
 
+                    _preview.HandleStart(ptClicked.X, ptClicked.Y);
+                    _startPoint = new Point(ptClicked.X, ptClicked.Y);
+
                     if (e.LeftButton.Equals(MouseButtonState.Pressed))
                     {
                         Color pxlColor = GetPixelColor(paintCanvas, ptClicked);
                         var converter = new System.Windows.Media.BrushConverter();
                         var brush = (Brush)converter.ConvertFromString(pxlColor.ToString());
-                        MessageBox.Show("HEX: " + brush.ToString());
+                        //MessageBox.Show("HEX: " + brush.ToString());
                         mainColor.Background = brush;
                         _selectedmColor = brush;
                         _preview.s_mColor = brush;
                     }
+
+                    _isPicker = false;
+                    CanvasBorder.Cursor = Cursors.Pen;
                 }
                 else
                 {
@@ -489,17 +460,11 @@ namespace MyPaint
                         _isPicker = false;
                         _preview.HandleMove(pos.X, pos.Y);
                     }
-                    // Xoá hết các hình vẽ cũ
-                    paintCanvas.Children.Clear();
-
-                    // Vẽ lại các hình trước đó
-                    foreach (var shape in _shapes)
-                    {
-                        shape.Draw(paintCanvas);
-                    }
+                    ReDraw();
 
                     // Vẽ hình preview đè lên
                     _preview.Draw(paintCanvas);
+                    paintCanvas.UpdateLayout();
                 }
             }
 
@@ -516,14 +481,7 @@ namespace MyPaint
                 _shapes.Add(_preview);
                 //Shape currShape = (Shape)_preview;
 
-                // Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                // Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
 
                 //Gọi hàm xử lý kết thúc cho đối tượng cuối cùng
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
@@ -554,25 +512,66 @@ namespace MyPaint
                     undoButton.IsEnabled = true;
                 }
             }
+
+        }
+
+        private void ReDraw()
+        {
+            Dispatcher.Invoke((Action)(() =>
+            {
+                // Ve lai Xoa toan bo
+                paintCanvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in _shapes)
+                {
+                    shape.Draw(paintCanvas);
+                }
+                paintCanvas.UpdateLayout();
+            }));
         }
 
         private void buttonEraser_Click(object sender, RoutedEventArgs e)
         {
+            CanvasBorder.Cursor = Cursors.Pen;
             Eraser eraser = new Eraser();
             _selectedShapeName = eraser.Name;
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_sColor = _selectedsColor;
             _preview.s_mThickness = _selectedSize;
+
+            _isPicker = false;
+            //Trả lại bảng chọn size và outline
+            GroupBoxShapeStyle();
         }
 
         private void buttonPencil_Click(object sender, RoutedEventArgs e)
         {
+            CanvasBorder.Cursor = Cursors.Pen;
             Curve curve = new Curve();
             _selectedShapeName = curve.Name;
             _preview = _prototypes[_selectedShapeName].Clone();
             _preview.s_mColor = _selectedmColor;
             _preview.s_mThickness = _selectedSize;
+
             _isPicker = false;
+            //Trả lại bảng chọn size và outline
+            GroupBoxShapeStyle();
+
+        }
+
+        private void GroupBoxShapeStyle()
+        {
+            if (_isWriting == true)
+            {
+                //Trả lại bảng chọn size và outline
+                ChooseStyleStack.Children.Clear();
+                ChooseStyleStack.Orientation = Orientation.Horizontal;
+                ChooseStyleStack.Children.Add(OutlineCbbox);
+                ChooseStyleStack.Children.Add(ChooseSizeButton);
+
+                _isWriting = false;
+            }
         }
 
         private void mainColor_Click(object sender, RoutedEventArgs e)
@@ -583,11 +582,6 @@ namespace MyPaint
         private void subColor_Click(object sender, RoutedEventArgs e)
         {
             mainColorSelected = false;
-
-        }
-
-        private void buttonBucket_Click(object sender, RoutedEventArgs e)
-        {
 
         }
 
@@ -617,14 +611,7 @@ namespace MyPaint
                     _shapes[lastIndex].s_mColor = _selectedmColor;
                     _shapes[lastIndex].s_sColor = _selectedsColor;
 
-                    //Ve lai Xoa toan bo
-                    paintCanvas.Children.Clear();
-
-                    //Ve lai tat ca cac hinh
-                    foreach (var shape in _shapes)
-                    {
-                        shape.Draw(paintCanvas);
-                    }
+                    ReDraw();
                 }
             }
         }
@@ -632,27 +619,30 @@ namespace MyPaint
         #region newFile
         private void newButton_Click(object sender, RoutedEventArgs e)
         {
-            var ans = MessageBox.Show("Save this masterpiece?", "MyPaint", MessageBoxButton.YesNoCancel);
-
-            if (ans == MessageBoxResult.Yes)
+            if(paintCanvas.Children.Count > 0)
             {
-                dlg.FileName = "mypaint"; // Default file name
-                dlg.DefaultExt = ".jpeg";
-                dlg.Filter = "Jpeg Files (*.jpeg)|*.jpeg|Png Files (*.png)|*.png|Canvas (.cvs)|*.cvs|Bitmap (.bmp)|*.bmp"; // Filter files by extension
-                Nullable<bool> result = dlg.ShowDialog();
-                if (result == true)
+                var ans = MessageBox.Show("Save this masterpiece?", "MyPaint", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                if (ans == MessageBoxResult.Yes)
                 {
-                    string filename_tmp = dlg.FileName;
+                    CreateSaveDialog();
+                    util.SaveCanvas(this, paintCanvas, 96, save_filename);
+                    _shapes.Clear();
+                    paintCanvas.Children.Clear();
                 }
-                save_filename = dlg.FileName.ToString();
+                else if (ans == MessageBoxResult.No)
+                {
+                    _shapes.Clear();
+                    paintCanvas.Children.Clear();
+                }
             }
-            else if (ans == MessageBoxResult.No)
+            else
             {
                 _shapes.Clear();
-                //pasteCanvas.Children.Clear();
                 paintCanvas.Children.Clear();
             }
 
+            buttonPencil_Click(sender, e);
         }
         #endregion
 
@@ -734,6 +724,8 @@ namespace MyPaint
                     image2D.HandleMove(10 + LoadedBitmap.Width, 10 + LoadedBitmap.Height);
                     image2D.Draw(paintCanvas);
                     //image2D.HandleEnd(10 + LoadedBitmap.Width, 10 + LoadedBitmap.Height);
+
+                    undoButton.IsEnabled = true;
                 }
             }
         }
@@ -741,7 +733,9 @@ namespace MyPaint
 
         private void buttonText_Click(object sender, RoutedEventArgs e)
         {
+            CanvasBorder.Cursor = Cursors.IBeam;
             _isWriting = true;
+            _isPicker = false;
             Textbox2D txb = new Textbox2D();
             _selectedShapeName = txb.Name;
             _preview = _prototypes[_selectedShapeName].Clone();
@@ -749,8 +743,6 @@ namespace MyPaint
 
             //Xóa đi bảng chọn size, outline và thêm vào bảng chọn font, size, style cho text
             ChooseStyleStack.Children.Clear();
-
-            //_selectedStyle = new List<int>();
 
             GroupBoxTextStyle();
             _preview.s_FontFamily = _selectedFontFamily;
@@ -807,6 +799,7 @@ namespace MyPaint
 
         private void buttonEyedrop_Click(object sender, RoutedEventArgs e)
         {
+            CanvasBorder.Cursor = Cursors.Arrow;
             _isPicker = true;
         }
 
@@ -858,11 +851,11 @@ namespace MyPaint
 
         private void DockPanel_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Z && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            if (e.Key == Key.Z && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && undoButton.IsEnabled == true)
             {
                 undoButton_Click(sender, e);
             }
-            else if (e.Key == Key.Y && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            else if (e.Key == Key.Y && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && redoButton.IsEnabled == true)
             {
                 redoButton_Click(sender, e);
             }
@@ -889,6 +882,7 @@ namespace MyPaint
             undoButton.IsEnabled = true;
             cutButton.IsEnabled = false;
             copyButton.IsEnabled = false;
+            Crop.IsEnabled = false;
             int lastIndex = _shapes.Count - 1;
             if (lastIndex >= 0)
             {
@@ -929,6 +923,8 @@ namespace MyPaint
             undoButton.IsEnabled = true;
             copyButton.IsEnabled = false;
             cutButton.IsEnabled = false;
+            Crop.IsEnabled = false;
+
             int lastIndex = _shapes.Count - 1;
             if (lastIndex >= 0)
             {
@@ -946,25 +942,6 @@ namespace MyPaint
                     _shapes.Add(currentSelect);
                 }
 
-            }
-        }
-
-        private void saveAsButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "Binary File (*.dat) | *.dat";
-
-            if (dlg.ShowDialog() == true)
-            {
-                string path = dlg.FileName;
-                FileStream stream = new FileStream(path, FileMode.Create);
-
-                foreach (var shape in _shapes)
-                {
-                    //formatter.Serialize(stream, shape);
-                }
-
-                stream.Close();
             }
         }
 
@@ -1045,6 +1022,8 @@ namespace MyPaint
             copyButton.IsEnabled = false;
             cutButton.IsEnabled = false;
             Crop.IsEnabled = false;
+            _isPicker = false;
+
             int lastIndex = _shapes.Count - 1;
             if (lastIndex >= 0)
             {

@@ -17,7 +17,9 @@
                      Title="My Paint"
                      Height="550"
                      Width="950"
-                     Loaded="RibbonWindow_Loaded">
+                     Loaded="RibbonWindow_Loaded"
+                     Closing="RibbonWindow_Closing"
+                     WindowStartupLocation="CenterScreen">
 
     <DockPanel LastChildFill="True"
                KeyDown="DockPanel_KeyDown">
@@ -28,16 +30,14 @@
                 <Fluent:Backstage Header="File"
                                   Background="Salmon">
                     <Fluent:BackstageTabControl Background="White">
-                        <Fluent:BackstageTabItem Header="New">
-                            <Grid>
-                            </Grid>
-                        </Fluent:BackstageTabItem>
-                        <Fluent:Button Header="Save As" Click="saveAsButton_Click">
-
+                        <Fluent:Button Header="New" Click="newButton_Click">
                         </Fluent:Button>
-                        <Fluent:BackstageTabItem Header="Exit">
-
-                        </Fluent:BackstageTabItem>
+                        <Fluent:Button Header="Open" Click="openButton_Click">
+                        </Fluent:Button>
+                        <Fluent:Button Header="Save" Click="saveButton_Click">
+                        </Fluent:Button>
+                        <Fluent:Button Header="Exit" Click="ExitButton_Click">
+                        </Fluent:Button>
                     </Fluent:BackstageTabControl>
                 </Fluent:Backstage>
             </Fluent:Ribbon.Menu>
@@ -229,8 +229,7 @@
                         </Fluent:Button>
                         <Fluent:SplitButton x:Name="buttonBucket"
                                        SizeDefinition="Small"
-                                       Focusable="False"
-                                       Click="buttonBucket_Click">
+                                       Focusable="False">
                             <Fluent:SplitButton.LargeIcon>
                                 <materialDesign:PackIcon Kind="FormatColorFill"
                                                          VerticalAlignment="Center"
@@ -304,7 +303,6 @@
                         <Fluent:Button x:Name="buttonEyedrop"
                                        HorizontalAlignment="Left"
                                        SizeDefinition="Small"
-                                       Focusable="False"
                                        Click="buttonEyedrop_Click">
                             <Fluent:Button.LargeIcon>
                                 <materialDesign:PackIcon Kind="Eyedropper"
@@ -583,7 +581,7 @@
             <zb:ZoomBorder x:Name="paintBorder"
                            MouseWheel="paintBorder_MouseWheel">
                 <Grid x:Name="fullCanvas"
-                        Margin="5"
+                        Margin="5, 5, 20, 20"
                         AllowDrop="True"
                         Drop="fullCanvas_Drop"
                         Width="850" Height="350"
@@ -595,7 +593,6 @@
                             ClipToBounds="True"
                             VerticalAlignment="Top" HorizontalAlignment="Left"
                             SizeChanged="paintCanvas_SizeChanged">
-                            
                     </Canvas>
 
                     <Border x:Name="CanvasBorder"

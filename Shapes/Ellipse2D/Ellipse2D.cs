@@ -40,15 +40,11 @@ namespace Ellipse2D
 
         public void HandleStart(double x, double y)
         {
-            //_leftTop.X = x;
-            //_leftTop.Y = y;
             _leftTop = new Point2D() { X = x, Y = y };
         }
 
         public void HandleEnd(double x, double y)
         {
-            //_rightBottom.X = x;
-            //_rightBottom.Y = y;
             if (_ellipse != null)
             {
                 _ellipse.Focusable = true;
@@ -60,8 +56,60 @@ namespace Ellipse2D
 
         public void HandleMove(double x, double y)
         {
-            //HandleEnd(x, y);
             _rightBottom = new Point2D { X = x, Y = y };
+            _ellipse = new Ellipse();
+        }
+
+        public void HandleHoldShift(double x, double y)
+        {
+            double _width = Math.Abs(x - _leftTop.X);
+            double _height = Math.Abs(y - _leftTop.Y);
+            double diff = _width < _height ? _width : _height;
+
+            if (_rightBottom.X > _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff };
+                }
+            }
+            else if (_rightBottom.X > _leftTop.X && _rightBottom.Y < _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
+            else if (_rightBottom.X < _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff };
+                }
+            }
+            else
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
             _ellipse = new Ellipse();
         }
 
@@ -145,6 +193,7 @@ namespace Ellipse2D
         {
             return new Ellipse2D();
         }
+
     }
 }
 

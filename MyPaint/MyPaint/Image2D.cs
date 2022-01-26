@@ -20,7 +20,7 @@ namespace MyPaint
         public Image _imageFinal = new Image();
         private Canvas _canvas;
 
-        public string Name => "Image";
+        public string Name => "Image2D";
 
         public int IconKind => (int)PackIconKind.RectangleOutline;
         public Brush s_mColor { get; set; }
@@ -62,6 +62,7 @@ namespace MyPaint
 
         public void HandleHoldShift(double x, double y)
         {
+            _rightBottom = new Point2D() { X = x, Y = y };
         }
 
         public void Draw(Canvas canvas)
@@ -94,6 +95,8 @@ namespace MyPaint
             if (image != null)
             {
                 _imageFinal.Source = image.Source;
+                _imageFinal.Width = image.ActualWidth;
+                _imageFinal.Height = image.ActualHeight;
                 _imageFinal.RenderTransformOrigin = image.RenderTransformOrigin;
                 _imageFinal.RenderTransform = image.RenderTransform;
 

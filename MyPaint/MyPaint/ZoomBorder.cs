@@ -89,18 +89,18 @@ namespace PanAndZoom
                 if (!(e.Delta > 0) && (st.ScaleX < .4 || st.ScaleY < .4))
                     return;
 
-                //Point relative = e.GetPosition(child);
-                //double absoluteX;
-                //double absoluteY;
+                Point relative = e.GetPosition(child);
+                double absoluteX;
+                double absoluteY;
 
-                //absoluteX = relative.X * st.ScaleX + tt.X;
-                //absoluteY = relative.Y * st.ScaleY + tt.Y;
+                absoluteX = relative.X * st.ScaleX + tt.X;
+                absoluteY = relative.Y * st.ScaleY + tt.Y;
 
                 st.ScaleX += zoom;
                 st.ScaleY += zoom;
 
-                //tt.X = absoluteX - relative.X * st.ScaleX;
-                //tt.Y = absoluteY - relative.Y * st.ScaleY;
+                tt.X = absoluteX - relative.X * st.ScaleX;
+                tt.Y = absoluteY - relative.Y * st.ScaleY;
             }
         }
 
