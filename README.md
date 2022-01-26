@@ -47,4 +47,6 @@ Cài đặt ứng dụng vẽ như MSPaint.
 - Thêm tính năng trích màu từ canvas.
 - Giữ shift để vẽ các hình Vuông, Tròn, Tam giác cân,...
 ## 🎥 Video demo
+https://www.youtube.com/watch?v=4k4lP7SEE6M&ab_channel=ManhNguyenDuc
+
 > **Điểm đề xuất: 10**
