@@ -83,6 +83,7 @@ namespace MyPaint
 
         public void HandleHoldShift(double x, double y)
         {
+            HandleEnd(x, y);
         }
 
         public void Draw(Canvas canvas)

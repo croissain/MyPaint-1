@@ -108,14 +108,7 @@ namespace MyPaint
             if(lastIndex >= 0)
             {
                 _shapes[lastIndex].s_FontFamily = _selectedFontFamily;
-                // Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                // Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
             }
         }
 
@@ -129,15 +122,7 @@ namespace MyPaint
             if(lastIndex >= 0)
             {
                 _shapes[lastIndex].s_FontSize = _selectedFontSize;
-
-                // Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                // Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
             }
         }
 
@@ -173,15 +158,7 @@ namespace MyPaint
                 _shapes[lastIndex].s_FontWeight = _selectedFontWeight;
                 _shapes[lastIndex].s_FontStyle = _selectedFontStyle;
                 _shapes[lastIndex].s_TextDecoration = _selectedTextDecoration;
-
-                // Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                // Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
             }
         }
 
@@ -225,15 +202,7 @@ namespace MyPaint
                 _shapes[lastIndex].s_FontWeight = _selectedFontWeight;
                 _shapes[lastIndex].s_FontStyle = _selectedFontStyle;
                 _shapes[lastIndex].s_TextDecoration = _selectedTextDecoration;
-
-                //Ve lai Xoa toan bo
-                paintCanvas.Children.Clear();
-
-                //Ve lai tat ca cac hinh
-                foreach (var shape in _shapes)
-                {
-                    shape.Draw(paintCanvas);
-                }
+                ReDraw();
             }
         }
     }

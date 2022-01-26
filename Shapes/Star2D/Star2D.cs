@@ -74,6 +74,59 @@ namespace Star2D
             _star = new Polygon();
         }
 
+        public void HandleHoldShift(double x, double y)
+        {
+            double _width = Math.Abs(x - _leftTop.X);
+            double _height = Math.Abs(y - _leftTop.Y);
+            double diff = _width < _height ? _width : _height;
+
+            if (_rightBottom.X > _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff };
+                }
+            }
+            else if (_rightBottom.X > _leftTop.X && _rightBottom.Y < _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
+            else if (_rightBottom.X < _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff };
+                }
+            }
+            else
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
+            _star = new Polygon();
+        }
+
         public void HandleEnd(double x, double y)
         {
             if (_star != null)
@@ -168,5 +221,6 @@ namespace Star2D
         {
             return new Star2D();
         }
+
     }
 }

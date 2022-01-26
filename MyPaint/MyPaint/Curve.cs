@@ -41,10 +41,20 @@ namespace MyPaint
         public void HandleStart(double x, double y)
         {
             _start = new Point2D() { X = x, Y = y };
+        }
+
+        public void HandleEnd(double x, double y)
+        {
+            _end = new Point2D() { X = x, Y = y };
+        }
+
+        public void HandleHoldShift(double x, double y)
+        {
+            _end = new Point2D() { X = x, Y = y };
             var line = new Line()
             {
-                X1 = x,
-                Y1 = y,
+                X1 = _start.X,
+                Y1 = _start.Y,
                 X2 = x,
                 Y2 = y,
                 StrokeThickness = s_mThickness,
@@ -53,10 +63,12 @@ namespace MyPaint
                 StrokeEndLineCap = PenLineCap.Round
             };
 
+            int n = _lines.Count;
+            if(n > 0) _lines.RemoveAt(n - 1);
             _lines.Add(line);
         }
 
-        public void HandleEnd(double x, double y)
+        public void HandleMove(double x, double y)
         {
             _end = new Point2D() { X = x, Y = y };
             var line = new Line()
@@ -72,17 +84,7 @@ namespace MyPaint
             };
 
             _lines.Add(line);
-
             _start = _end;
-        }
-
-        public void HandleHoldShift(double x, double y)
-        {
-        }
-
-        public void HandleMove(double x, double y)
-        {
-            HandleEnd(x, y);
         }
 
         public void Draw(Canvas canvas)

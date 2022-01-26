@@ -91,33 +91,88 @@ namespace Heart2D
             _heart = new Path();
         }
 
+        public void HandleHoldShift(double x, double y)
+        {
+            double _width = Math.Abs(x - _leftTop.X);
+            double _height = Math.Abs(y - _leftTop.Y);
+            double diff = _width < _height ? _width : _height;
+
+            if (_rightBottom.X > _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff };
+                }
+            }
+            else if (_rightBottom.X > _leftTop.X && _rightBottom.Y < _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X + diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
+            else if (_rightBottom.X < _leftTop.X && _rightBottom.Y > _leftTop.Y)
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y + diff };
+                }
+            }
+            else
+            {
+                if (_width > _height)
+                {
+                    _rightBottom = new Point2D() { X = _leftTop.X - diff, Y = y };
+                }
+                else
+                {
+                    _rightBottom = new Point2D() { X = x, Y = _leftTop.Y - diff };
+                }
+            }
+            _heart = new Path();
+        }
+
         public void Draw(Canvas canvas)
         {
             _canvas = canvas;
-            var _width = _rightBottom.X - _leftTop.X;
-            var _height = _rightBottom.Y - _leftTop.Y;
             if (_heart != null)
             {
                 rotateTransform = _heartFinal.RenderTransform as RotateTransform;
                 double angle = (rotateTransform != null) ? rotateTransform.Angle : 0;
 
-                //_heart = new Heart();
-                _heart.Width = Math.Abs(_width);
-                _heart.Height = Math.Abs(_height);
+                var x = Math.Min(_rightBottom.X, _leftTop.X);
+                var y = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+                var w = Math.Max(_rightBottom.X, _leftTop.X) - x;
+                var h = Math.Max(_rightBottom.Y, _leftTop.Y) - y;
+
+                _heart.Width = w;
+                _heart.Height = h;
                 _heart.Stroke = s_mColor;
                 _heart.StrokeThickness = s_mThickness;
                 _heart.StrokeDashArray = s_Outline;
-                _heart.Data = Geometry.Parse(@"M 241,200 
-                                            A 20,20 0 0 0 200,240
-                                            C 210,250 240,270 240,270
-                                            C 240,270 260,260 280,240
-                                            A 20,20 0 0 0 239,200");
+                _heart.Data = Geometry.Parse("M 40,0 A 20,20 0 0 0 0,40 C 10,50 40,70 40,70 C 40,70 60,60 80,40 A 20,20 0 0 0 40,0 Z");
+                _heart.Stretch = Stretch.Fill;
                 _heart.Fill = s_Fill;
                 _heart.RenderTransformOrigin = new Point(0.5, 0.5);
                 _heart.RenderTransform = new RotateTransform(angle);
                 _heart.LostFocus += Rectangle_LostFocus;
 
-                SetPosition(_heart, _width, _height);
+                Canvas.SetLeft(_heart, x);
+                Canvas.SetTop(_heart, y);
+
                 canvas.Children.Add(_heart);
                 adnrLayer = AdornerLayer.GetAdornerLayer(canvas);
             }
@@ -137,6 +192,7 @@ namespace Heart2D
                 _heartFinal.StrokeThickness = _heart.StrokeThickness;
                 _heartFinal.StrokeDashArray = _heart.StrokeDashArray;
                 _heartFinal.Data = _heart.Data;
+                _heartFinal.Stretch = _heart.Stretch;
                 _heartFinal.Fill = _heart.Fill;
                 _heartFinal.RenderTransformOrigin = _heart.RenderTransformOrigin;
                 _heartFinal.RenderTransform = _heart.RenderTransform;
@@ -149,33 +205,10 @@ namespace Heart2D
             _heart = null;
         }
 
-        private void SetPosition(UIElement shape, double width, double height)
-        {
-            if (width > 0 && height > 0)
-            {
-                Canvas.SetLeft(shape, _leftTop.X);
-                Canvas.SetTop(shape, _leftTop.Y);
-            }
-            else if (width > 0 && height < 0)
-            {
-                Canvas.SetLeft(shape, _leftTop.X);
-                Canvas.SetTop(shape, _rightBottom.Y);
-            }
-            else if (width < 0 && height > 0)
-            {
-                Canvas.SetLeft(shape, _rightBottom.X);
-                Canvas.SetTop(shape, _leftTop.Y);
-            }
-            else
-            {
-                Canvas.SetLeft(shape, _rightBottom.X);
-                Canvas.SetTop(shape, _rightBottom.Y);
-            }
-        }
-
         public IShape Clone()
         {
             return new Heart2D();
         }
+
     }
 }

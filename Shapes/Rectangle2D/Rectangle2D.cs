@@ -67,8 +67,8 @@ namespace Rectangle2D
 
         public void HandleHoldShift(double x, double y)
         {
-            double _width = Math.Abs(_rightBottom.X - _leftTop.X);
-            double _height = Math.Abs(_rightBottom.Y - _leftTop.Y);
+            double _width = Math.Abs(x - _leftTop.X);
+            double _height = Math.Abs(y - _leftTop.Y);
             double diff = _width < _height ? _width : _height;
 
             if (_rightBottom.X > _leftTop.X && _rightBottom.Y > _leftTop.Y)
